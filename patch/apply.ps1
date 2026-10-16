@@ -5,7 +5,7 @@ if (!(Test-Path (Join-Path $base 'build.gradle'))) { throw "Missing extracted pr
 
 # Apply complete Java overlays after the compatibility updates in the CI workflow.
 $javaDir = Join-Path $base 'src\main\java\it\bonsaigreenhouse'
-foreach ($name in @('BonsaiGreenhouse.java','GreenhouseMenu.java','GreenhouseScreen.java','ClientScreens.java')) {
+foreach ($name in @('BonsaiGreenhouse.java','GreenhouseMenu.java','GreenhouseScreen.java','ClientScreens.java','GreenhouseBlock.java')) {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot "java\$name") -Destination (Join-Path $javaDir $name) -Force
 }
 
@@ -15,7 +15,7 @@ $gradleProps = Join-Path $base 'gradle.properties'
 $p = [System.IO.File]::ReadAllText($gradleProps)
 $p = $p.Replace('mod_id=bonsai_greenhouse','mod_id=greenhouse')
 $p = $p.Replace('mod_name=Bonsai Greenhouse','mod_name=Greenhouse')
-$p = $p.Replace('mod_version=0.1.0-alpha','mod_version=0.2.0-alpha')
+$p = $p.Replace('mod_version=0.1.0-alpha','mod_version=0.2.1-alpha')
 [System.IO.File]::WriteAllText($gradleProps,$p,[System.Text.UTF8Encoding]::new($false))
 
 # Replace the placeholder vanilla 27-slot chest menu with the new 3-input GUI
@@ -101,6 +101,20 @@ $it = @'
   "gui.greenhouse.ready": "Pronto da raccogliere"
 }
 '@
+# Deliberately differentiated base textures: normal greenhouse retains warm timber,
+# automatic greenhouse uses darker oak and reinforcing steel bands.
+$automaticModel = Join-Path $resources 'assets\greenhouse\models\block\automatic_greenhouse.json'
+if (!(Test-Path $automaticModel)) { throw "Missing model: $automaticModel" }
+$am = [System.IO.File]::ReadAllText($automaticModel)
+$am = $am.Replace('"planks": "greenhouse:block/planks"', '"planks": "greenhouse:block/auto_planks"')
+$am = $am.Replace('"planks_edge": "greenhouse:block/planks_edge"', '"planks_edge": "greenhouse:block/auto_planks_edge"')
+[System.IO.File]::WriteAllText($automaticModel,$am,[System.Text.UTF8Encoding]::new($false))
+$textureDir = Join-Path $resources 'assets\greenhouse\textures\block'
+foreach ($name in @('auto_planks','auto_planks_edge')) {
+    $encoded = (Get-Content -LiteralPath (Join-Path $PSScriptRoot "textures\$name.png.b64") -Raw).Trim()
+    [System.IO.File]::WriteAllBytes((Join-Path $textureDir "$name.png"),[Convert]::FromBase64String($encoded))
+}
+
 $languageDir = Join-Path $resources 'assets\greenhouse\lang'
 [System.IO.File]::WriteAllText((Join-Path $languageDir 'en_us.json'),$en,[System.Text.UTF8Encoding]::new($false))
 [System.IO.File]::WriteAllText((Join-Path $languageDir 'it_it.json'),$it,[System.Text.UTF8Encoding]::new($false))
