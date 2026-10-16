@@ -15,7 +15,7 @@ $gradleProps = Join-Path $base 'gradle.properties'
 $p = [System.IO.File]::ReadAllText($gradleProps)
 $p = $p.Replace('mod_id=bonsai_greenhouse','mod_id=greenhouse')
 $p = $p.Replace('mod_name=Bonsai Greenhouse','mod_name=Greenhouse')
-$p = $p.Replace('mod_version=0.1.0-alpha','mod_version=0.2.1-alpha')
+$p = $p.Replace('mod_version=0.1.0-alpha','mod_version=0.2.2-alpha')
 [System.IO.File]::WriteAllText($gradleProps,$p,[System.Text.UTF8Encoding]::new($false))
 
 # Replace the placeholder vanilla 27-slot chest menu with the new 3-input GUI
@@ -47,6 +47,9 @@ $be = $be.Replace($old, $old + [Environment]::NewLine + $insert)
 $oldMenu = 'return ChestMenu.threeRows(windowId,inventory,this);'
 if (!$be.Contains($oldMenu)) { throw 'Expected menu constructor was not found' }
 $be = $be.Replace($oldMenu, 'return new GreenhouseMenu(windowId,inventory,this);')
+# Fix menu title keys that survived the pre-rename alpha source archive.
+$be = $be.Replace('block.bonsai_greenhouse.hopping_greenhouse','block.greenhouse.automatic_greenhouse')
+$be = $be.Replace('block.bonsai_greenhouse.bonsai_greenhouse','block.greenhouse.greenhouse')
 [System.IO.File]::WriteAllText($beFile,$be,[System.Text.UTF8Encoding]::new($false))
 
 # Rename both namespaces and both block ids within all assets, recipes,
@@ -74,6 +77,8 @@ $en = @'
   "block.greenhouse.greenhouse": "Greenhouse",
   "block.greenhouse.automatic_greenhouse": "Automatic Greenhouse",
   "itemGroup.greenhouse": "Greenhouse",
+  "gui.greenhouse.progress": "Growth",
+  "gui.greenhouse.growing": "Growing",
   "gui.greenhouse.soil": "Soil",
   "gui.greenhouse.plant": "Plant",
   "gui.greenhouse.fertilizer": "Bone meal",
@@ -81,7 +86,7 @@ $en = @'
   "gui.greenhouse.storage": "Products",
   "gui.greenhouse.bonus": "Boost",
   "gui.greenhouse.missing_plant": "Insert a plant or seed",
-  "gui.greenhouse.invalid_soil": "Invalid substrate for this crop",
+  "gui.greenhouse.invalid_soil": "Invalid substrate",
   "gui.greenhouse.ready": "Ready to harvest"
 }
 '@
@@ -90,6 +95,8 @@ $it = @'
   "block.greenhouse.greenhouse": "Greenhouse",
   "block.greenhouse.automatic_greenhouse": "Automatic Greenhouse",
   "itemGroup.greenhouse": "Greenhouse",
+  "gui.greenhouse.progress": "Crescita",
+  "gui.greenhouse.growing": "In crescita",
   "gui.greenhouse.soil": "Terreno",
   "gui.greenhouse.plant": "Pianta",
   "gui.greenhouse.fertilizer": "Ossa",
@@ -118,4 +125,4 @@ foreach ($name in @('auto_planks','auto_planks_edge')) {
 $languageDir = Join-Path $resources 'assets\greenhouse\lang'
 [System.IO.File]::WriteAllText((Join-Path $languageDir 'en_us.json'),$en,[System.Text.UTF8Encoding]::new($false))
 [System.IO.File]::WriteAllText((Join-Path $languageDir 'it_it.json'),$it,[System.Text.UTF8Encoding]::new($false))
-Write-Host 'Greenhouse 0.2: Java overlay, complete resource ID migration, and custom GUI applied.'
+Write-Host 'Greenhouse 0.2.2: short title, corrected translation keys, refined GUI applied.'
