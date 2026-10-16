@@ -81,13 +81,13 @@ $en = @'
   "gui.greenhouse.growing": "Growing",
   "gui.greenhouse.soil": "Soil",
   "gui.greenhouse.plant": "Plant",
-  "gui.greenhouse.fertilizer": "Bone meal",
+  "gui.greenhouse.fertilizer": "Bone",
   "gui.greenhouse.harvest": "Harvest",
   "gui.greenhouse.storage": "Products",
   "gui.greenhouse.bonus": "Boost",
-  "gui.greenhouse.missing_plant": "Insert a plant or seed",
-  "gui.greenhouse.invalid_soil": "Invalid substrate",
-  "gui.greenhouse.ready": "Ready to harvest"
+  "gui.greenhouse.missing_plant": "Insert plant",
+  "gui.greenhouse.invalid_soil": "Invalid soil",
+  "gui.greenhouse.ready": "Ready"
 }
 '@
 $it = @'
@@ -103,9 +103,9 @@ $it = @'
   "gui.greenhouse.harvest": "Raccogli",
   "gui.greenhouse.storage": "Prodotti",
   "gui.greenhouse.bonus": "Bonus",
-  "gui.greenhouse.missing_plant": "Inserisci un seme o pianta",
+  "gui.greenhouse.missing_plant": "Inserisci pianta",
   "gui.greenhouse.invalid_soil": "Terreno non valido",
-  "gui.greenhouse.ready": "Pronto da raccogliere"
+  "gui.greenhouse.ready": "Pronto"
 }
 '@
 # Deliberately differentiated base textures: normal greenhouse retains warm timber,
