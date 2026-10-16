@@ -36,29 +36,29 @@ public final class GreenhouseMenu extends AbstractContainerMenu {
         checkContainerDataCount(data, 4);
         storage.startOpen(inventory.player);
 
-        addSlot(new Slot(storage,0,44,44) {
+        addSlot(new Slot(storage,0,44,39) {
             @Override public boolean mayPlace(ItemStack stack) {
                 for (Crop crop: Crop.values()) if (crop.accepts(stack)) return true;
                 return false;
             }
             @Override public int getMaxStackSize() { return 1; }
         });
-        addSlot(new Slot(storage,1,80,44) {
+        addSlot(new Slot(storage,1,80,39) {
             @Override public boolean mayPlace(ItemStack stack) { return Crop.of(stack) != Crop.EMPTY; }
             @Override public int getMaxStackSize() { return 1; }
         });
-        addSlot(new Slot(storage,2,116,44) {
+        addSlot(new Slot(storage,2,116,39) {
             @Override public boolean mayPlace(ItemStack stack) { return stack.is(Items.BONE_MEAL); }
         });
         if (automatic) for (int i=0;i<9;i++) {
-            addSlot(new Slot(storage,9+i,8+i*18,135) {
+            addSlot(new Slot(storage,9+i,8+i*18,107) {
                 @Override public boolean mayPlace(ItemStack stack) { return false; }
             });
         }
         for (int row=0;row<3;row++) for (int col=0;col<9;col++) {
-            addSlot(new Slot(inventory,9+row*9+col,8+col*18,177+row*18));
+            addSlot(new Slot(inventory,9+row*9+col,8+col*18,139+row*18));
         }
-        for (int col=0;col<9;col++) addSlot(new Slot(inventory,col,8+col*18,235));
+        for (int col=0;col<9;col++) addSlot(new Slot(inventory,col,8+col*18,195));
         addDataSlots(data);
     }
     public boolean isAutomatic() { return automatic; }
