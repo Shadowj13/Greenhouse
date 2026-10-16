@@ -9,6 +9,7 @@ on:
       - 'BonsaiGreenhouse-26.3-source.zip'
       - 'BonsaiGreenhouse_Pacchetto_GitHub_Build.zip'
       - '.github/workflows/build-neoforge.yml'
+      - 'patch/**'
 
 permissions:
   contents: read
