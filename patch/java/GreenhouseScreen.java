@@ -81,6 +81,7 @@ public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMe
         else if(menu.mature()) state=Component.translatable("gui.greenhouse.ready").getString();
         else state=Component.translatable("gui.greenhouse.growing").getString();
         g.text(font,Component.literal(state),x+13,y+86,0xFF332B22,false);
+        g.text(font,Component.translatable("gui.greenhouse.bonus"),x+108,y+86,0xFF332B22,false);
         g.text(font,Component.literal(menu.bonusCycles()+"/4"),x+144,y+86,0xFF332B22,false);
 
         // Either manual harvest button or the automatic 9-slot storage row.
