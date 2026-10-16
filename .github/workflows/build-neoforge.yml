@@ -57,6 +57,10 @@ jobs:
             [System.IO.File]::WriteAllText((Resolve-Path $file), $code, [System.Text.UTF8Encoding]::new($false))
           }
 
+      - name: Apply Greenhouse 0.2 patch
+        shell: pwsh
+        run: .\\patch\\apply.ps1
+
       - name: Build mod with official NeoForge Gradle wrapper
         shell: pwsh
         working-directory: project/BonsaiGreenhouse-26.3
