@@ -9,11 +9,11 @@ import net.minecraft.world.entity.player.Inventory;
 public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMenu> {
     private Button harvest;
     public GreenhouseScreen(GreenhouseMenu menu, Inventory player, Component title) {
-        super(menu, player, title, 176, 220);
+        super(menu, player, title, 176, 264);
         this.titleLabelX = 10;
-        this.titleLabelY = 7;
+        this.titleLabelY = 10;
         this.inventoryLabelX = 8;
-        this.inventoryLabelY = 123;
+        this.inventoryLabelY = 163;
     }
     @Override protected void init() {
         super.init();
@@ -21,7 +21,7 @@ public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMe
             harvest = Button.builder(Component.translatable("gui.greenhouse.harvest"), button -> {
                 if (minecraft != null && minecraft.gameMode != null)
                     minecraft.gameMode.handleInventoryButtonClick(menu.containerId,0);
-            }).bounds(leftPos+51,topPos+98,74,20).build();
+            }).bounds(leftPos+51,topPos+126,74,20).build();
             harvest.active = menu.mature();
             addRenderableWidget(harvest);
         }
@@ -35,40 +35,44 @@ public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMe
         g.fill(x,y,x+16,y+16,0xFFB8AF94);
         g.fill(x+1,y+1,x+16,y+16,0xFF726B60);
     }
-    @Override public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
+    @Override public void extractBackground(GuiGraphicsExtractor g,int mouseX,int mouseY,float delta) {
         super.extractBackground(g,mouseX,mouseY,delta);
         int x=leftPos,y=topPos;
-        g.fill(x-4,y-4,x+180,y+224,0xFF3D3025);
-        g.fill(x,y,x+176,y+220,0xFFE0D2AB);
-        g.fill(x+4,y+4,x+172,y+22,0xFF68784F);
-        g.fill(x+4,y+24,x+172,y+92,0xFFC5B88E);
-        g.fill(x+6,y+94,x+170,y+121,0xFFB7AB88);
-        g.text(font,Component.translatable("gui.greenhouse.soil"),x+38,y+28,0xFF423426,false);
-        g.text(font,Component.translatable("gui.greenhouse.plant"),x+77,y+28,0xFF423426,false);
-        g.text(font,Component.translatable("gui.greenhouse.fertilizer"),x+112,y+28,0xFF423426,false);
-        for (int i=0;i<3;i++) slot(g,x+44+i*36,y+41);
-        g.fill(x+11,y+72,x+165,y+85,0xFF3A4934);
-        g.fill(x+13,y+74,x+163,y+83,0xFF172C1F);
-        int amount=menu.mature()?150:(menu.duration()==0?0:Math.min(150,150*menu.elapsed()/Math.max(1,menu.duration())));
-        g.fill(x+13,y+74,x+13+amount,y+83,menu.mature()?0xFFD3B350:0xFF5EAE65);
+        // Timber surround, warm parchment panels, and restrained sage accents.
+        g.fill(x-4,y-4,x+180,y+268,0xFF49372B);
+        g.fill(x,y,x+176,y+264,0xFFE2D5B8);
+        g.fill(x+4,y+4,x+172,y+25,0xFF657755);
+        g.fill(x+5,y+29,x+171,y+117,0xFFCCBE9B);
+
+        g.text(font,Component.translatable("gui.greenhouse.soil"),x+39,y+31,0xFF382E26,false);
+        g.text(font,Component.translatable("gui.greenhouse.plant"),x+76,y+31,0xFF382E26,false);
+        g.text(font,Component.translatable("gui.greenhouse.fertilizer"),x+111,y+31,0xFF382E26,false);
+        for(int i=0;i<3;i++) slot(g,x+44+i*36,y+44);
+
+        g.fill(x+12,y+76,x+164,y+89,0xFF544936);
+        g.fill(x+14,y+78,x+162,y+87,0xFF2B3C2F);
+        int progress=menu.mature()?148:(menu.duration()==0?0:Math.min(148,148*menu.elapsed()/Math.max(1,menu.duration())));
+        g.fill(x+14,y+78,x+14+progress,y+87,menu.mature()?0xFFD5B65F:0xFF70AE68);
         String status;
-        if (menu.crop()==Crop.EMPTY) status=Component.translatable("gui.greenhouse.missing_plant").getString();
-        else if (!menu.validCrop()) status=Component.translatable("gui.greenhouse.invalid_soil").getString();
-        else if (menu.mature()) status=Component.translatable("gui.greenhouse.ready").getString();
+        if(menu.crop()==Crop.EMPTY) status=Component.translatable("gui.greenhouse.missing_plant").getString();
+        else if(!menu.validCrop()) status=Component.translatable("gui.greenhouse.invalid_soil").getString();
+        else if(menu.mature()) status=Component.translatable("gui.greenhouse.ready").getString();
         else status=(menu.duration()==0?0:100*menu.elapsed()/Math.max(1,menu.duration()))+"%";
-        g.centeredText(font,status,x+88,y+87,0xFF362B20);
-        g.text(font,Component.translatable("gui.greenhouse.bonus").getString()+": "+menu.bonusCycles()+"/4",x+9,y+109,0xFF433A2B,false);
-        if (menu.isAutomatic()) {
-            for (int i=0;i<9;i++) slot(g,x+8+i*18,y+103);
+        g.centeredText(font,status,x+88,y+94,0xFF403427);
+        g.text(font,Component.translatable("gui.greenhouse.bonus").getString()+": "+menu.bonusCycles()+"/4",x+12,y+109,0xFF514833,false);
+
+        if(menu.isAutomatic()) {
+            g.text(font,Component.translatable("gui.greenhouse.storage"),x+8,y+121,0xFF403427,false);
+            for(int i=0;i<9;i++) slot(g,x+8+i*18,y+135);
+        } else {
+            g.fill(x+7,y+121,x+169,y+151,0xFFB4A47E);
         }
-        g.fill(x+4,y+122,x+172,y+217,0xFFCCC2A7);
-        for (int i=0;i<3;i++) for (int j=0;j<9;j++) slot(g,x+8+j*18,y+136+i*18);
-        for (int i=0;i<9;i++) slot(g,x+8+i*18,y+194);
+        g.fill(x+4,y+158,x+172,y+260,0xFFC9BDA1);
+        for(int i=0;i<3;i++) for(int j=0;j<9;j++) slot(g,x+8+j*18,y+177+i*18);
+        for(int i=0;i<9;i++) slot(g,x+8+i*18,y+235);
     }
     @Override protected void extractLabels(GuiGraphicsExtractor g,int mouseX,int mouseY) {
-        g.text(font,this.title,10,7,0xFFFFFFFF,false);
-        g.text(font,playerInventoryTitle,8,123,0xFF3C3629,false);
-        if (menu.isAutomatic())
-            g.text(font,Component.translatable("gui.greenhouse.storage"),8,94,0xFF312C25,false);
+        g.text(font,this.title,10,11,0xFFFFFFFF,false);
+        g.text(font,playerInventoryTitle,8,163,0xFF403427,false);
     }
 }
