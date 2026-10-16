@@ -1,0 +1,58 @@
+name: Build Bonsai Greenhouse (NeoForge 26.3)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'BonsaiGreenhouse_NeoForge_26.3_alpha_sorgenti.zip'
+      - 'BonsaiGreenhouse-26.3-source.zip'
+      - 'BonsaiGreenhouse_Pacchetto_GitHub_Build.zip'
+      - '.github/workflows/build-neoforge.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Locate and extract Bonsai Greenhouse sources
+        shell: pwsh
+        run: |
+          $source = @('BonsaiGreenhouse-26.3-source.zip','BonsaiGreenhouse_NeoForge_26.3_alpha_sorgenti.zip') | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (!$source -and (Test-Path 'BonsaiGreenhouse_Pacchetto_GitHub_Build.zip')) {
+            Expand-Archive -LiteralPath 'BonsaiGreenhouse_Pacchetto_GitHub_Build.zip' -DestinationPath 'input' -Force
+            $source = 'input/BonsaiGreenhouse_NeoForge_26.3_alpha_sorgenti.zip'
+          }
+          if (!$source -or !(Test-Path $source)) {
+            throw 'Missing source ZIP. Upload BonsaiGreenhouse_NeoForge_26.3_alpha_sorgenti.zip to the root of the repository.'
+          }
+          Expand-Archive -LiteralPath $source -DestinationPath 'project' -Force
+          if (!(Test-Path 'project/BonsaiGreenhouse-26.3/build.gradle')) {
+            throw 'Source archive does not contain the expected BonsaiGreenhouse-26.3 project.'
+          }
+
+      - name: Build mod with official NeoForge Gradle wrapper
+        shell: pwsh
+        working-directory: project/BonsaiGreenhouse-26.3
+        run: .\build-windows.ps1
+
+      - name: Upload JAR
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BonsaiGreenhouse-NeoForge-26.3-JAR
+          path: project/BonsaiGreenhouse-26.3/build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 30
