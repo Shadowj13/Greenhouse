@@ -43,6 +43,20 @@ jobs:
             throw 'Source archive does not contain the expected BonsaiGreenhouse-26.3 project.'
           }
 
+      - name: Apply Minecraft 26.3 API compatibility fixes
+        shell: pwsh
+        run: |
+          $dir = 'project/BonsaiGreenhouse-26.3/src/main/java/it/bonsaigreenhouse'
+          foreach ($name in @('GreenhouseBlock.java','GreenhouseBlockEntity.java')) {
+            $file = Join-Path $dir $name
+            if (!(Test-Path $file)) { throw "Missing source file $file" }
+            $code = [System.IO.File]::ReadAllText((Resolve-Path $file))
+            $code = $code.Replace('level.isClientSide', 'level.isClientSide()')
+            $code = $code.Replace('level.random', 'level.getRandom()')
+            $code = $code.Replace('player.drop(remain,false)', 'net.minecraft.world.level.block.Block.popResource(level,worldPosition,remain)')
+            [System.IO.File]::WriteAllText((Resolve-Path $file), $code, [System.Text.UTF8Encoding]::new($false))
+          }
+
       - name: Build mod with official NeoForge Gradle wrapper
         shell: pwsh
         working-directory: project/BonsaiGreenhouse-26.3
