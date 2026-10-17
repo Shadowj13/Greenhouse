@@ -20,29 +20,15 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class GreenhouseBlock extends BaseEntityBlock {
     public static final EnumProperty<Crop> CROP=EnumProperty.create("crop",Crop.class);
     public static final IntegerProperty STAGE=IntegerProperty.create("stage",0,3);
-    // A detailed outline instead of the vanilla 16x16x16 selection cube.
-    // The transparent interior has no hitbox; corners, timber base and roof are selectable.
-    private static final VoxelShape SHAPE=Shapes.or(
-        Block.box(1,0,1,15,3,15),
-        Block.box(0,2,0,16,3.2,1.5),
-        Block.box(0,2,14.5,16,3.2,16),
-        Block.box(0,2,1.5,1.5,3.2,14.5),
-        Block.box(14.5,2,1.5,16,3.2,14.5),
-        Block.box(0.5,3,0.5,1.7,13,1.7),
-        Block.box(14.3,3,0.5,15.5,13,1.7),
-        Block.box(0.5,3,14.3,1.7,13,15.5),
-        Block.box(14.3,3,14.3,15.5,13,15.5),
-        Block.box(1,12,1,15,13.1,15),
-        Block.box(3,13.1,2,13.5,14.2,14),
-        Block.box(5,14.2,2,11,15.2,14)
-    );
+    // One clean selection cuboid replaces the old overlapping 13-part wireframe.
+    // Detailed timber/glass geometry remains visual, not part of the targeting outline.
+    private static final VoxelShape SHAPE=Block.box(0.45,0.0,0.45,15.55,15.55,15.55);
     public final boolean automatic;
     public GreenhouseBlock(boolean automatic,Properties properties) {
         super(properties);
