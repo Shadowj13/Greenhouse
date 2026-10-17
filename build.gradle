@@ -7,8 +7,43 @@ version = mod_version
 group = mod_group_id
 base { archivesName = mod_id }
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
 
 repositories {}
+
+sourceSets {
+    qa {
+        compileClasspath = sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath = output + compileClasspath
+    }
+}
+
+tasks.register('qaJar', Jar) {
+    dependsOn tasks.named('qaClasses')
+    from sourceSets.qa.output
+    archiveFileName = 'greenhouse-qa.jar'
+    destinationDirectory = layout.buildDirectory.dir('qa')
+}
+
+tasks.register('prepareQaRuntime') {
+    dependsOn tasks.named('jar'), tasks.named('qaJar')
+    doLast {
+        def target = layout.buildDirectory.file('qa/runtime-classpath.txt').get().asFile
+        target.parentFile.mkdirs()
+        target.text = sourceSets.main.runtimeClasspath.filter { it.isFile() && it.name.endsWith('.jar') }.asPath
+    }
+}
+
+tasks.register('integrationTest', Exec) {
+    dependsOn tasks.named('prepareQaRuntime')
+    workingDir projectDir
+    def launcher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
+    commandLine providers.gradleProperty('pythonExecutable').getOrElse('python'),
+        'tests/run_server_tests.py', '--java', launcher.get().executablePath.asFile.absolutePath
+}
 
 runs {
     configureEach {
@@ -36,6 +71,10 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
 tasks.withType(ProcessResources).configureEach {
+    filesMatching(['**/*.json', '**/*.toml']) {
+        filter(org.apache.tools.ant.filters.FixCrLfFilter,
+               eol: org.apache.tools.ant.filters.FixCrLfFilter.CrLf.newInstance('lf'))
+    }
     def props = [minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range, neo_version: neo_version, mod_id: mod_id, mod_name: mod_name, mod_version: mod_version, mod_license: mod_license]
     inputs.properties props
     filesMatching('META-INF/neoforge.mods.toml') { expand props }

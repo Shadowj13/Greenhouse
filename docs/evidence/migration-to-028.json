@@ -1,0 +1,11 @@
+{
+  "minecraft": "26.3",
+  "neoforge": "26.3.0.76",
+  "mod_version": "0.2.8-alpha",
+  "results": {
+    "reload": {
+      "disk_reload_exact_progress": "PASS",
+      "disk_reload_pending_and_full_outputs": "PASS"
+    }
+  }
+}

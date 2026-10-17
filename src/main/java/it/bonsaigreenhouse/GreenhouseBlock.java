@@ -51,11 +51,6 @@ public class GreenhouseBlock extends BaseEntityBlock {
     @Override public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level,BlockState state,BlockEntityType<T> type) {
         return level.isClientSide() ? null : createTickerHelper(type,BonsaiGreenhouse.GREENHOUSE_ENTITY.get(),GreenhouseBlockEntity::serverTick);
     }
-    @Override public BlockState playerWillDestroy(Level level,BlockPos pos,BlockState state,Player player) {
-        if(!level.isClientSide() && level.getBlockEntity(pos) instanceof GreenhouseBlockEntity greenhouse)
-            greenhouse.dropContentsForBreak(level,pos);
-        return super.playerWillDestroy(level,pos,state,player);
-    }
     // Sneak-use on an automatic greenhouse gives access to its underlying chest,
     // barrel, double chest or other menu-providing storage block.
     private static void openStorageBelow(Level level,BlockPos pos,Player player) {

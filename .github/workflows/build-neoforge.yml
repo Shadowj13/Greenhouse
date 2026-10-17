@@ -19,9 +19,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Build and run model regressions
+      - name: Build, verify models and run live server integration checks
         shell: pwsh
-        run: ./gradlew.bat build --console=plain
+        run: ./gradlew.bat build integrationTest --console=plain
       - name: Hash installable JAR
         shell: pwsh
         run: |
@@ -36,4 +36,12 @@ jobs:
             build/libs/*.jar
             build/libs/*.sha256
           if-no-files-found: error
+          retention-days: 30
+      - name: Upload server test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Greenhouse-server-tests
+          path: build/qa-results/
+          if-no-files-found: warn
           retention-days: 30

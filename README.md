@@ -2,9 +2,10 @@
 
 Minecraft Java **26.3**, NeoForge **26.3.0.76 or later**, Java **25**.
 
-Version **0.2.7-alpha** fixes the floating selection cage while retaining the
-0.2.6 flat-roof greenhouse, transparent side panels, internal pot, distinct
-automatic base, menu and crop mechanics.
+Version **0.2.8-alpha** consolidates persistence, automatic transfers and removal
+drops. It retains the 0.2.7 selection correction, detailed flat-roof greenhouse,
+transparent side panels, internal pot, distinct automatic base, menu and crop
+mechanics. Existing 0.2.7 world data loads without a conversion.
 
 ## Build and verify
 
@@ -13,13 +14,25 @@ and `patch/` are historical inputs, no longer applied by CI.
 
 ```powershell
 ./gradlew.bat build
+./gradlew.bat integrationTest
 ./gradlew.bat runClient
 ```
 
 Python 3 is required for the asset regression checks in `check` (no packages are
 required). Override its location with `-PpythonExecutable=C:/path/to/python.exe`.
-The installable file is `build/libs/greenhouse-0.2.7-alpha.jar`.
+The installable file is `build/libs/greenhouse-0.2.8-alpha.jar`.
 Use one Greenhouse JAR at a time in the instance's `mods` folder.
+
+`integrationTest` launches the packaged JAR and a separate QA mod on an isolated,
+headless NeoForge server. It checks growth, fertilizer, full inventories, sided
+insertion, double chests, drops, server-side menu listeners, chunk unloading and
+disk reload. Its world stays under `build/integration`; results and server logs
+are written to `build/qa-results`. The QA mod is never part of the installable JAR.
+The harness accepts the Minecraft EULA for this local test server.
+
+See [0.2.8 consolidation](docs/consolidation-0.2.8.md) for reproduced defects,
+test results and the limits of server-only validation. Client rendering and real
+multiplayer network sessions still require separate verification.
 
 When cleaning, run `clean` in a separate invocation before `build`: NeoGradle
 7.1.39 expands its patch archive during configuration into `build/tmp`, so
@@ -45,4 +58,5 @@ border. The old underside plug also shared a coplanar down face with the base;
 that fully hidden face is removed. This is a separate geometry issue and does
 not explain the large rectangle above the roof.
 
-See `docs/validation.md` for evidence, build history and the exact test limits.
+See [0.2.7 rendering investigation](docs/validation.md) for the original evidence,
+build history and the exact visual test limits.

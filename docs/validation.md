@@ -1,4 +1,7 @@
-# Rendering investigation and validation
+# 0.2.7 rendering investigation and validation
+
+This is the historical 0.2.7 report. For subsequent persistence, inventory and
+removal fixes, see [0.2.8 consolidation](consolidation-0.2.8.md).
 
 ## Evidence recovered
 

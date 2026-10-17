@@ -1,0 +1,45 @@
+{
+  "minecraft": "26.3",
+  "neoforge": "26.3.0.76",
+  "mod_version": "0.2.8-alpha",
+  "results": {
+    "core": {
+      "growth_and_manual_harvest_once": "PASS",
+      "fertilizer_four_cycles": "PASS",
+      "invalid_soil_and_fertilizer_rejected": "PASS",
+      "progress_marks_chunk_dirty": "PASS",
+      "idle_automatic_does_not_dirty_chunk": "PASS",
+      "full_outputs_backpressure_and_resume": "PASS",
+      "target_stack_limit_no_item_loss": "PASS",
+      "target_up_face_is_respected": "PASS",
+      "full_target_does_not_consume_output": "PASS",
+      "furnace_top_does_not_accept_into_fuel_slot": "PASS",
+      "double_chest_uses_other_half": "PASS",
+      "removal_preserves_pending_harvest": "PASS",
+      "survival_break_drops_once": "PASS",
+      "manual_harvest_with_full_player_inventory": "PASS",
+      "two_player_menu_progress_sync_and_harvest": "PASS",
+      "shift_click_and_slot_rules": "PASS",
+      "serialization_roundtrip": "PASS"
+    },
+    "checkpoint": {
+      "persist_in_progress": "PASS",
+      "persist_blocked_mature": "PASS"
+    },
+    "benchmark": {
+      "machines": 256,
+      "simulated_server_ticks": 200,
+      "total_machine_ticks": 51200,
+      "average_ms_per_server_tick": 0.37013150000000006,
+      "scope": "256 active machines only; excludes full world tick, networking and rendering"
+    },
+    "unload": {
+      "in_progress_chunk_really_unloaded": "PASS",
+      "blocked_harvest_chunk_really_unloaded": "PASS"
+    },
+    "reload": {
+      "disk_reload_exact_progress": "PASS",
+      "disk_reload_pending_and_full_outputs": "PASS"
+    }
+  }
+}

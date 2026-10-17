@@ -7,24 +7,25 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import java.util.ArrayList;
 import java.util.List;
 
-/** Server-authoritative crops; 3 inputs + 9 products exposed through a vanilla GUI. */
+/** Server-authoritative crops; 3 inputs and 9 automatic output slots. */
 public class GreenhouseBlockEntity extends BlockEntity implements WorldlyContainer, net.minecraft.world.MenuProvider {
     // Slots 0 soil, 1 seed, 2 bone meal; 9..17 produced items.
-    // Unused slots in the vanilla 3-row chest GUI cannot accept input.
+    // Preserve the 27-slot serialized layout for existing alpha worlds.
     private final NonNullList<ItemStack> stacks=NonNullList.withSize(27,ItemStack.EMPTY);
     private final NonNullList<ItemStack> pending=NonNullList.withSize(9,ItemStack.EMPTY);
     private static final int[] TOP={0,1,2};
@@ -80,6 +81,9 @@ public class GreenhouseBlockEntity extends BlockEntity implements WorldlyContain
                 for (int i=0;i<be.pending.size();i++) be.pending.set(i, i<rolled.size() ? rolled.get(i) : ItemStack.EMPTY);
                 be.setChanged();
             }
+            // Persist every growth tick without sending comparator updates each
+            // tick. setChanged() remains appropriate for inventory transitions.
+            level.blockEntityChanged(pos);
             be.visualSync();
         }
         if (be.automatic() && be.mature && be.canStorePending()) {
@@ -144,24 +148,47 @@ public class GreenhouseBlockEntity extends BlockEntity implements WorldlyContain
         return false;
     }
     private void pushDown(Level level, BlockPos pos) {
-        BlockEntity below=level.getBlockEntity(pos.below());
-        if (!(below instanceof Container target) || below==this) return;
+        boolean hasOutput=false;
+        for (int i=9;i<18;i++) if (!stacks.get(i).isEmpty()) { hasOutput=true; break; }
+        if (!hasOutput) return;
+        BlockPos belowPos=pos.below();
+        BlockState belowState=level.getBlockState(belowPos);
+        Container target;
+        if (belowState.getBlock() instanceof WorldlyContainerHolder holder)
+            target=holder.getContainer(belowState,level,belowPos);
+        else if (level.getBlockEntity(belowPos) instanceof Container container)
+            target=container;
+        else return;
+        if (target instanceof ChestBlockEntity && belowState.getBlock() instanceof ChestBlock chest)
+            target=ChestBlock.getContainer(chest,belowState,level,belowPos,true);
+        if (target==null || target==this) return;
+        int[] destinations;
+        if (target instanceof WorldlyContainer sided) destinations=sided.getSlotsForFace(Direction.UP);
+        else {
+            destinations=new int[target.getContainerSize()];
+            for (int i=0;i<destinations.length;i++) destinations[i]=i;
+        }
+        boolean changed=false;
         for (int i=9;i<18;i++) {
             ItemStack source=stacks.get(i);
             if (source.isEmpty()) continue;
-            for (int dest=0;dest<target.getContainerSize() && !source.isEmpty();dest++) {
+            for (int dest : destinations) {
+                if (source.isEmpty()) break;
+                if (dest<0 || dest>=target.getContainerSize()) continue;
                 if (!target.canPlaceItem(dest,source)) continue;
+                if (target instanceof WorldlyContainer sided && !sided.canPlaceItemThroughFace(dest,source,Direction.UP)) continue;
                 ItemStack targetStack=target.getItem(dest);
+                int limit=target.getMaxStackSize(source);
                 if (targetStack.isEmpty()) {
-                    int count=Math.min(source.getCount(),source.getMaxStackSize());
-                    target.setItem(dest,source.copyWithCount(count));source.shrink(count);
+                    int count=Math.min(source.getCount(),limit);
+                    if (count>0) { target.setItem(dest,source.copyWithCount(count)); source.shrink(count); changed=true; }
                 } else if (ItemStack.isSameItemSameComponents(source,targetStack)) {
-                    int count=Math.min(source.getCount(),targetStack.getMaxStackSize()-targetStack.getCount());
-                    if (count>0) { targetStack.grow(count); source.shrink(count); target.setChanged(); }
+                    int count=Math.min(source.getCount(),Math.min(limit,targetStack.getMaxStackSize())-targetStack.getCount());
+                    if (count>0) { targetStack.grow(count); source.shrink(count); changed=true; }
                 }
             }
         }
-        setChanged();
+        if (changed) { target.setChanged(); setChanged(); }
     }
     private void visualSync() {
         if (level==null || level.isClientSide()) return;
@@ -170,7 +197,7 @@ public class GreenhouseBlockEntity extends BlockEntity implements WorldlyContain
         if (old.getValue(GreenhouseBlock.CROP)!=active || old.getValue(GreenhouseBlock.STAGE)!=stage)
             level.setBlock(worldPosition,old.setValue(GreenhouseBlock.CROP,active).setValue(GreenhouseBlock.STAGE,stage),3);
     }
-    /** On player break, return substrates, seeds, bone meal, and nine output stacks. */
+    /** Return stored inputs, outputs and any mature harvest when removed. */
     public void dropContentsForBreak(Level level, BlockPos pos) {
         for (ItemStack item : stacks) if (!item.isEmpty())
             net.minecraft.world.level.block.Block.popResource(level,pos,item.copy());
@@ -178,6 +205,12 @@ public class GreenhouseBlockEntity extends BlockEntity implements WorldlyContain
             net.minecraft.world.level.block.Block.popResource(level,pos,item.copy());
         clearContent();
         pending.replaceAll(x -> ItemStack.EMPTY);
+    }
+    @Override public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        // The removal lifecycle covers players, explosions and replacement.
+        // Drain both inventories before vanilla handles the now-empty container.
+        if (level!=null && !level.isClientSide()) dropContentsForBreak(level,pos);
+        super.preRemoveSideEffects(pos,state);
     }
     @Override public int getContainerSize() { return 27; }
     @Override public boolean isEmpty() { for (ItemStack s:stacks) if (!s.isEmpty()) return false; return true; }
@@ -207,8 +240,6 @@ public class GreenhouseBlockEntity extends BlockEntity implements WorldlyContain
     @Override public boolean canTakeItemThroughFace(int slot,ItemStack stack,Direction face) { return face==Direction.DOWN && slot>=9 && slot<18; }
     @Override public Component getDisplayName() { return Component.translatable(automatic()?"block.greenhouse.automatic_greenhouse":"block.greenhouse.greenhouse"); }
     @Override public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-        // Alpha GUI: vanilla chest inventory, first row: 3 inputs; second row: outputs (hopping).
-        // Manual harvest is Shift+right click; a custom 'Raccogli' button will come in the next UI revision.
         return new GreenhouseMenu(windowId,inventory,this);
     }
     @Override protected void saveAdditional(ValueOutput output) {
