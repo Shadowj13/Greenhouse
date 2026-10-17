@@ -21,7 +21,7 @@ jobs:
           python-version: '3.13'
       - name: Build and run model regressions
         shell: pwsh
-        run: ./gradlew.bat clean build --console=plain
+        run: ./gradlew.bat build --console=plain
       - name: Hash installable JAR
         shell: pwsh
         run: |

@@ -23,7 +23,13 @@ tasks.register('verifyModels', Exec) {
     workingDir projectDir
     commandLine providers.gradleProperty('pythonExecutable').getOrElse('python'), 'tests/verify_models.py'
 }
-tasks.named('check') { dependsOn 'verifyModels' }
+tasks.register('verifyJar', Exec) {
+    dependsOn tasks.named('jar')
+    workingDir projectDir
+    commandLine providers.gradleProperty('pythonExecutable').getOrElse('python'),
+        'tests/verify_jar.py', tasks.named('jar').get().archiveFile.get().asFile.absolutePath
+}
+tasks.named('check') { dependsOn 'verifyModels', 'verifyJar' }
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 }

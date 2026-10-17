@@ -12,7 +12,7 @@ The canonical, editable project is now at the repository root. The original ZIP
 and `patch/` are historical inputs, no longer applied by CI.
 
 ```powershell
-./gradlew.bat clean build
+./gradlew.bat build
 ./gradlew.bat runClient
 ```
 
@@ -20,6 +20,10 @@ Python 3 is required for the asset regression checks in `check` (no packages are
 required). Override its location with `-PpythonExecutable=C:/path/to/python.exe`.
 The installable file is `build/libs/greenhouse-0.2.7-alpha.jar`.
 Use one Greenhouse JAR at a time in the instance's `mods` folder.
+
+When cleaning, run `clean` in a separate invocation before `build`: NeoGradle
+7.1.39 expands its patch archive during configuration into `build/tmp`, so
+`clean build` in one invocation deletes that input before `neoFormSetup`.
 
 ## Rendering correction
 
