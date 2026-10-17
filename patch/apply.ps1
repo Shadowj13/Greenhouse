@@ -15,7 +15,7 @@ $gradleProps = Join-Path $base 'gradle.properties'
 $p = [System.IO.File]::ReadAllText($gradleProps)
 $p = $p.Replace('mod_id=bonsai_greenhouse','mod_id=greenhouse')
 $p = $p.Replace('mod_name=Bonsai Greenhouse','mod_name=Greenhouse')
-$p = $p.Replace('mod_version=0.1.0-alpha','mod_version=0.2.2-alpha')
+$p = $p.Replace('mod_version=0.1.0-alpha','mod_version=0.2.3-alpha')
 [System.IO.File]::WriteAllText($gradleProps,$p,[System.Text.UTF8Encoding]::new($false))
 
 # Replace the placeholder vanilla 27-slot chest menu with the new 3-input GUI
@@ -81,7 +81,7 @@ $en = @'
   "gui.greenhouse.growing": "Growing",
   "gui.greenhouse.soil": "Soil",
   "gui.greenhouse.plant": "Plant",
-  "gui.greenhouse.fertilizer": "Bone",
+  "gui.greenhouse.fertilizer": "Bone Meal",
   "gui.greenhouse.harvest": "Harvest",
   "gui.greenhouse.storage": "Products",
   "gui.greenhouse.bonus": "Boost",
@@ -125,4 +125,6 @@ foreach ($name in @('auto_planks','auto_planks_edge')) {
 $languageDir = Join-Path $resources 'assets\greenhouse\lang'
 [System.IO.File]::WriteAllText((Join-Path $languageDir 'en_us.json'),$en,[System.Text.UTF8Encoding]::new($false))
 [System.IO.File]::WriteAllText((Join-Path $languageDir 'it_it.json'),$it,[System.Text.UTF8Encoding]::new($false))
-Write-Host 'Greenhouse 0.2.2: short title, corrected translation keys, refined GUI applied.'
+& (Join-Path $PSScriptRoot 'clean_models.ps1')
+if ($LASTEXITCODE -ne 0) { throw 'Geometry cleanup failed' }
+Write-Host 'Greenhouse 0.2.3: readable input labels, simplified outline and cleaner glass applied.'
