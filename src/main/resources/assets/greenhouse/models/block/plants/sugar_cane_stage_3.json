@@ -1,0 +1,144 @@
+{
+  "textures": {
+    "particle": "greenhouse:block/planks",
+    "sugar_cane": "greenhouse:block/sugar_cane"
+  },
+  "elements": [
+    {
+      "from": [
+        7.0,
+        5.0,
+        7.6
+      ],
+      "to": [
+        8.05,
+        12.7,
+        8.65
+      ],
+      "faces": {
+        "down": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        9.0,
+        5.0,
+        8.7
+      ],
+      "to": [
+        10.05,
+        12.0,
+        9.75
+      ],
+      "faces": {
+        "down": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#sugar_cane",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

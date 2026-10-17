@@ -1,0 +1,22 @@
+# Changelog
+
+## 0.2.8-alpha
+
+- Save growing progress between visual stage transitions.
+- Avoid dirtying unchanged empty automatic greenhouses.
+- Preserve items when the target has a smaller stack limit, respect upper-face
+  insertion rules and use both halves of a double chest.
+- Drop the pending mature harvest and stored items once on removal.
+- Add isolated live server tests, restart and chunk unload checks, old-world
+  migration checks and reproducible JAR packaging.
+- Preserve the 0.2.7 model, textures, GUI and crop rules.
+
+## 0.2.7-alpha
+
+- Align the selection cuboid with the opaque posts and flat roof rim.
+- Use four transparent double-sided glass planes and remove one hidden
+  coplanar underside face, keeping the detailed one-block model and pot.
+- Recover the actual 0.2.6 assets, retain its GUI and crop behavior, and promote
+  root project sources for reproducible builds instead of legacy ZIP patching.
+
+Validation details and explicit client-test limits are in `docs/`.

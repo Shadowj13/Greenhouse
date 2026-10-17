@@ -1,0 +1,13 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="All Rights Reserved"
+[[mods]]
+modId="greenhouse_qa"
+version="1.0.0"
+displayName="Greenhouse automated consolidation tests"
+[[dependencies.greenhouse_qa]]
+modId="greenhouse"
+type="required"
+versionRange="[0,)"
+ordering="AFTER"
+side="SERVER"

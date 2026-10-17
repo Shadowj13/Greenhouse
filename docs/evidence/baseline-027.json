@@ -1,0 +1,31 @@
+{
+  "minecraft": "26.3",
+  "neoforge": "26.3.0.76",
+  "mod_version": "0.2.7-alpha",
+  "results": {
+    "core": {
+      "growth_and_manual_harvest_once": "PASS",
+      "fertilizer_four_cycles": "PASS",
+      "invalid_soil_and_fertilizer_rejected": "PASS",
+      "progress_marks_chunk_dirty": "FAIL: java.lang.AssertionError: in-progress tick can be skipped by chunk saving",
+      "idle_automatic_does_not_dirty_chunk": "FAIL: java.lang.AssertionError: idle machine repeatedly marks an unchanged inventory dirty",
+      "full_outputs_backpressure_and_resume": "PASS",
+      "target_stack_limit_no_item_loss": "FAIL: java.lang.AssertionError: target limit discarded source items",
+      "target_up_face_is_respected": "FAIL: java.lang.AssertionError: inserted through forbidden target face",
+      "full_target_does_not_consume_output": "PASS",
+      "removal_preserves_pending_harvest": "FAIL: java.lang.AssertionError: non-player removal lost pending mature harvest",
+      "survival_break_drops_once": "PASS",
+      "manual_harvest_with_full_player_inventory": "PASS",
+      "two_player_menu_progress_sync_and_harvest": "PASS",
+      "shift_click_and_slot_rules": "PASS",
+      "serialization_roundtrip": "PASS"
+    },
+    "benchmark": {
+      "machines": 256,
+      "simulated_server_ticks": 200,
+      "total_machine_ticks": 51200,
+      "average_ms_per_server_tick": 0.11026899999999999,
+      "scope": "256 active machines only; excludes full world tick, networking and rendering"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "textures": {
+    "particle": "greenhouse:block/planks",
+    "leaf": "greenhouse:block/leaf"
+  },
+  "elements": [
+    {
+      "from": [
+        6.38,
+        5.0,
+        6.38
+      ],
+      "to": [
+        9.62,
+        8.888,
+        9.62
+      ],
+      "faces": {
+        "down": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#leaf",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}
