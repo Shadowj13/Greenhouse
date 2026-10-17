@@ -42,6 +42,10 @@ public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMe
         g.fill(x+1,y+1,x+15,y+15,0xFF756E62);
     }
 
+    private void clearLabel(GuiGraphicsExtractor g, Component label, int centerX, int y) {
+        g.text(font,label,centerX-font.width(label)/2,y,0xFF1D1C18,false);
+    }
+
     @Override public void extractBackground(GuiGraphicsExtractor g,int mouseX,int mouseY,float delta) {
         super.extractBackground(g,mouseX,mouseY,delta);
         int x = leftPos, y = topPos;
@@ -52,16 +56,23 @@ public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMe
         g.fill(x,y,x+176,y+216,0xFFE1D6B9);
 
         // Title is deliberately short and independent of stale alpha-world translation keys.
-        g.fill(x+5,y+5,x+171,y+27,0xFF4C6449);
+        g.fill(x+5,y+5,x+171,y+21,0xFF4C6449);
         g.centeredText(font,Component.literal(menu.isAutomatic()?"Automatic Greenhouse":"Greenhouse"),
-                       x+88,y+12,0xFFFFFFFF);
+                       x+88,y+9,0xFFFFFFFF);
 
-        // Inputs: three aligned positions, each with its own header.
-        g.fill(x+7,y+23,x+169,y+59,0xFFCBBD9D);
-        g.centeredText(font,Component.translatable("gui.greenhouse.soil"),x+52,y+26,0xFF29241D);
-        g.centeredText(font,Component.translatable("gui.greenhouse.plant"),x+88,y+26,0xFF29241D);
-        g.centeredText(font,Component.translatable("gui.greenhouse.fertilizer"),x+124,y+26,0xFF29241D);
-        for (int i=0;i<3;i++) slot(g,x+44+i*36,y+39);
+        // The former green title bar overlapped the Soil caption.
+        // Make separate high-contrast header chips with NO font shadow, and
+        // leave enough horizontal space for the complete "Bone Meal" label.
+        g.fill(x+7,y+23,x+169,y+59,0xFFD4C6A7);
+        g.fill(x+10,y+24,x+54,y+36,0xFFF3E8D1);
+        g.fill(x+65,y+24,x+111,y+36,0xFFF3E8D1);
+        g.fill(x+116,y+24,x+169,y+36,0xFFF3E8D1);
+        clearLabel(g,Component.translatable("gui.greenhouse.soil"),x+32,y+26);
+        clearLabel(g,Component.translatable("gui.greenhouse.plant"),x+88,y+26);
+        clearLabel(g,Component.translatable("gui.greenhouse.fertilizer"),x+144,y+26);
+        slot(g,x+24,y+39);
+        slot(g,x+80,y+39);
+        slot(g,x+136,y+39);
 
         // Progress block. Percentage sits on the same line as its heading.
         g.fill(x+7,y+61,x+169,y+96,0xFFCBBF9F);
