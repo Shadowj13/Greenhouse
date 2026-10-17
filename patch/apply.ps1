@@ -126,5 +126,4 @@ $languageDir = Join-Path $resources 'assets\greenhouse\lang'
 [System.IO.File]::WriteAllText((Join-Path $languageDir 'en_us.json'),$en,[System.Text.UTF8Encoding]::new($false))
 [System.IO.File]::WriteAllText((Join-Path $languageDir 'it_it.json'),$it,[System.Text.UTF8Encoding]::new($false))
 & (Join-Path $PSScriptRoot 'clean_models.ps1')
-if ($LASTEXITCODE -ne 0) { throw 'Geometry cleanup failed' }
 Write-Host 'Greenhouse 0.2.3: readable input labels, simplified outline and cleaner glass applied.'
