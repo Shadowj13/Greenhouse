@@ -1,0 +1,213 @@
+{
+  "textures": {
+    "particle": "greenhouse:block/planks",
+    "poplar_wood": "greenhouse:block/poplar_wood",
+    "poplar_yellow_leaves": "greenhouse:block/poplar_yellow_leaves"
+  },
+  "elements": [
+    {
+      "from": [
+        7.61,
+        4.95,
+        7.61
+      ],
+      "to": [
+        8.39,
+        8.93,
+        8.39
+      ],
+      "faces": {
+        "down": {
+          "texture": "#poplar_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#poplar_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#poplar_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#poplar_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#poplar_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#poplar_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6.2,
+        7.53,
+        6.2
+      ],
+      "to": [
+        9.8,
+        9.83,
+        9.8
+      ],
+      "faces": {
+        "down": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6.704,
+        9.48,
+        6.704
+      ],
+      "to": [
+        9.296,
+        10.83,
+        9.296
+      ],
+      "faces": {
+        "down": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#poplar_yellow_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

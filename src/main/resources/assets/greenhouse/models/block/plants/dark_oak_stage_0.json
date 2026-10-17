@@ -1,0 +1,145 @@
+{
+  "textures": {
+    "particle": "greenhouse:block/planks",
+    "dark_oak_leaves": "greenhouse:block/dark_oak_leaves",
+    "dark_oak_wood": "greenhouse:block/dark_oak_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        7.7,
+        4.95,
+        7.7
+      ],
+      "to": [
+        8.3,
+        7.985,
+        8.3
+      ],
+      "faces": {
+        "down": {
+          "texture": "#dark_oak_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#dark_oak_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#dark_oak_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#dark_oak_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#dark_oak_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#dark_oak_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7.18,
+        7.585,
+        7.2
+      ],
+      "to": [
+        8.82,
+        8.585,
+        8.8
+      ],
+      "faces": {
+        "down": {
+          "texture": "#dark_oak_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#dark_oak_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#dark_oak_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#dark_oak_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#dark_oak_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#dark_oak_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

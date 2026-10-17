@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GGG",
+    "GPG",
+    "SSS"
+  ],
+  "key": {
+    "G": "minecraft:glass_pane",
+    "P": "minecraft:flower_pot",
+    "S": "#minecraft:wooden_slabs"
+  },
+  "result": {
+    "id": "greenhouse:greenhouse",
+    "count": 1
+  }
+}

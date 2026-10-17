@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GGG",
+    "GSG",
+    "BHB"
+  ],
+  "key": {
+    "G": "minecraft:glass_pane",
+    "S": "greenhouse:greenhouse",
+    "B": "minecraft:barrel",
+    "H": "minecraft:hopper"
+  },
+  "result": {
+    "id": "greenhouse:automatic_greenhouse",
+    "count": 1
+  }
+}

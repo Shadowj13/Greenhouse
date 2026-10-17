@@ -1,0 +1,16 @@
+{
+  "block.greenhouse.greenhouse": "Greenhouse",
+  "block.greenhouse.automatic_greenhouse": "Automatic Greenhouse",
+  "itemGroup.greenhouse": "Greenhouse",
+  "gui.greenhouse.progress": "Crescita",
+  "gui.greenhouse.growing": "In crescita",
+  "gui.greenhouse.soil": "Terreno",
+  "gui.greenhouse.plant": "Pianta",
+  "gui.greenhouse.fertilizer": "Ossa",
+  "gui.greenhouse.harvest": "Raccogli",
+  "gui.greenhouse.storage": "Prodotti",
+  "gui.greenhouse.bonus": "Bonus",
+  "gui.greenhouse.missing_plant": "Inserisci pianta",
+  "gui.greenhouse.invalid_soil": "Terreno non valido",
+  "gui.greenhouse.ready": "Pronto"
+}

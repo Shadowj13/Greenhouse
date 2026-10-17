@@ -1,0 +1,145 @@
+{
+  "textures": {
+    "particle": "greenhouse:block/planks",
+    "mangrove_leaves": "greenhouse:block/mangrove_leaves",
+    "mangrove_wood": "greenhouse:block/mangrove_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        7.7,
+        4.95,
+        7.7
+      ],
+      "to": [
+        8.3,
+        7.985,
+        8.3
+      ],
+      "faces": {
+        "down": {
+          "texture": "#mangrove_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#mangrove_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#mangrove_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#mangrove_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#mangrove_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#mangrove_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7.18,
+        7.585,
+        7.2
+      ],
+      "to": [
+        8.82,
+        8.585,
+        8.8
+      ],
+      "faces": {
+        "down": {
+          "texture": "#mangrove_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#mangrove_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#mangrove_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#mangrove_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#mangrove_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#mangrove_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.gradle.userdev' version '7.1.39'
+}
+
+version = mod_version
+group = mod_group_id
+base { archivesName = mod_id }
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+repositories {}
+
+runs {
+    configureEach {
+        workingDirectory project.layout.projectDirectory.dir('run').dir(name)
+        modSource project.sourceSets.main
+    }
+    client {}
+    server { argument '--nogui' }
+}
+
+tasks.register('verifyModels', Exec) {
+    workingDir projectDir
+    commandLine providers.gradleProperty('pythonExecutable').getOrElse('python'), 'tests/verify_models.py'
+}
+tasks.named('check') { dependsOn 'verifyModels' }
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+}
+
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
+tasks.withType(ProcessResources).configureEach {
+    def props = [minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range, neo_version: neo_version, mod_id: mod_id, mod_name: mod_name, mod_version: mod_version, mod_license: mod_license]
+    inputs.properties props
+    filesMatching('META-INF/neoforge.mods.toml') { expand props }
+}

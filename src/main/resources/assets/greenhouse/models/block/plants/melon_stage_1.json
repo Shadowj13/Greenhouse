@@ -1,0 +1,76 @@
+{
+  "textures": {
+    "particle": "greenhouse:block/planks",
+    "crop_green": "greenhouse:block/crop_green"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        5.0,
+        7.4
+      ],
+      "to": [
+        9.4,
+        5.55,
+        8.1
+      ],
+      "faces": {
+        "down": {
+          "texture": "#crop_green",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#crop_green",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#crop_green",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#crop_green",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#crop_green",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#crop_green",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

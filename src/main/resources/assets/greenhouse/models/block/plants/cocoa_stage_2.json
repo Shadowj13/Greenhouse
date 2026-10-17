@@ -1,0 +1,145 @@
+{
+  "textures": {
+    "particle": "greenhouse:block/planks",
+    "cocoa_pod": "greenhouse:block/cocoa_pod",
+    "jungle_wood": "greenhouse:block/jungle_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        7.1,
+        5.0,
+        7.2
+      ],
+      "to": [
+        8.9,
+        9.2,
+        8.8
+      ],
+      "faces": {
+        "down": {
+          "texture": "#jungle_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#jungle_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#jungle_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#jungle_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#jungle_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#jungle_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        8.9,
+        7.0,
+        7.2
+      ],
+      "to": [
+        11.068,
+        9.168,
+        9.368
+      ],
+      "faces": {
+        "down": {
+          "texture": "#cocoa_pod",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#cocoa_pod",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#cocoa_pod",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cocoa_pod",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#cocoa_pod",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#cocoa_pod",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

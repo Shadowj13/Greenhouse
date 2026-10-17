@@ -1,0 +1,145 @@
+{
+  "textures": {
+    "particle": "greenhouse:block/planks",
+    "birch_wood": "greenhouse:block/birch_wood",
+    "brown_mushroom": "greenhouse:block/brown_mushroom"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        5.0,
+        7.5
+      ],
+      "to": [
+        8.5,
+        9.12,
+        8.5
+      ],
+      "faces": {
+        "down": {
+          "texture": "#birch_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#birch_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#birch_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#birch_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#birch_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#birch_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5.021,
+        8.67,
+        5.021
+      ],
+      "to": [
+        10.979,
+        9.62,
+        10.979
+      ],
+      "faces": {
+        "down": {
+          "texture": "#brown_mushroom",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#brown_mushroom",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#brown_mushroom",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#brown_mushroom",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#brown_mushroom",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#brown_mushroom",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

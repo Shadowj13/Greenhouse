@@ -1,0 +1,145 @@
+{
+  "textures": {
+    "particle": "greenhouse:block/planks",
+    "cherry_leaves": "greenhouse:block/cherry_leaves",
+    "cherry_wood": "greenhouse:block/cherry_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        7.7,
+        4.95,
+        7.7
+      ],
+      "to": [
+        8.3,
+        7.985,
+        8.3
+      ],
+      "faces": {
+        "down": {
+          "texture": "#cherry_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#cherry_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#cherry_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cherry_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#cherry_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#cherry_wood",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7.18,
+        7.585,
+        7.2
+      ],
+      "to": [
+        8.82,
+        8.585,
+        8.8
+      ],
+      "faces": {
+        "down": {
+          "texture": "#cherry_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#cherry_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#cherry_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cherry_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#cherry_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#cherry_leaves",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}
