@@ -36,7 +36,7 @@ public final class GreenhouseMenu extends AbstractContainerMenu {
         checkContainerDataCount(data, 4);
         storage.startOpen(inventory.player);
 
-        addSlot(new Slot(storage,0,44,39) {
+        addSlot(new Slot(storage,0,24,39) {
             @Override public boolean mayPlace(ItemStack stack) {
                 for (Crop crop: Crop.values()) if (crop.accepts(stack)) return true;
                 return false;
@@ -47,7 +47,7 @@ public final class GreenhouseMenu extends AbstractContainerMenu {
             @Override public boolean mayPlace(ItemStack stack) { return Crop.of(stack) != Crop.EMPTY; }
             @Override public int getMaxStackSize() { return 1; }
         });
-        addSlot(new Slot(storage,2,116,39) {
+        addSlot(new Slot(storage,2,136,39) {
             @Override public boolean mayPlace(ItemStack stack) { return stack.is(Items.BONE_MEAL); }
         });
         if (automatic) for (int i=0;i<9;i++) {
