@@ -3,7 +3,7 @@
 ## Evidence recovered
 
 - Repository baseline: `f7c6823648698c1d8b06c0aeb26b023bfecb6092` (0.2.3).
-- GitHub Actions runs 1â€“18 recovered: 15 succeeded; 1, 2 and 17 failed.
+- GitHub Actions runs 1–18 recovered: 15 succeeded; 1, 2 and 17 failed.
   Run 18 succeeded after a PowerShell exit-status correction. These builds do
   not establish that a graphical test was performed.
 - Screenshots: `2026-10-17_15.42.48.png`, `16.02.00.png`, `16.03.02.png`,
@@ -18,7 +18,7 @@
 
 | Layer | Finding | Evidence / limit |
 | --- | --- | --- |
-| Minecraft selection | Confirmed mismatch: old box `(0.45,0,0.45)â€“(15.55,15.55,15.55)` versus lid top `14.85` and inset posts `1â€“1.9` / `14.1â€“15`. | `javap` inspection of the actual 0.2.6 class; JSON geometry; suspended rectangle in the targeted screenshot. |
+| Minecraft selection | Confirmed mismatch: old box `(0.45,0,0.45)–(15.55,15.55,15.55)` versus lid top `14.85` and inset posts `1–1.9` / `14.1–15`. | `javap` inspection of the actual 0.2.6 class; JSON geometry; suspended rectangle in the targeted screenshot. |
 | Mesh | Old glass had opposing faces separated by 0.01 model units; no same-facing duplicate panel found. A hidden automatic underside face shared Y=0 with the base. | Geometry audit. Separation alone is not proof of visible z-fighting. Changed to true planes; hidden duplicate removed. |
 | Alpha / texture | Light blue, partially transparent pixels; no black border. 26.3 material alpha chooses translucency per texture. | PNG channel inspection; official NeoForge model specification. Texture simplification cannot fix selection geometry. |
 | Other mods | Jade provides the top information panel. Presence of Jade/JEI does not prove responsibility for wire edges. | Installed mod names and screenshot appearance. Any modpack compatibility result must be stated separately from clean-client results. |
