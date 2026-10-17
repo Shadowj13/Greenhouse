@@ -75,12 +75,14 @@ python tests/run_server_tests.py --jar C:/path/to/greenhouse-0.2.7-alpha.jar --c
 python tests/run_server_tests.py --reload-only --report-name migration-to-028
 ```
 
-## Limits
+## Scope of this initial server report
 
 The two-viewer check uses fake players, real server menus and their data
 listeners. It verifies server-side synchronization and prevents double harvest;
 it does not test packets, latency, separate client processes or GUI rendering.
-Client visuals, new in-game screenshots and Jade/JEI compatibility are not
-reported as passed. The earlier desktop test was interrupted with Escape and
-has not been repeated. No claim is made for shaders, resource packs or arbitrary
-third-party storage capabilities beyond the tested vanilla container contracts.
+At the time of these initial checks, client visuals and Jade/JEI compatibility
+were incomplete after a desktop interruption. The subsequent
+[client acceptance run](client-acceptance-0.2.8.md) records the completed visual
+and GUI checks and a separate two-client loopback test. No claim is made for
+shaders, resource packs or arbitrary third-party storage capabilities beyond
+the tested vanilla container contracts.

@@ -30,9 +30,9 @@ disk reload. Its world stays under `build/integration`; results and server logs
 are written to `build/qa-results`. The QA mod is never part of the installable JAR.
 The harness accepts the Minecraft EULA for this local test server.
 
-See [0.2.8 consolidation](docs/consolidation-0.2.8.md) for reproduced defects,
-test results and the limits of server-only validation. Client rendering and real
-multiplayer network sessions still require separate verification.
+See [0.2.8 consolidation](docs/consolidation-0.2.8.md) for reproduced defects and
+server regression results, and [client acceptance](docs/client-acceptance-0.2.8.md)
+for the subsequent graphics, GUI, Jade/JEI and two-client loopback checks.
 
 When cleaning, run `clean` in a separate invocation before `build`: NeoGradle
 7.1.39 expands its patch archive during configuration into `build/tmp`, so

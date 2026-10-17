@@ -1,0 +1,54 @@
+{
+  "artifact": "greenhouse-0.2.8-alpha.jar",
+  "jar_sha256": "35f378718cf4daba1d0024a2cd1c25321d3008b42f4435b65f7c8c8e3e7d1efc",
+  "visual_date": "2026-10-17",
+  "network_load_date": "2026-10-18",
+  "clean_client": {
+    "minecraft": "26.3",
+    "neoforge": "26.3.0.76",
+    "language": "en_us",
+    "status": "PASS"
+  },
+  "compatibility_client": {
+    "minecraft": "26.3",
+    "neoforge": "26.3.0.85",
+    "jade": "26.3.5",
+    "jei": "31.13.0.71",
+    "mezz_config": "0.6.8",
+    "language": "it_it",
+    "status": "PASS"
+  },
+  "network": {
+    "networksetup": {
+      "two_real_clients_open_same_menu": "PASS"
+    },
+    "networkassert": {
+      "real_clients_remain_on_greenhouse_menu": "PASS",
+      "real_client_harvest_packet_delivers_exactly_once": "PASS",
+      "network_harvest_resets_authoritative_state": "PASS"
+    }
+  },
+  "natural_tick_load": {
+    "soaksetup": {
+      "prepare_256_naturally_ticking_machines": "PASS"
+    },
+    "soakassert": {
+      "machines": 256,
+      "natural_world_ticks": 6401,
+      "wall_seconds": 318.6502063,
+      "server_average_tick_ms": 0.238505,
+      "scope": "Full local server ticks with 256 forced-loaded machines; wall time includes any explicit tick freeze",
+      "at_least_6000_natural_world_ticks": "PASS",
+      "all_256_machines_tick_and_preserve_exact_log_yield": "PASS",
+      "minimum_machine_ticks": 6365,
+      "maximum_initial_chunk_activation_ticks": 36
+    }
+  },
+  "screenshot_count": 16,
+  "limits": [
+    "Loopback network with two development client processes; Internet authentication and latency not tested.",
+    "No shaders, alternate resource packs or arbitrary third-party storage mods tested.",
+    "Natural-tick load run is bounded to about five active minutes; trailing tick time is not a full-run average."
+  ],
+  "product_code_changed_during_acceptance": false
+}
