@@ -1,0 +1,117 @@
+{
+  "artifact": "greenhouse-0.2.8-alpha.jar",
+  "screenshots": [
+    {
+      "file": "01-clean-manual-front.png",
+      "sha256": "d836356ab14a63adf552b58c271aa93e86a02ad5a0a5e3cbd72f97e16ba16e1e",
+      "bytes": 676676,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "02-clean-manual-angle.png",
+      "sha256": "c050101cc7652ab01119dd1180aa43836815fcdb9c33b25abebdd13eb5329888",
+      "bytes": 928657,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "03-clean-automatic-chest.png",
+      "sha256": "7f2065b6517d93f11671d787ee801d51bc893691916443b05b561b7171b2fc8e",
+      "bytes": 371784,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "04-clean-gui-ready.png",
+      "sha256": "0b5c49043c94b39ebc83756de3af96ca0bc82d07252c6aff7145efc341bdf009",
+      "bytes": 352230,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "05-clean-gui-harvested.png",
+      "sha256": "859957245ed11796080ec38dbc58142511abea3e9852ea2f5714111536183435",
+      "bytes": 355461,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "06-clean-chest-reference.png",
+      "sha256": "b4c9c4893e6d7e157df68af1c8d529a1e9fa4b10a8039643209e48f573965816",
+      "bytes": 614227,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "07-clean-night.png",
+      "sha256": "3c85a3e4a70ebc35cb0c57a6b84718d1f2d52f935cf4fd06d178731d541abb8b",
+      "bytes": 579238,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "08-clean-gui-empty.png",
+      "sha256": "94f719cd007ef25c8156105db1944e88722d5a72fdb7a6335b695ebaf9638fe7",
+      "bytes": 317666,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "09-jade-automatic-outline.png",
+      "sha256": "fe8361261c93260ff4134a92fce96665fd4848df52761adab847476bf465a8ce",
+      "bytes": 565190,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "10-jei-automatic-gui-it.png",
+      "sha256": "2a49541a8fd0f7841e17893ec17e48e373f2d7d739e041080230f8bd9ece437a",
+      "bytes": 395406,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "11-jade-manual-angle.png",
+      "sha256": "ec4bd2b6984f89d6989b6c01f3f40d319a1a7336ce700dea7230a37458dcadb3",
+      "bytes": 935105,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "12-jei-manual-gui-it.png",
+      "sha256": "b92741137d2b5d70045dad805a2913d83ff7bae4ea7d37899235121a8fc7cbcd",
+      "bytes": 562282,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "13-network-client1-ready.png",
+      "sha256": "eaa18bb0e24289731fa441e931eb7bce17b460b805e7c631d511389664b31c9a",
+      "bytes": 134489,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "14-network-client2-ready.png",
+      "sha256": "e369001c02eb692ea5052e6e2bbfee5f8dbe41f9e257cebe9a4584d9cd3a0d1b",
+      "bytes": 124966,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "15-network-client1-harvested.png",
+      "sha256": "16ef3415e68cde521b1918194190c36357e3912a131226230b179be891aa9a65",
+      "bytes": 139146,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "16-network-client2-synced.png",
+      "sha256": "9d703482e6e96de1bb962676fc7d75e191ffe8d05f98fc9c865ba966ae33f8f1",
+      "bytes": 124714,
+      "width": 1280,
+      "height": 800
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Test-world datapack for Minecraft 26.3. Copy into an isolated world datapacks folder and run reload. It prepares a platform, greenhouse/chest fixtures and camera views selected by hotbar slots 1 to 7. It clears the test player inventory and force-loads fixture chunks. Use only an isolated test world.

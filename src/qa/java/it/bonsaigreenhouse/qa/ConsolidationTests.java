@@ -35,13 +35,17 @@ public final class ConsolidationTests {
     private ServerLevel level;
     private int next;
     private final Map<String,Object> results = new LinkedHashMap<>();
+    private final BlockPos networkPos = new BlockPos(X,Y,Z+64);
+    private final List<BlockPos> soakPositions = new ArrayList<>();
+    private long soakStartTick, soakStartNanos;
 
     public ConsolidationTests() {
         NeoForge.EVENT_BUS.addListener(this::commands);
     }
     private void commands(RegisterCommandsEvent event) {
         var root = Commands.literal("greenhouseqa");
-        for (String phase : List.of("core", "checkpoint", "unload", "reload", "benchmark"))
+        for (String phase : List.of("core", "checkpoint", "unload", "reload", "benchmark",
+                "networksetup", "networkassert", "soaksetup", "soakstats", "soakassert"))
             root.then(Commands.literal(phase).executes(c -> run(c.getSource(), phase)));
         event.getDispatcher().register(root);
     }
@@ -53,6 +57,11 @@ public final class ConsolidationTests {
             case "unload" -> unloaded();
             case "reload" -> reload();
             case "benchmark" -> benchmark();
+            case "networksetup" -> networkSetup(source);
+            case "networkassert" -> networkAssert(source);
+            case "soaksetup" -> soakSetup();
+            case "soakstats" -> soakStats(source);
+            case "soakassert" -> soakAssert(source);
         }
         System.out.println("GREENHOUSE_QA_RESULT " + new Gson().toJson(Map.of("phase",phase,"results",results)));
         return results.values().stream().anyMatch(v -> v instanceof String s && s.startsWith("FAIL")) ? 0 : 1;
@@ -60,6 +69,90 @@ public final class ConsolidationTests {
     private void test(String name, Runnable body) {
         try { body.run(); results.put(name, "PASS"); }
         catch (Throwable ex) { results.put(name, "FAIL: " + ex); ex.printStackTrace(); }
+    }
+    private List<net.minecraft.server.level.ServerPlayer> networkPlayers(CommandSourceStack source) {
+        return source.getServer().getPlayerList().getPlayers().stream()
+            .filter(p->p.getPlainTextName().equals("GreenhouseNetA") || p.getPlainTextName().equals("GreenhouseNetB")).toList();
+    }
+    private void networkSetup(CommandSourceStack source) {
+        test("two_real_clients_open_same_menu",()->{
+            var players=networkPlayers(source);
+            require(players.size()==2,"expected two connected real network clients");
+            level.setChunkForced(networkPos.getX()>>4,networkPos.getZ()>>4,true);
+            for(int x=-2;x<=4;x++) for(int z=-2;z<=5;z++)
+                level.setBlock(networkPos.offset(x,-1,z),Blocks.SMOOTH_STONE.defaultBlockState(),3);
+            var be=greenhouse(networkPos,false); inputs(be,Items.DIRT,Items.OAK_SAPLING,64); tick(be,450);
+            int i=0;
+            for(var p:players) {
+                p.getInventory().clearContent(); p.setGameMode(GameType.CREATIVE);
+                p.teleportTo(level,networkPos.getX()+0.5+i++,Y,networkPos.getZ()+3.2,Set.of(),180,20,true);
+                require(p.openMenu(be).isPresent(),"server did not open menu for "+p.getPlainTextName());
+                p.containerMenu.broadcastChanges();
+            }
+            require(be.dataAccess().get(2)==1 && be.getItem(2).getCount()==63,"network fixture not mature");
+        });
+    }
+    private void networkAssert(CommandSourceStack source) {
+        test("real_clients_remain_on_greenhouse_menu",()->{
+            var players=networkPlayers(source); require(players.size()==2,"network client disconnected");
+            for(var p:players) require(p.containerMenu instanceof GreenhouseMenu && p.containerMenu.stillValid(p),"client menu closed or invalid");
+        });
+        test("real_client_harvest_packet_delivers_exactly_once",()->{
+            var players=networkPlayers(source);
+            require(players.size()==2 && players.stream().mapToInt(p->p.getInventory().countItem(Items.OAK_LOG)).sum()==2,"network harvest lost or duplicated logs");
+        });
+        test("network_harvest_resets_authoritative_state",()->{
+            var be=(GreenhouseBlockEntity)level.getBlockEntity(networkPos);
+            require(be!=null && be.dataAccess().get(2)==0 && be.dataAccess().get(0)==0,"maturity did not reset while ticks frozen");
+            require(be.getItem(2).getCount()==63 && be.dataAccess().get(3)==3,"network harvest spent fertilizer twice");
+        });
+    }
+    private void soakSetup() {
+        test("prepare_256_naturally_ticking_machines",()->{
+            soakPositions.clear();
+            for(int cx=(X+256)>>4;cx<=(X+286)>>4;cx++) for(int cz=Z>>4;cz<=(Z+30)>>4;cz++) level.setChunkForced(cx,cz,true);
+            for(int x=0;x<16;x++) for(int z=0;z<16;z++) {
+                BlockPos p=new BlockPos(X+256+x*2,Y,Z+z*2);
+                var be=greenhouse(p,true); inputs(be,Items.DIRT,Items.OAK_SAPLING,64); soakPositions.add(p);
+            }
+            soakStartTick=level.getGameTime(); soakStartNanos=System.nanoTime();
+        });
+    }
+    private void soakStats(CommandSourceStack source) {
+        results.put("machines",soakPositions.size()); results.put("natural_world_ticks",level.getGameTime()-soakStartTick);
+        results.put("wall_seconds",(System.nanoTime()-soakStartNanos)/1_000_000_000.0);
+        results.put("server_average_tick_ms",source.getServer().getAverageTickTimeNanos()/1_000_000.0);
+        results.put("scope","Full local server ticks with 256 forced-loaded machines; wall time includes any explicit tick freeze");
+    }
+    private void soakAssert(CommandSourceStack source) {
+        soakStats(source);
+        test("at_least_6000_natural_world_ticks",()->require(level.getGameTime()-soakStartTick>=6000,"soak duration not reached"));
+        long[] minimumTicks={Long.MAX_VALUE}, maximumActivation={0};
+        test("all_256_machines_tick_and_preserve_exact_log_yield",()->{
+            require(soakPositions.size()==256,"soak fixtures missing");
+            long ticks=level.getGameTime()-soakStartTick;
+            for(BlockPos p:soakPositions) {
+                var be=(GreenhouseBlockEntity)level.getBlockEntity(p);
+                require(be!=null,"soak block entity missing at "+p);
+                // Force-loaded chunks become ticking asynchronously. Infer cycle
+                // starts from fertilizer/charge state independently of output,
+                // then check exact output and a bounded initial activation lag.
+                long started=4L*(64-be.getItem(2).getCount())-be.dataAccess().get(3);
+                long completed=started-(be.dataAccess().get(1)>0?1:0);
+                long actualTicks=completed*450+be.dataAccess().get(0);
+                require(actualTicks>=6000 && ticks-actualTicks>=0 && ticks-actualTicks<=40,
+                    "unexpected ticking gap at "+p+": world="+ticks+", machine="+actualTicks);
+                require(be.countItem(Items.OAK_LOG)==2*completed,
+                    "incorrect natural yield at "+p+": expected="+(2*completed)+", actual="+be.countItem(Items.OAK_LOG));
+                require(be.getItem(0).getCount()==1 && be.getItem(1).getCount()==1,"soak consumed substrate/plant");
+                minimumTicks[0]=Math.min(minimumTicks[0],actualTicks);
+                maximumActivation[0]=Math.max(maximumActivation[0],ticks-actualTicks);
+            }
+        });
+        if(minimumTicks[0]!=Long.MAX_VALUE) {
+            results.put("minimum_machine_ticks",minimumTicks[0]);
+            results.put("maximum_initial_chunk_activation_ticks",maximumActivation[0]);
+        }
     }
     private static void require(boolean condition, String message) {
         if (!condition) throw new AssertionError(message);
