@@ -53,7 +53,7 @@ public enum Crop implements StringRepresentable {
     @Override public String getSerializedName() { return name().toLowerCase(Locale.ROOT); }
     private static String id(ItemStack stack) {
         Identifier name = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        return name == null ? "" : name.getPath();
+        return name != null && name.getNamespace().equals("minecraft") ? name.getPath() : "";
     }
     public static Crop of(ItemStack stack) {
         if (stack.isEmpty()) return EMPTY;
@@ -99,6 +99,7 @@ public enum Crop implements StringRepresentable {
         return products;
     }
     public boolean isTree() { return ordinal()>0 && ordinal()<=WARPED_FUNGUS.ordinal(); }
+    public boolean isPoplar() { return this==POPLAR_RED || this==POPLAR_ORANGE || this==POPLAR_YELLOW; }
     private String leafId() {
         if (this==AZALEA) return "azalea_leaves";
         if (this==FLOWERING_AZALEA) return "flowering_azalea_leaves";

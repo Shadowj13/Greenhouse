@@ -2,10 +2,12 @@
 
 Minecraft Java **26.3**, NeoForge **26.3.0.76 or later**, Java **25**.
 
-Version **0.2.8-alpha** consolidates persistence, automatic transfers and removal
-drops. It retains the 0.2.7 selection correction, detailed flat-roof greenhouse,
-transparent side panels, internal pot, distinct automatic base, menu and crop
-mechanics. Existing 0.2.7 world data loads without a conversion.
+Version **0.2.9-alpha** makes all three poplar colors reachable and retains the
+chosen color through growth, harvests and reloads. Crop inputs now match the
+vanilla namespace, avoiding accidental acceptance of similarly named mod items.
+It retains the detailed flat-roof model, transparent panels, pot, automatic base,
+GUI, recipes, yields and timing, together with the 0.2.8 persistence and transfer
+fixes. Existing 0.2.8 world data loads without conversion.
 
 ## Build and verify
 
@@ -20,17 +22,20 @@ and `patch/` are historical inputs, no longer applied by CI.
 
 Python 3 is required for the asset regression checks in `check` (no packages are
 required). Override its location with `-PpythonExecutable=C:/path/to/python.exe`.
-The installable file is `build/libs/greenhouse-0.2.8-alpha.jar`.
+The installable file is `build/libs/greenhouse-0.2.9-alpha.jar`.
 Use one Greenhouse JAR at a time in the instance's `mods` folder.
 
 `integrationTest` launches the packaged JAR and a separate QA mod on an isolated,
 headless NeoForge server. It checks growth, fertilizer, full inventories, sided
-insertion, double chests, drops, server-side menu listeners, chunk unloading and
-disk reload. Its world stays under `build/integration`; results and server logs
+insertion, double chests, drops, server-side menu listeners, chunk unloading,
+disk reload, all 30 crop/color entries and both crafting recipes (151 checks).
+Its world stays under `build/integration`; results and server logs
 are written to `build/qa-results`. The QA mod is never part of the installable JAR.
 The harness accepts the Minecraft EULA for this local test server.
 
-See [0.2.8 consolidation](docs/consolidation-0.2.8.md) for reproduced defects and
+See [0.2.9 crop acceptance](docs/crop-acceptance-0.2.9.md) for the new fixes,
+negative baseline, recipe and crop matrix, and native client screenshots.
+See [0.2.8 consolidation](docs/consolidation-0.2.8.md) for earlier defects and
 server regression results, and [client acceptance](docs/client-acceptance-0.2.8.md)
 for the subsequent graphics, GUI, Jade/JEI and two-client loopback checks.
 

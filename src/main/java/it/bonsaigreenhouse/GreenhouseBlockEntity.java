@@ -57,7 +57,19 @@ public class GreenhouseBlockEntity extends BlockEntity implements WorldlyContain
     }
     private Crop selected() {
         Crop crop=Crop.of(stacks.get(1));
-        return crop!=Crop.EMPTY && crop.accepts(stacks.get(0)) ? crop : Crop.EMPTY;
+        if (crop==Crop.EMPTY || !crop.accepts(stacks.get(0))) return Crop.EMPTY;
+        if (crop==Crop.POPLAR_RED) {
+            // Vanilla has one sapling and three equally likely leaf colors.
+            // Choose only when establishing a tree; retain its serialized
+            // color through subsequent ticks, harvests and world reloads.
+            if (active.isPoplar()) return active;
+            return switch(level.getRandom().nextInt(3)) {
+                case 0 -> Crop.POPLAR_RED;
+                case 1 -> Crop.POPLAR_ORANGE;
+                default -> Crop.POPLAR_YELLOW;
+            };
+        }
+        return crop;
     }
     public static void serverTick(Level level, BlockPos pos, BlockState state, GreenhouseBlockEntity be) {
         Crop selected=be.selected();

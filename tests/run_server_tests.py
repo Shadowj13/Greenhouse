@@ -4,6 +4,7 @@ Prepare with `gradlew prepareQaRuntime`; no client, launcher, user world or
 account is accessed. The fixture server is confined to build/integration.
 """
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -20,6 +21,7 @@ parser.add_argument('--jar', type=Path)
 parser.add_argument('--report-name', default='consolidation')
 scenarios = parser.add_mutually_exclusive_group()
 scenarios.add_argument('--core-only', action='store_true')
+scenarios.add_argument('--crops-only', action='store_true')
 scenarios.add_argument('--checkpoint-only', action='store_true')
 scenarios.add_argument('--reload-only', action='store_true')
 args = parser.parse_args()
@@ -59,6 +61,7 @@ argfile.write_text('\n'.join('"'+s.replace('\\', '/')+'"' for s in jvm), encodin
 reports = ROOT / 'build/qa-results'
 reports.mkdir(exist_ok=True)
 all_results = {}
+server_exit_codes = []
 
 
 def launch(phases, index):
@@ -112,22 +115,26 @@ def launch(phases, index):
                     proc.wait(timeout=10)
     if proc.returncode != 0:
         raise RuntimeError(f'Server shutdown failed: {proc.returncode}')
+    server_exit_codes.append(proc.returncode)
 
 
-if args.checkpoint_only:
+if args.crops_only:
+    launch(['crops', 'recipes'], 1)
+elif args.checkpoint_only:
     launch(['checkpoint'], 1)
 elif args.reload_only:
     launch(['reload'], 1)
 else:
-    launch(['core', 'benchmark'] if args.core_only else ['core', 'checkpoint', 'benchmark', 'unload'], 1)
-if not (args.core_only or args.checkpoint_only or args.reload_only):
+    launch(['core', 'benchmark'] if args.core_only else ['core', 'crops', 'recipes', 'checkpoint', 'benchmark', 'unload'], 1)
+if not (args.core_only or args.crops_only or args.checkpoint_only or args.reload_only):
     launch(['reload'], 2)
 from zipfile import ZipFile
 with ZipFile(jar) as archive:
     artifact_version = re.search(r'^version="([^"]+)"', archive.read('META-INF/neoforge.mods.toml').decode('utf-8'), re.M).group(1)
 target = reports / (args.report_name+'.json')
 target.write_text(json.dumps({'minecraft': props['minecraft_version'], 'neoforge': props['neo_version'],
-                             'mod_version': artifact_version, 'results': all_results}, indent=2)+'\n', encoding='utf-8')
+                             'mod_version': artifact_version, 'jar_sha256': hashlib.sha256(jar.read_bytes()).hexdigest(),
+                             'server_exit_codes': server_exit_codes, 'results': all_results}, indent=2)+'\n', encoding='utf-8')
 failed = {phase: {k: v for k, v in values.items() if isinstance(v,str) and v.startswith('FAIL')}
           for phase, values in all_results.items()}
 failed = {k: v for k, v in failed.items() if v}

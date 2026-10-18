@@ -39,12 +39,13 @@ public final class ConsolidationTests {
     private final List<BlockPos> soakPositions = new ArrayList<>();
     private long soakStartTick, soakStartNanos;
 
-    public ConsolidationTests() {
+    public ConsolidationTests(net.neoforged.bus.api.IEventBus modBus) {
+        CropAndRecipeTests.ITEMS.register(modBus);
         NeoForge.EVENT_BUS.addListener(this::commands);
     }
     private void commands(RegisterCommandsEvent event) {
         var root = Commands.literal("greenhouseqa");
-        for (String phase : List.of("core", "checkpoint", "unload", "reload", "benchmark",
+        for (String phase : List.of("core", "crops", "recipes", "checkpoint", "unload", "reload", "benchmark",
                 "networksetup", "networkassert", "soaksetup", "soakstats", "soakassert"))
             root.then(Commands.literal(phase).executes(c -> run(c.getSource(), phase)));
         event.getDispatcher().register(root);
@@ -53,6 +54,8 @@ public final class ConsolidationTests {
         level = source.getLevel(); next = 0; results.clear();
         switch (phase) {
             case "core" -> core();
+            case "crops" -> new CropAndRecipeTests(level, this::test).crops();
+            case "recipes" -> new CropAndRecipeTests(level, this::test).recipes();
             case "checkpoint" -> checkpoint();
             case "unload" -> unloaded();
             case "reload" -> reload();

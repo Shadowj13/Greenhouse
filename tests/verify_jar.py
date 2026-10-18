@@ -38,9 +38,9 @@ with ZipFile(jar_path) as jar:
     assert f'versionRange="{props["minecraft_version_range"]}"' in toml
     if len(sys.argv) > 2:
         with ZipFile(sys.argv[2]) as baseline:
-            unchanged = [n for n in classes if '/GreenhouseBlock' not in n]
+            unchanged = [n for n in classes if '/GreenhouseBlock' not in n and not n.endswith('/Crop.class')]
             for name in unchanged:
-                assert jar.read(name) == baseline.read(name), f'Unexpected mechanics/UI bytecode change: {name}'
-            print(f'{len(unchanged)} GUI, menu, crop and registry classes identical to baseline')
+                assert jar.read(name) == baseline.read(name), f'Unexpected GUI/menu/registry bytecode change: {name}'
+            print(f'{len(unchanged)} GUI, menu, client and registry classes identical to baseline')
 print(f'JAR integrity, metadata, {len(classes)} Java 25 classes and all packaged resources verified')
 print('SHA256', hashlib.sha256(jar_path.read_bytes()).hexdigest())
