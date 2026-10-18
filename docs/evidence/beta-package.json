@@ -1,0 +1,9 @@
+{
+  "stale_receipt_rejected": true,
+  "no_zip_from_rejected_receipt": true,
+  "repeat_bundle_byte_identical": true,
+  "zip_crc_valid": true,
+  "one_jar_only": true,
+  "jar_sha256": "c40355d30c2a4dc1cb8c57326baf15bf63c7046d5f5a9d4029d5eae58af1d58b",
+  "bundle_sha256": "dcec064df3ff709d14af6dfee12bb660ec69a40913dc014b293f4ee237858232"
+}

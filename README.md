@@ -2,12 +2,17 @@
 
 Minecraft Java **26.3**, NeoForge **26.3.0.76 or later**, Java **25**.
 
-Version **0.2.9-alpha** makes all three poplar colors reachable and retains the
-chosen color through growth, harvests and reloads. Crop inputs now match the
-vanilla namespace, avoiding accidental acceptance of similarly named mod items.
-It retains the detailed flat-roof model, transparent panels, pot, automatic base,
-GUI, recipes, yields and timing, together with the 0.2.8 persistence and transfer
-fixes. Existing 0.2.8 world data loads without conversion.
+Version **0.3.0-beta.1** packages the verified 0.2.9 implementation as the first
+installable beta, with Italian installation and crop/automation guides.
+Production classes and all assets are unchanged from 0.2.9: three persistent
+poplar colors, vanilla namespace recognition, the detailed flat-roof model,
+transparent panels, pot, automatic base, GUI, recipes, yields and timing.
+
+Start with [installation and updates](docs/INSTALLAZIONE.md) and
+[recipes, crops and automation](docs/USO.md). Keep one Greenhouse JAR per instance;
+install the same version on clients and dedicated servers.
+See the [beta verification report](docs/beta-0.3.0.md) for the current two-client,
+natural-tick load and migration scope, with explicit untested configurations.
 
 ## Build and verify
 
@@ -17,13 +22,19 @@ and `patch/` are historical inputs, no longer applied by CI.
 ```powershell
 ./gradlew.bat build
 ./gradlew.bat integrationTest
+./gradlew.bat releaseBundle
 ./gradlew.bat runClient
 ```
 
 Python 3 is required for the asset regression checks in `check` (no packages are
 required). Override its location with `-PpythonExecutable=C:/path/to/python.exe`.
-The installable file is `build/libs/greenhouse-0.2.9-alpha.jar`.
+The installable file is `build/libs/greenhouse-0.3.0-beta.1.jar`.
 Use one Greenhouse JAR at a time in the instance's `mods` folder.
+
+`releaseBundle` builds and runs all server checks, then creates a reproducible
+install ZIP in `build/distributions/` with the JAR, SHA256, Italian guides,
+changelog and release manifest. Packaging rejects a stale JAR/test receipt or
+any failed test. CI uploads both the standalone JAR and the bundle.
 
 `integrationTest` launches the packaged JAR and a separate QA mod on an isolated,
 headless NeoForge server. It checks growth, fertilizer, full inventories, sided

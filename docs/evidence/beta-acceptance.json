@@ -1,0 +1,88 @@
+{
+  "minecraft": "26.3",
+  "neoforge": "26.3.0.76",
+  "mod_version": "0.3.0-beta.1",
+  "jar_sha256": "c40355d30c2a4dc1cb8c57326baf15bf63c7046d5f5a9d4029d5eae58af1d58b",
+  "results": {
+    "networksetup": {
+      "two_real_clients_open_same_menu": "PASS"
+    },
+    "networkassert": {
+      "real_clients_remain_on_greenhouse_menu": "PASS",
+      "real_client_harvest_packet_delivers_exactly_once": "PASS",
+      "network_harvest_resets_authoritative_state": "PASS"
+    },
+    "poplarsoaksetup": {
+      "prepare_256_naturally_ticking_machines": "PASS"
+    },
+    "soakstats": {
+      "machines": 256,
+      "natural_world_ticks": 6564,
+      "crop": "poplar",
+      "wall_seconds": 328.0649496,
+      "server_average_tick_ms": 1.04209,
+      "scope": "Full local server ticks with 256 forced-loaded machines; wall time includes any explicit tick freeze"
+    },
+    "poplarsoakassert": {
+      "machines": 256,
+      "natural_world_ticks": 6584,
+      "crop": "poplar",
+      "wall_seconds": 329.0707363,
+      "server_average_tick_ms": 1.039268,
+      "scope": "Full local server ticks with 256 forced-loaded machines; wall time includes any explicit tick freeze",
+      "at_least_6000_natural_world_ticks": "PASS",
+      "all_256_machines_tick_and_preserve_exact_log_yield": "PASS",
+      "all_three_poplar_colors_present_under_natural_ticks": "PASS",
+      "minimum_machine_ticks": 6580,
+      "maximum_initial_chunk_activation_ticks": 4
+    }
+  },
+  "actions": [
+    {
+      "command": "greenhouseqa networksetup"
+    },
+    {
+      "command": "greenhouseqa networkassert"
+    },
+    {
+      "command": "greenhouseqa poplarsoaksetup"
+    },
+    {
+      "command": "tick unfreeze"
+    },
+    {
+      "command": "greenhouseqa soakstats"
+    },
+    {
+      "command": "greenhouseqa soakstats"
+    },
+    {
+      "command": "greenhouseqa soakstats"
+    },
+    {
+      "command": "greenhouseqa soakstats"
+    },
+    {
+      "command": "greenhouseqa soakstats"
+    },
+    {
+      "command": "greenhouseqa soakstats"
+    },
+    {
+      "command": "greenhouseqa soakstats"
+    },
+    {
+      "command": "tick freeze"
+    },
+    {
+      "command": "greenhouseqa poplarsoakassert"
+    },
+    {
+      "command": "save-all flush"
+    },
+    {
+      "command": "stop"
+    }
+  ],
+  "server_exit_code": 0
+}

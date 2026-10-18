@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.0-beta.1
+
+- Promote the verified 0.2.9 implementation to the first installable beta;
+  production classes, models, textures and recipes remain unchanged.
+- Add Italian installation, update, dedicated-server and crop/automation guides.
+- Build a deterministic install ZIP only after the exact packaged JAR passes
+  all 151 live server checks; include checksums and a release manifest.
+- Extend optional full-client/network and natural-tick QA to poplar.
+
+## 0.2.9-alpha
+
+- Make red, orange and yellow poplar variants reachable and preserve their
+  selected color through growth, harvests and reloads.
+- Reject foreign-namespace crop/substrate lookalikes.
+- Verify all 30 crop/color entries, 300,000 seeded drop rolls and both loaded
+  crafting recipes, including real server-menu ingredient consumption.
+
 ## 0.2.8-alpha
 
 - Save growing progress between visual stage transitions.

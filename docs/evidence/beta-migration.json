@@ -1,0 +1,15 @@
+{
+  "minecraft": "26.3",
+  "neoforge": "26.3.0.76",
+  "mod_version": "0.3.0-beta.1",
+  "jar_sha256": "c40355d30c2a4dc1cb8c57326baf15bf63c7046d5f5a9d4029d5eae58af1d58b",
+  "server_exit_codes": [
+    0
+  ],
+  "results": {
+    "reload": {
+      "disk_reload_exact_progress": "PASS",
+      "disk_reload_pending_and_full_outputs": "PASS"
+    }
+  }
+}

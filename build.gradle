@@ -45,6 +45,12 @@ tasks.register('integrationTest', Exec) {
         'tests/run_server_tests.py', '--java', launcher.get().executablePath.asFile.absolutePath
 }
 
+tasks.register('releaseBundle', Exec) {
+    dependsOn tasks.named('build'), tasks.named('integrationTest')
+    workingDir projectDir
+    commandLine providers.gradleProperty('pythonExecutable').getOrElse('python'), 'tools/package_release.py'
+}
+
 runs {
     configureEach {
         workingDirectory project.layout.projectDirectory.dir('run').dir(name)

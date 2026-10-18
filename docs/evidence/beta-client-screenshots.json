@@ -1,0 +1,51 @@
+{
+  "version": "0.3.0-beta.1",
+  "minecraft": "26.3",
+  "neoforge": "26.3.0.76",
+  "jar_sha256": "c40355d30c2a4dc1cb8c57326baf15bf63c7046d5f5a9d4029d5eae58af1d58b",
+  "independent_full_clients": 2,
+  "optional_client_mods": [],
+  "before": "both 100%, ready, boost 3/4, empty inventory",
+  "after": "both 0%, disabled button, A has two poplar logs, B empty",
+  "screenshots": [
+    {
+      "file": "client-A-before.png",
+      "native_file": "2026-10-18_10.19.52.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "3f89c248bb568c6024be1e1eaafc38c0c1b7b9bd948f998d0b2c9a696c71381a"
+    },
+    {
+      "file": "client-A-after.png",
+      "native_file": "2026-10-18_10.21.19.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "5f5f1493de7cfad917e3f266f8f75702f713f2bf79d7a5c953a8e95a6cb9231b"
+    },
+    {
+      "file": "client-B-before.png",
+      "native_file": "2026-10-18_10.20.27.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "c04e18562b5402b2b7f1c97d3c5896da42e3356f85c50fda87b3c56ca0316595"
+    },
+    {
+      "file": "client-B-after.png",
+      "native_file": "2026-10-18_10.21.41.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "e8789733eea84ff517564274a30d2271ef399da73206d5fdb7a45312fcf981a7"
+    }
+  ],
+  "baseline": "0.2.9-alpha",
+  "identical_production_classes": 12,
+  "identical_resource_files": 211,
+  "client_shutdown": {
+    "mode": "controlled interrupt after completed checks and normal server stop",
+    "exit_codes": [
+      1,
+      1
+    ]
+  },
+  "scope": "Real local TCP clients and actual GUI click; offline test profiles, clean client dirs. World ticks frozen during screenshots/network assertions, naturally running during load."
+}
