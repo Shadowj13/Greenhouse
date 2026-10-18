@@ -1,0 +1,15 @@
+{
+  "minecraft": "26.3",
+  "neoforge": "26.3.0.76",
+  "mod_version": "0.2.8-alpha",
+  "jar_sha256": "35f378718cf4daba1d0024a2cd1c25321d3008b42f4435b65f7c8c8e3e7d1efc",
+  "server_exit_codes": [
+    0
+  ],
+  "results": {
+    "checkpoint": {
+      "persist_in_progress": "PASS",
+      "persist_blocked_mature": "PASS"
+    }
+  }
+}

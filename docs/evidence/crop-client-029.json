@@ -1,0 +1,71 @@
+{
+  "minecraft": "26.3",
+  "neoforge": "26.3.0.85",
+  "mod_version": "0.2.9-alpha",
+  "jar_sha256": "95b242add39af8660b34a1306f1eb0cacd090a52d685ec06ae14c5998e721dfa",
+  "mods": {
+    "jade": "26.3.5",
+    "jei": "31.13.0.71",
+    "mezz_config": "0.6.8"
+  },
+  "client_exit_code": 0,
+  "checks": {
+    "all_three_colors_normal_and_automatic": "PASS",
+    "glass_pot_flat_roof_and_distinct_auto_base": "PASS",
+    "targeting_without_floating_cage": "PASS",
+    "orange_real_gui_harvest_two_logs_and_disabled_button": "PASS",
+    "italian_gui_and_jei_sidebar": "PASS"
+  },
+  "screenshots": [
+    {
+      "file": "01-six-poplar-colors.png",
+      "native_file": "2026-10-18_09.52.16.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "96b8d6e146fd39de0e261c4bfe0dcf4820738819365fa679e4f74d11a6fa8e47"
+    },
+    {
+      "file": "02-red-targeted.png",
+      "native_file": "2026-10-18_09.52.56.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "72a35ea8e82697bfdfd8e2c1603656a75faadaf86a29efe0e0516b8fa301e6f6"
+    },
+    {
+      "file": "03-yellow-targeted.png",
+      "native_file": "2026-10-18_09.54.01.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "da07dc29ad72ceb9ba8b7350d4443f5b1fddd1b1bed6024e10f358c545843dca"
+    },
+    {
+      "file": "04-orange-ready-gui.png",
+      "native_file": "2026-10-18_09.54.42.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "c1d04c63846fdfbb2c660e96a53c2f57fc98197dc9815e52ce1f4450d9fe4725"
+    },
+    {
+      "file": "05-orange-after-real-harvest.png",
+      "native_file": "2026-10-18_09.55.07.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "60dd679ae6cdb88e3bdac36f9bb444a59f04606660240e8470e49d95715dce7f"
+    },
+    {
+      "file": "06-orange-automatic-gui.png",
+      "native_file": "2026-10-18_09.56.52.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "45c47fd3f758e13261423140d90869bed924663181f26459363c551a35ffbb7e"
+    },
+    {
+      "file": "07-automatic-targeted.png",
+      "native_file": "2026-10-18_09.57.24.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "26a76a77e95b611083c946195c718f2e89e08e5acd167a79cd4cc8f354410d55"
+    }
+  ],
+  "scope": "Local full client, controlled serialized crop fixtures, actual GUI click. Natural selection separately tested on server. No new shaders/resource-pack/public network/two-client run."
+}
