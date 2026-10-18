@@ -2,6 +2,14 @@
 
 Minecraft Java **26.3**, NeoForge **26.3.0.76 or later**, Java **25**.
 
+## Download
+
+[Download Greenhouse 0.3.0-beta.1](https://github.com/Shadowj13/Greenhouse/releases/tag/v0.3.0-beta.1)
+(public beta; no GitHub account required).
+Choose the [installable JAR](https://github.com/Shadowj13/Greenhouse/releases/download/v0.3.0-beta.1/greenhouse-0.3.0-beta.1.jar)
+or the [ZIP with Italian guides and checksums](https://github.com/Shadowj13/Greenhouse/releases/download/v0.3.0-beta.1/Greenhouse-0.3.0-beta.1-Minecraft-26.3-NeoForge.zip).
+Copy the JAR into your Minecraft 26.3 NeoForge instance's `mods` folder.
+
 Version **0.3.0-beta.1** packages the verified 0.2.9 implementation as the first
 installable beta, with Italian installation and crop/automation guides.
 Production classes and all assets are unchanged from 0.2.9: three persistent
