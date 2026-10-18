@@ -1,11 +1,16 @@
-"""Check an installable JAR, optionally proving preserved UI/crop bytecode."""
+"""Check an installable JAR, optionally proving preserved baseline bytecode."""
+import argparse
 import hashlib
-import sys
 from pathlib import Path
 from zipfile import ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
-jar_path = Path(sys.argv[1])
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('jar', type=Path)
+parser.add_argument('baseline', type=Path, nargs='?')
+parser.add_argument('--all-classes', action='store_true', help='Require all production classes to match the baseline')
+args = parser.parse_args()
+jar_path = args.jar
 props = dict(line.split('=', 1) for line in (ROOT / 'gradle.properties').read_text().splitlines() if '=' in line)
 with ZipFile(jar_path) as jar:
     assert jar.testzip() is None, 'Corrupt ZIP entry'
@@ -36,11 +41,11 @@ with ZipFile(jar_path) as jar:
     assert '${' not in toml
     assert f'version="{props["mod_version"]}"' in toml
     assert f'versionRange="{props["minecraft_version_range"]}"' in toml
-    if len(sys.argv) > 2:
-        with ZipFile(sys.argv[2]) as baseline:
-            unchanged = [n for n in classes if '/GreenhouseBlock' not in n and not n.endswith('/Crop.class')]
+    if args.baseline:
+        with ZipFile(args.baseline) as baseline:
+            unchanged = classes if args.all_classes else [n for n in classes if '/GreenhouseBlock' not in n and not n.endswith('/Crop.class')]
             for name in unchanged:
-                assert jar.read(name) == baseline.read(name), f'Unexpected GUI/menu/registry bytecode change: {name}'
-            print(f'{len(unchanged)} GUI, menu, client and registry classes identical to baseline')
+                assert jar.read(name) == baseline.read(name), f'Unexpected production bytecode change: {name}'
+            print(f'{len(unchanged)} production classes identical to baseline')
 print(f'JAR integrity, metadata, {len(classes)} Java 25 classes and all packaged resources verified')
 print('SHA256', hashlib.sha256(jar_path.read_bytes()).hexdigest())

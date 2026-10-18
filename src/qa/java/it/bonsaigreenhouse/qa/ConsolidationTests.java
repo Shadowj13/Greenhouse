@@ -38,15 +38,19 @@ public final class ConsolidationTests {
     private final BlockPos networkPos = new BlockPos(X,Y,Z+64);
     private final List<BlockPos> soakPositions = new ArrayList<>();
     private long soakStartTick, soakStartNanos;
+    private boolean poplarSoak;
 
     public ConsolidationTests(net.neoforged.bus.api.IEventBus modBus) {
-        CropAndRecipeTests.ITEMS.register(modBus);
+        // Keep clean full-client acceptance free of test-only registry entries.
+        // The default integration suite registers them for namespace regressions.
+        if (!Boolean.getBoolean("greenhouse.qa.skipLookalikes")) CropAndRecipeTests.ITEMS.register(modBus);
         NeoForge.EVENT_BUS.addListener(this::commands);
     }
     private void commands(RegisterCommandsEvent event) {
         var root = Commands.literal("greenhouseqa");
         for (String phase : List.of("core", "crops", "recipes", "checkpoint", "unload", "reload", "benchmark",
-                "networksetup", "networkassert", "soaksetup", "soakstats", "soakassert"))
+                "networksetup", "networkassert", "soaksetup", "soakstats", "soakassert",
+                "poplarsoaksetup", "poplarsoakassert"))
             root.then(Commands.literal(phase).executes(c -> run(c.getSource(), phase)));
         event.getDispatcher().register(root);
     }
@@ -62,9 +66,11 @@ public final class ConsolidationTests {
             case "benchmark" -> benchmark();
             case "networksetup" -> networkSetup(source);
             case "networkassert" -> networkAssert(source);
-            case "soaksetup" -> soakSetup();
+            case "soaksetup" -> { poplarSoak=false; soakSetup(); }
+            case "poplarsoaksetup" -> { poplarSoak=true; soakSetup(); }
             case "soakstats" -> soakStats(source);
             case "soakassert" -> soakAssert(source);
+            case "poplarsoakassert" -> soakAssert(source);
         }
         System.out.println("GREENHOUSE_QA_RESULT " + new Gson().toJson(Map.of("phase",phase,"results",results)));
         return results.values().stream().anyMatch(v -> v instanceof String s && s.startsWith("FAIL")) ? 0 : 1;
@@ -84,7 +90,7 @@ public final class ConsolidationTests {
             level.setChunkForced(networkPos.getX()>>4,networkPos.getZ()>>4,true);
             for(int x=-2;x<=4;x++) for(int z=-2;z<=5;z++)
                 level.setBlock(networkPos.offset(x,-1,z),Blocks.SMOOTH_STONE.defaultBlockState(),3);
-            var be=greenhouse(networkPos,false); inputs(be,Items.DIRT,Items.OAK_SAPLING,64); tick(be,450);
+            var be=greenhouse(networkPos,false); inputs(be,Items.DIRT,Items.POPLAR_SAPLING,64); tick(be,450);
             int i=0;
             for(var p:players) {
                 p.getInventory().clearContent(); p.setGameMode(GameType.CREATIVE);
@@ -102,12 +108,13 @@ public final class ConsolidationTests {
         });
         test("real_client_harvest_packet_delivers_exactly_once",()->{
             var players=networkPlayers(source);
-            require(players.size()==2 && players.stream().mapToInt(p->p.getInventory().countItem(Items.OAK_LOG)).sum()==2,"network harvest lost or duplicated logs");
+            require(players.size()==2 && players.stream().mapToInt(p->p.getInventory().countItem(Items.POPLAR_LOG)).sum()==2,"network harvest lost or duplicated poplar logs");
         });
         test("network_harvest_resets_authoritative_state",()->{
             var be=(GreenhouseBlockEntity)level.getBlockEntity(networkPos);
             require(be!=null && be.dataAccess().get(2)==0 && be.dataAccess().get(0)==0,"maturity did not reset while ticks frozen");
             require(be.getItem(2).getCount()==63 && be.dataAccess().get(3)==3,"network harvest spent fertilizer twice");
+            require(be.getBlockState().getValue(GreenhouseBlock.CROP).isPoplar(),"network fixture lost poplar color");
         });
     }
     private void soakSetup() {
@@ -116,13 +123,14 @@ public final class ConsolidationTests {
             for(int cx=(X+256)>>4;cx<=(X+286)>>4;cx++) for(int cz=Z>>4;cz<=(Z+30)>>4;cz++) level.setChunkForced(cx,cz,true);
             for(int x=0;x<16;x++) for(int z=0;z<16;z++) {
                 BlockPos p=new BlockPos(X+256+x*2,Y,Z+z*2);
-                var be=greenhouse(p,true); inputs(be,Items.DIRT,Items.OAK_SAPLING,64); soakPositions.add(p);
+                var be=greenhouse(p,true); inputs(be,Items.DIRT,poplarSoak?Items.POPLAR_SAPLING:Items.OAK_SAPLING,64); soakPositions.add(p);
             }
             soakStartTick=level.getGameTime(); soakStartNanos=System.nanoTime();
         });
     }
     private void soakStats(CommandSourceStack source) {
         results.put("machines",soakPositions.size()); results.put("natural_world_ticks",level.getGameTime()-soakStartTick);
+        results.put("crop",poplarSoak?"poplar":"oak");
         results.put("wall_seconds",(System.nanoTime()-soakStartNanos)/1_000_000_000.0);
         results.put("server_average_tick_ms",source.getServer().getAverageTickTimeNanos()/1_000_000.0);
         results.put("scope","Full local server ticks with 256 forced-loaded machines; wall time includes any explicit tick freeze");
@@ -145,12 +153,21 @@ public final class ConsolidationTests {
                 long actualTicks=completed*450+be.dataAccess().get(0);
                 require(actualTicks>=6000 && ticks-actualTicks>=0 && ticks-actualTicks<=40,
                     "unexpected ticking gap at "+p+": world="+ticks+", machine="+actualTicks);
-                require(be.countItem(Items.OAK_LOG)==2*completed,
-                    "incorrect natural yield at "+p+": expected="+(2*completed)+", actual="+be.countItem(Items.OAK_LOG));
+                var log=poplarSoak?Items.POPLAR_LOG:Items.OAK_LOG;
+                require(be.countItem(log)==2*completed,
+                    "incorrect natural yield at "+p+": expected="+(2*completed)+", actual="+be.countItem(log));
                 require(be.getItem(0).getCount()==1 && be.getItem(1).getCount()==1,"soak consumed substrate/plant");
                 minimumTicks[0]=Math.min(minimumTicks[0],actualTicks);
                 maximumActivation[0]=Math.max(maximumActivation[0],ticks-actualTicks);
             }
+        });
+        if(poplarSoak) test("all_three_poplar_colors_present_under_natural_ticks",()->{
+            Set<Crop> colors=EnumSet.noneOf(Crop.class);
+            for(BlockPos p:soakPositions) {
+                Crop color=level.getBlockState(p).getValue(GreenhouseBlock.CROP);
+                require(color.isPoplar(),"machine lost poplar selection at "+p); colors.add(color);
+            }
+            require(colors.size()==3,"not all colors were naturally selected: "+colors);
         });
         if(minimumTicks[0]!=Long.MAX_VALUE) {
             results.put("minimum_machine_ticks",minimumTicks[0]);

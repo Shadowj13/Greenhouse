@@ -35,7 +35,7 @@ shutil.copy2(ROOT / 'build/qa/greenhouse-qa.jar', run / 'mods/greenhouse-qa.jar'
     'view-distance=3', 'simulation-distance=3', 'max-tick-time=120000',
     'spawn-protection=0', 'allow-flight=true', 'sync-chunk-writes=true'])+'\n')
 classpath = (ROOT / 'build/qa/runtime-classpath.txt').read_text()
-jvm = ['-Xmx1536M', '-Dfile.encoding=UTF-8', '--sun-misc-unsafe-memory-access=allow',
+jvm = ['-Xmx1536M', '-Dfile.encoding=UTF-8', '-Dgreenhouse.qa.skipLookalikes=true', '--sun-misc-unsafe-memory-access=allow',
        '--enable-native-access=ALL-UNNAMED', '--add-opens', 'java.base/java.lang.invoke=ALL-UNNAMED',
        '--add-exports', 'jdk.naming.dns/com.sun.jndi.dns=java.naming', '-cp', classpath,
        'net.neoforged.fml.startup.Server', '--fml.neoForgeVersion', props['neo_version'],

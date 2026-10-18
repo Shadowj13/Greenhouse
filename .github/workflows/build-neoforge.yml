@@ -19,9 +19,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Build, verify models and run live server integration checks
+      - name: Build, run live server checks and package validated install bundle
         shell: pwsh
-        run: ./gradlew.bat build integrationTest --console=plain
+        run: ./gradlew.bat releaseBundle --console=plain
       - name: Hash installable JAR
         shell: pwsh
         run: |
@@ -35,6 +35,9 @@ jobs:
           path: |
             build/libs/*.jar
             build/libs/*.sha256
+            build/distributions/*.zip
+            build/distributions/*.sha256
+            build/distributions/*.json
           if-no-files-found: error
           retention-days: 30
       - name: Upload server test evidence
