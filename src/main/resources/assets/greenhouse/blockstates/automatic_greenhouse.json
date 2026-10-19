@@ -1,8 +1,19 @@
 {
   "multipart": [
     {
+      "when": {
+        "crop": "!kelp"
+      },
       "apply": {
         "model": "greenhouse:block/automatic_greenhouse"
+      }
+    },
+    {
+      "when": {
+        "crop": "kelp"
+      },
+      "apply": {
+        "model": "greenhouse:block/automatic_greenhouse_aquatic"
       }
     },
     {
@@ -1083,6 +1094,42 @@
       },
       "apply": {
         "model": "greenhouse:block/plants/brown_mushroom_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "kelp",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/kelp_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "kelp",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/kelp_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "kelp",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/kelp_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "kelp",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/kelp_stage_3"
       }
     }
   ]

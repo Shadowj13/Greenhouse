@@ -1,0 +1,56 @@
+{
+  "version": "0.3.0-beta.2",
+  "minecraft": "26.3",
+  "neoforge": "26.3.0.85",
+  "jar_sha256": "a996af4693e459e339929e8b130cda17cb91c4955803f4b56b8e2de681dd37fe",
+  "optional_client_mods": [],
+  "profile": "offline",
+  "fixture": "tests/fixtures/kelp-visual; initial stages then natural ticks",
+  "manual_before": "100%, ready, water bucket and kelp, no harvested kelp",
+  "manual_after": "one kelp delivered to hotbar, water and plant retained; next cycle progressing",
+  "client_shutdown": "normal window close; integrated server saved and client exited 0",
+  "screenshots": [
+    {
+      "file": "overview.png",
+      "native_file": "2026-10-19_10.01.34.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "64cd10631e8250cbc7839094b234f05fcb61be70ecf90e2483d442e645d4d607"
+    },
+    {
+      "file": "manual-before.png",
+      "native_file": "2026-10-19_10.02.23.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "fe0fd1c6bfe2a2d1f8aefc0e4a41d8c57ef915e6207373a208bf9db71efd1763"
+    },
+    {
+      "file": "manual-after.png",
+      "native_file": "2026-10-19_10.02.57.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "ae92afddc7fa766c29aba36195825b93381ac6916fbe7972f80a03048dad36b0"
+    },
+    {
+      "file": "normal-front.png",
+      "native_file": "2026-10-19_10.04.01.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "f104fdd1b012846839571827129e743b73eebfcbaa2534de49777e2d3c39a3e6"
+    },
+    {
+      "file": "automatic-front.png",
+      "native_file": "2026-10-19_10.04.45.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "b406da19c8a3f8eeed954cbe492d27fe6ec6d93a07bb2ac185eccaf4864f8160"
+    },
+    {
+      "file": "automatic-menu.png",
+      "native_file": "2026-10-19_10.05.24.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "e19fa06bfeddc4401d86d38c10e69c5613b81a681fec66a45caadbc506f8bb09"
+    }
+  ]
+}
