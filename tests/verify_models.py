@@ -46,6 +46,33 @@ def png_pixels(path):
 
 
 class ModelTests(unittest.TestCase):
+    def test_kelp_uses_four_stages_and_only_replaces_the_soil_surface(self):
+        heights = []
+        for kind in ('greenhouse', 'automatic_greenhouse'):
+            base = read(MODELS / f'block/{kind}.json')
+            aquatic = read(MODELS / f'block/{kind}_aquatic.json')
+            self.assertEqual(base['elements'][:6], aquatic['elements'][:6])
+            self.assertEqual(base['elements'][7:], aquatic['elements'][7:])
+            water = aquatic['elements'][6]
+            self.assertEqual(water['from'][1], water['to'][1])
+            self.assertGreater(water['from'][1], base['elements'][6]['to'][1])
+            self.assertEqual(set(water['faces']), {'up'})
+            self.assertEqual(aquatic['textures']['dirt'], 'minecraft:block/water_still')
+            parts = read(ASSETS / f'blockstates/{kind}.json')['multipart']
+            bases = [p for p in parts if 'stage' not in p.get('when', {})]
+            self.assertEqual([p['when']['crop'] for p in bases], ['!kelp', 'kelp'])
+            stages = [p['when']['stage'] for p in parts
+                      if p.get('when', {}).get('crop') == 'kelp' and 'stage' in p['when']]
+            self.assertEqual(stages, ['0', '1', '2', '3'])
+        for stage in range(4):
+            model = read(MODELS / f'block/plants/kelp_stage_{stage}.json')
+            heights.append(max(e['to'][1] for e in model['elements']))
+            for e in model['elements']:
+                self.assertEqual(sum(a == b for a, b in zip(e['from'], e['to'])), 1)
+                self.assertEqual(len(e['faces']), 2)
+                self.assertGreaterEqual(e['from'][1], 4.96)
+        self.assertEqual(heights, sorted(set(heights)))
+
     def test_all_resource_references_resolve(self):
         for path in ASSETS.rglob('*.json'):
             model = read(path)

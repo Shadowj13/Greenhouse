@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0-beta.2
+
+- Add kelp to both greenhouses: one raw kelp every 30 seconds, with a reusable
+  water bucket in the existing substrate slot and the usual bone-meal bonus.
+- Show four growth stages with animated vanilla kelp textures and water in the
+  pot. The aquatic base replaces the soil surface without overlapping faces;
+  the frame, glass, pot, roof, automatic base and GUI layout are preserved.
+- Extend the packaged-JAR crop suite to all 31 crop/color entries, including
+  aquatic input rejection, menu slots, harvest/export, fertilizer and reload.
+
 ## 0.3.0-beta.1
 
 - Promote the verified 0.2.9 implementation to the first installable beta;

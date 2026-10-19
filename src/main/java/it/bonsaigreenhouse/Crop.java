@@ -42,7 +42,9 @@ public enum Crop implements StringRepresentable {
     MELON("melon_seeds", "melon_slice", "dirt", 900, 2, 100),
     SWEET_BERRIES("sweet_berries", "sweet_berries", "dirt", 900, 1, 50),
     RED_MUSHROOM("red_mushroom", "red_mushroom", "mycelium", 900, 1, 25),
-    BROWN_MUSHROOM("brown_mushroom", "brown_mushroom", "mycelium", 900, 1, 25);
+    BROWN_MUSHROOM("brown_mushroom", "brown_mushroom", "mycelium", 900, 1, 25),
+    // Append new crops so the existing ordinal-based tree boundary stays stable.
+    KELP("kelp", "kelp", "water_bucket", 600, 1, 0);
 
     public final String plantId, dropId, soilId;
     public final int duration, guaranteed, extraChance;

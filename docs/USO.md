@@ -49,6 +49,7 @@ rimangono disponibili dopo il raccolto. Raccogli prima di cambiare coltura.
 | Cactus | Sabbia o sabbia rossa | 1 cactus | 30 s |
 | Canna da zucchero | Terra* | 1 canna | 30 s |
 | Bambù | Terra* | 1–2 bambù | 45 s |
+| Alghe kelp | Secchio d'acqua | 1 alga kelp | 30 s |
 | Semi di zucca | Terra* | 1 zucca | 45 s |
 | Semi di anguria | Terra* | 2–4 fette | 45 s |
 | Bacche dolci | Terra* | 1–2 bacche | 45 s |
@@ -62,7 +63,14 @@ prodotto principale e non promette tutti i bonus a ogni raccolto.
 
 Il pioppo usa un solo alberello: quando viene stabilito sceglie rosso, arancione
 o giallo con pari probabilità e conserva il colore tra raccolte e salvataggi.
-Le tre varianti portano il totale a 30 voci di coltura/colore.
+Con le tre varianti del pioppo e le kelp, il totale è di 31 voci di coltura/colore.
+
+Per le kelp inserisci un **secchio d'acqua nello slot Terreno** e un'alga kelp
+nello slot Pianta. Secchio e pianta rimangono dopo ogni raccolto, senza consumare
+acqua o richiedere tubazioni. Il vaso mostra acqua e quattro stadi di crescita.
+Si raccolgono alghe normali: le alghe essiccate non si possono piantare.
+La serra automatica trasferisce le alghe nei contenitori sottostanti come le
+altre colture. La farina d'ossa applica lo stesso bonus di quattro cicli.
 
 Una farina d'ossa dimezza il tempo di **quattro cicli**, incluso quello che la
 consuma. Il bonus visualizzato indica i cicli accelerati ancora disponibili
@@ -90,4 +98,5 @@ L'accesso automatico alla serra avviene così:
 - dal basso: estrazione dai nove slot di uscita.
 
 Le serre funzionano quando il loro chunk è caricato e attivo. Greenhouse non
-carica autonomamente i chunk e non richiede energia, acqua o un orario solare.
+carica autonomamente i chunk e non richiede energia, rifornimenti d'acqua o un
+orario solare. Solo le kelp richiedono un secchio d'acqua come substrato iniziale.

@@ -1,0 +1,11 @@
+{
+  "changed_production_classes": [
+    "it/bonsaigreenhouse/Crop.class"
+  ],
+  "unchanged_production_classes": 11,
+  "changed_existing_resources": [
+    "assets/greenhouse/blockstates/automatic_greenhouse.json",
+    "assets/greenhouse/blockstates/greenhouse.json"
+  ],
+  "unchanged_existing_resources": 209
+}

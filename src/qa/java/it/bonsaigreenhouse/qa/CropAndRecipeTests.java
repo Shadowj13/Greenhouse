@@ -40,7 +40,7 @@ final class CropAndRecipeTests {
     private Spec spec(Crop crop) {
         // Independent acceptance limits: do not infer expected yields/timings
         // from the production fields whose behavior is being verified.
-        int duration = switch(crop) { case WHEAT,CARROTS,POTATOES,BEETROOT,CACTUS,SUGAR_CANE -> 600; default -> 900; };
+        int duration = switch(crop) { case WHEAT,CARROTS,POTATOES,BEETROOT,CACTUS,SUGAR_CANE,KELP -> 600; default -> 900; };
         int min = switch(crop) {
             case WHEAT,BEETROOT,NETHER_WART,MELON -> 2;
             default -> crop.isTree()?2:1;
@@ -179,6 +179,23 @@ final class CropAndRecipeTests {
                 for(int count=s.min;count<=s.max;count++) require(mains.contains(count),"unreachable main yield "+count);
             });
         }
+        test.accept("kelp_aquatic_inputs_reload_and_menu",()->{
+            var be=fresh(false); inputs(be,Crop.KELP,0);
+            for(Item invalid:List.of(Items.BUCKET,Items.LAVA_BUCKET,Items.DIRT,Items.SAND))
+                require(!Crop.KELP.accepts(new ItemStack(invalid)),"non-water substrate accepted");
+            require(Crop.of(new ItemStack(Items.DRIED_KELP))==Crop.EMPTY,"dried kelp can be planted");
+            var p=player(be.getBlockPos());
+            var menu=new GreenhouseMenu(1,p.getInventory(),be);
+            require(menu.slots.get(0).mayPlace(new ItemStack(Items.WATER_BUCKET)) &&
+                menu.slots.get(1).mayPlace(new ItemStack(Items.KELP)),"menu rejects aquatic inputs");
+            tick(be,187); var saved=state(be); load(be,saved); tick(be,1);
+            require(be.dataAccess().get(0)==188 && be.dataAccess().get(1)==600,"reload resets kelp progress");
+            require(be.getBlockState().getValue(GreenhouseBlock.CROP)==Crop.KELP,"reload loses kelp identity");
+            tick(be,412); be.collectBy(p);
+            require(contents(p.getInventory()).equals(Map.of("kelp",1)),"wrong kelp harvest after reload");
+            require(be.getItem(0).is(Items.WATER_BUCKET) && be.getItem(0).getCount()==1 &&
+                be.getItem(1).is(Items.KELP),"kelp consumes water/plant");
+        });
         test.accept("poplar_natural_color_selection_and_reload",()->{
             Set<Crop> seen=EnumSet.noneOf(Crop.class);
             for(int seed=0;seed<48;seed++) {

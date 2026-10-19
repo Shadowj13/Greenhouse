@@ -4,22 +4,23 @@ Minecraft Java **26.3**, NeoForge **26.3.0.76 or later**, Java **25**.
 
 ## Download
 
-[Download Greenhouse 0.3.0-beta.1](https://github.com/Shadowj13/Greenhouse/releases/tag/v0.3.0-beta.1)
+[Download Greenhouse 0.3.0-beta.2](https://github.com/Shadowj13/Greenhouse/releases/tag/v0.3.0-beta.2)
 (public beta; no GitHub account required).
-Choose the [installable JAR](https://github.com/Shadowj13/Greenhouse/releases/download/v0.3.0-beta.1/greenhouse-0.3.0-beta.1.jar)
-or the [ZIP with Italian guides and checksums](https://github.com/Shadowj13/Greenhouse/releases/download/v0.3.0-beta.1/Greenhouse-0.3.0-beta.1-Minecraft-26.3-NeoForge.zip).
+Choose the [installable JAR](https://github.com/Shadowj13/Greenhouse/releases/download/v0.3.0-beta.2/greenhouse-0.3.0-beta.2.jar)
+or the [ZIP with Italian guides and checksums](https://github.com/Shadowj13/Greenhouse/releases/download/v0.3.0-beta.2/Greenhouse-0.3.0-beta.2-Minecraft-26.3-NeoForge.zip).
 Copy the JAR into your Minecraft 26.3 NeoForge instance's `mods` folder.
 
-Version **0.3.0-beta.1** packages the verified 0.2.9 implementation as the first
-installable beta, with Italian installation and crop/automation guides.
-Production classes and all assets are unchanged from 0.2.9: three persistent
-poplar colors, vanilla namespace recognition, the detailed flat-roof model,
-transparent panels, pot, automatic base, GUI, recipes, yields and timing.
+Version **0.3.0-beta.2** adds kelp to both greenhouses: one raw kelp every
+30 seconds, using a reusable water bucket in the existing substrate slot.
+Four animated growth stages and an aquatic pot preserve the detailed frame,
+transparent panels, flat roof, automatic base and GUI layout. Other crops,
+recipes, yields and timing retain the beta.1 implementation.
 
 Start with [installation and updates](docs/INSTALLAZIONE.md) and
 [recipes, crops and automation](docs/USO.md). Keep one Greenhouse JAR per instance;
 install the same version on clients and dedicated servers.
-See the [beta verification report](docs/beta-0.3.0.md) for the current two-client,
+See [kelp verification](docs/kelp-0.3.0-beta.2.md) for this update and the
+[previous beta verification report](docs/beta-0.3.0.md) for the beta.1 two-client,
 natural-tick load and migration scope, with explicit untested configurations.
 
 ## Build and verify
@@ -36,7 +37,7 @@ and `patch/` are historical inputs, no longer applied by CI.
 
 Python 3 is required for the asset regression checks in `check` (no packages are
 required). Override its location with `-PpythonExecutable=C:/path/to/python.exe`.
-The installable file is `build/libs/greenhouse-0.3.0-beta.1.jar`.
+The installable file is `build/libs/greenhouse-0.3.0-beta.2.jar`.
 Use one Greenhouse JAR at a time in the instance's `mods` folder.
 
 `releaseBundle` builds and runs all server checks, then creates a reproducible
@@ -47,7 +48,7 @@ any failed test. CI uploads both the standalone JAR and the bundle.
 `integrationTest` launches the packaged JAR and a separate QA mod on an isolated,
 headless NeoForge server. It checks growth, fertilizer, full inventories, sided
 insertion, double chests, drops, server-side menu listeners, chunk unloading,
-disk reload, all 30 crop/color entries and both crafting recipes (151 checks).
+disk reload, all 31 crop/color entries and both crafting recipes (156 checks).
 Its world stays under `build/integration`; results and server logs
 are written to `build/qa-results`. The QA mod is never part of the installable JAR.
 The harness accepts the Minecraft EULA for this local test server.
