@@ -1,0 +1,136 @@
+{
+  "mod_version": "0.3.0-beta.3",
+  "minecraft": "26.3",
+  "jar_sha256": "58772f8040b90e64460ae25a78e0ad4afb48c72314ca7f3d7d71825376da8de1",
+  "server": {
+    "neoforge": "26.3.0.76",
+    "checks_passed": 276,
+    "server_exit_codes": [
+      0,
+      0
+    ]
+  },
+  "migration": {
+    "source_version": "0.3.0-beta.2",
+    "source_sha256": "a996af4693e459e339929e8b130cda17cb91c4955803f4b56b8e2de681dd37fe",
+    "target_version": "0.3.0-beta.3",
+    "target_sha256": "58772f8040b90e64460ae25a78e0ad4afb48c72314ca7f3d7d71825376da8de1",
+    "source_exit_codes": [
+      0
+    ],
+    "target_exit_codes": [
+      0
+    ],
+    "checks": {
+      "legacyreload": {
+        "disk_reload_exact_progress": "PASS",
+        "disk_reload_pending_and_full_outputs": "PASS"
+      }
+    }
+  },
+  "client": {
+    "neoforge": "26.3.0.85",
+    "profile": "offline",
+    "world": "GreenhouseFlowersBeta3QA",
+    "exit_code": 0,
+    "mods": [
+      "greenhouse",
+      "neoforge"
+    ],
+    "manual_berry_harvest": "one real GUI click; one berry; soil/plant retained",
+    "manual_flower_harvest": "one real GUI click; one blue orchid; soil/plant retained",
+    "automatic_export": "glow berries observed in underlying chest after natural cycles",
+    "comparison_fixture": "600000-tick artificial comparison rows; exact production timing verified by server",
+    "initial_native_exit_code": -1073740940,
+    "retry": "second client run with -XX:StackShadowPages=32 completed normally; initial failure cause not established",
+    "not_tested": [
+      "two simultaneous clients",
+      "prolonged full-world load with new crops",
+      "Jade/JEI in beta.3",
+      "shaders",
+      "alternate resource packs",
+      "real accounts",
+      "Internet multiplayer"
+    ]
+  },
+  "preservation": {
+    "production_classes_unchanged": 11,
+    "production_classes_changed": [
+      "Crop.class"
+    ],
+    "previous_assets_changed": [
+      "blockstates/greenhouse.json",
+      "blockstates/automatic_greenhouse.json"
+    ],
+    "new_plant_models": 68,
+    "prior_crop_entries_retained": 31
+  },
+  "screenshots": [
+    {
+      "file": "01-berry-stages.png",
+      "source": "2026-10-23_00.07.44.png",
+      "description": "Bacche: confronto degli stadi su sostegno interno",
+      "sha256": "750b4cde0a73ae390b8344324e60ee3e9635553b4ec2214666032e8d5e973ce6"
+    },
+    {
+      "file": "02-berries-front.png",
+      "source": "2026-10-23_00.08.28.png",
+      "description": "Serra normale con bacche mature",
+      "sha256": "be5ba007281004796bace44e2a37cb1cfa857132caf4c4dd33481559979a0da1"
+    },
+    {
+      "file": "03-berries-ready.png",
+      "source": "2026-10-23_00.08.41.png",
+      "description": "GUI prima della raccolta delle bacche",
+      "sha256": "75e9a697da7fcc6176735a7996f8892a889e1166679e005e026d9d3408372252"
+    },
+    {
+      "file": "04-berries-collected.png",
+      "source": "2026-10-23_00.08.59.png",
+      "description": "GUI dopo il click reale: una bacca, input conservati, nuovo ciclo",
+      "sha256": "eee371cd0e6be4ee5e83b9cf9f789d898536a81f9b3da707e47d52f5603460ea"
+    },
+    {
+      "file": "05-all-crops.png",
+      "source": "2026-10-23_00.09.57.png",
+      "description": "Panoramica delle 17 nuove colture",
+      "sha256": "a43182e88e0d7d9ed331e466889c1f48c4597063c7df2dec7a56219dfcfd8ee3"
+    },
+    {
+      "file": "06-tall-flower-stages.png",
+      "source": "2026-10-23_00.13.40.png",
+      "description": "Fiori alti e girasole con testa distinta",
+      "sha256": "b074857c399da59e66a1dbe1eef909dc5865f532ec70be62e008e86b3243b074"
+    },
+    {
+      "file": "07-small-flowers.png",
+      "source": "2026-10-23_00.13.54.png",
+      "description": "Fiori bassi con texture vanilla corrette",
+      "sha256": "8a54279e87abbaca4b99ded91a3d37e6570325a5b5becb12c2c0e95f3808bc69"
+    },
+    {
+      "file": "08-orchid-ready.png",
+      "source": "2026-10-23_00.14.04.png",
+      "description": "Orchidea blu pronta nella GUI",
+      "sha256": "c1b9c09e87f63487d66bd8e9c45c4caa5b2050c3044aa975cef8301f751a1406"
+    },
+    {
+      "file": "09-orchid-collected.png",
+      "source": "2026-10-23_00.14.20.png",
+      "description": "GUI dopo il click reale: una orchidea, input conservati",
+      "sha256": "6ad4ceb418b88a18dc171d09486f57bb2c7eb5ae1d2d9e6800110d660f7bec37"
+    },
+    {
+      "file": "10-automatic-menu.png",
+      "source": "2026-10-23_00.14.51.png",
+      "description": "Serra automatica con dente di leone, ciclo attivo",
+      "sha256": "ccbe1a00f40026903b49379fa2f8ba780be401e63db480b465b3a7eb9fedcc55"
+    },
+    {
+      "file": "11-automatic-chest.png",
+      "source": "2026-10-23_00.15.19.png",
+      "description": "Cassa con bacche esportate da cicli naturali",
+      "sha256": "0ee0e2380152717ce1a80dde3bc125a26edce9535a9f8eb6b3bd3ce815096c5d"
+    }
+  ]
+}

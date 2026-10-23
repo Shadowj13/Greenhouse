@@ -19,7 +19,7 @@ receipt = json.loads(args.report.read_text())
 assert receipt['mod_version'] == version and receipt['jar_sha256'] == digest, 'Stale server test receipt'
 assert receipt['server_exit_codes'] == [0, 0], 'The two test servers must stop normally'
 values = [v for phase in receipt['results'].values() for v in phase.values() if isinstance(v, str) and (v == 'PASS' or v.startswith('FAIL'))]
-assert len(values) == 156 and all(v == 'PASS' for v in values), 'All 156 server checks must pass'
+assert len(values) == 276 and all(v == 'PASS' for v in values), 'All 276 server checks must pass'
 with ZipFile(jar) as archive:
     assert archive.testzip() is None
     assert not any('/qa/' in n or n.startswith(('tests/', 'tools/')) for n in archive.namelist())

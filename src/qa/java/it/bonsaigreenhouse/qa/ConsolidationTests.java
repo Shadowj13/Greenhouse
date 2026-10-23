@@ -48,7 +48,7 @@ public final class ConsolidationTests {
     }
     private void commands(RegisterCommandsEvent event) {
         var root = Commands.literal("greenhouseqa");
-        for (String phase : List.of("core", "crops", "recipes", "checkpoint", "unload", "reload", "benchmark",
+        for (String phase : List.of("core", "crops", "recipes", "checkpoint", "unload", "reload", "legacyreload", "benchmark",
                 "networksetup", "networkassert", "soaksetup", "soakstats", "soakassert",
                 "poplarsoaksetup", "poplarsoakassert"))
             root.then(Commands.literal(phase).executes(c -> run(c.getSource(), phase)));
@@ -62,7 +62,8 @@ public final class ConsolidationTests {
             case "recipes" -> new CropAndRecipeTests(level, this::test).recipes();
             case "checkpoint" -> checkpoint();
             case "unload" -> unloaded();
-            case "reload" -> reload();
+            case "reload" -> reload(true);
+            case "legacyreload" -> reload(false);
             case "benchmark" -> benchmark();
             case "networksetup" -> networkSetup(source);
             case "networkassert" -> networkAssert(source);
@@ -346,10 +347,12 @@ public final class ConsolidationTests {
         });
     }
     private void checkpoint() {
+        new CropAndRecipeTests(level,this::test).checkpointAdditions();
         test("persist_in_progress",()->{ var be=greenhouse(new BlockPos(X+100,Y,Z+100),false); inputs(be,Items.DIRT,Items.OAK_SAPLING,64); tick(be,137); });
         test("persist_blocked_mature",()->{ blockedReady(new BlockPos(X+103,Y,Z+100)); });
     }
-    private void reload() {
+    private void reload(boolean additions) {
+        if(additions) new CropAndRecipeTests(level,this::test).reloadAdditions();
         test("disk_reload_exact_progress",()->{
             var be=(GreenhouseBlockEntity)level.getBlockEntity(new BlockPos(X+100,Y,Z+100));
             require(be!=null && be.dataAccess().get(0)==137 && be.dataAccess().get(1)==450 && be.dataAccess().get(3)==3,"progress/boost changed across restart");

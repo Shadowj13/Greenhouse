@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0-beta.3
+
+- Add priorities 1-3: glow berries, twelve common small flowers and four tall
+  flowers, in both manual and automatic greenhouses (48 crop/color entries).
+- Flowers yield one matching flower every 600 ticks (30 seconds); glow berries
+  yield one or two berries every 900 ticks (45 seconds). Both retain dirt and
+  plant, accept existing dirt variants, and use the four-cycle bone-meal bonus.
+- Add 68 growth models using vanilla textures, a miniature internal berry
+  support, and separate sunflower front/back sprites. Keep the approved shell,
+  glass, roof, pot, selection/collision shape, GUI and all earlier crop rules.
+- Extend packaged-JAR checks to 276, including all new crops, exact timing,
+  manual/automatic harvest, menus, NBT and disk restart. Add a reproducible
+  isolated visual fixture and a historical-QA migration option.
+
 ## 0.3.0-beta.2
 
 - Add kelp to both greenhouses: one raw kelp every 30 seconds, with a reusable

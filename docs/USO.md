@@ -54,6 +54,9 @@ rimangono disponibili dopo il raccolto. Raccogli prima di cambiare coltura.
 | Semi di anguria | Terra* | 2–4 fette | 45 s |
 | Bacche dolci | Terra* | 1–2 bacche | 45 s |
 | Fungo rosso o marrone | Micelio o podzol | 1–2 funghi dello stesso tipo | 45 s |
+| Bacche luminose | Terra* | 1–2 bacche luminose | 45 s |
+| Fiori comuni bassi (elenco sotto) | Terra* | 1 fiore del tipo inserito | 30 s |
+| Girasole, lillà, peonia, rosaio | Terra* | 1 fiore/pianta del tipo inserito | 30 s |
 
 *Terra comprende anche blocco d'erba, podzol, terra radicata e terra brulla.
 I tempi indicati corrispondono a 20 tick al secondo; un server rallentato può
@@ -63,7 +66,20 @@ prodotto principale e non promette tutti i bonus a ogni raccolto.
 
 Il pioppo usa un solo alberello: quando viene stabilito sceglie rosso, arancione
 o giallo con pari probabilità e conserva il colore tra raccolte e salvataggi.
-Con le tre varianti del pioppo e le kelp, il totale è di 31 voci di coltura/colore.
+Con le tre varianti del pioppo, le kelp e le 17 aggiunte della beta.3, il totale
+è di 48 voci di coltura/colore.
+
+I dodici fiori bassi supportati sono: dente di leone, papavero, orchidea blu,
+fiore d'aglio, houstonia, tulipano rosso, arancione, bianco e rosa, margherita,
+fiordaliso e mughetto. Inserisci il fiore stesso nello slot Pianta: rimane dopo
+ogni raccolto, come le altre piante. Non vengono prodotti semi aggiuntivi.
+Dente di leone d'oro, rosa di Wither, fiortorcia, pianta carnivora e occhidee
+restano esclusi da questo aggiornamento.
+
+Le bacche luminose si inseriscono nello slot Pianta con terra nello slot
+Terreno. Nel vaso crescono verso il basso su un piccolo sostegno interno;
+le bacche compaiono nell'ultimo dei quattro stadi. Il raccolto produce bacche,
+non blocchi di rampicante, e conserva l'esemplare originale.
 
 Per le kelp inserisci un **secchio d'acqua nello slot Terreno** e un'alga kelp
 nello slot Pianta. Secchio e pianta rimangono dopo ogni raccolto, senza consumare

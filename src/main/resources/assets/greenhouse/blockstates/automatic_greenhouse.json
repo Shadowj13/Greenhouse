@@ -1131,6 +1131,618 @@
       "apply": {
         "model": "greenhouse:block/plants/kelp_stage_3"
       }
+    },
+    {
+      "when": {
+        "crop": "glow_berries",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/glow_berries_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "glow_berries",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/glow_berries_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "glow_berries",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/glow_berries_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "glow_berries",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/glow_berries_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "dandelion",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/dandelion_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "dandelion",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/dandelion_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "dandelion",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/dandelion_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "dandelion",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/dandelion_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "poppy",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/poppy_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "poppy",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/poppy_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "poppy",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/poppy_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "poppy",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/poppy_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "blue_orchid",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/blue_orchid_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "blue_orchid",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/blue_orchid_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "blue_orchid",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/blue_orchid_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "blue_orchid",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/blue_orchid_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "allium",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/allium_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "allium",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/allium_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "allium",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/allium_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "allium",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/allium_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "azure_bluet",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/azure_bluet_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "azure_bluet",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/azure_bluet_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "azure_bluet",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/azure_bluet_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "azure_bluet",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/azure_bluet_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "red_tulip",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/red_tulip_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "red_tulip",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/red_tulip_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "red_tulip",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/red_tulip_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "red_tulip",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/red_tulip_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "orange_tulip",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/orange_tulip_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "orange_tulip",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/orange_tulip_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "orange_tulip",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/orange_tulip_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "orange_tulip",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/orange_tulip_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "white_tulip",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/white_tulip_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "white_tulip",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/white_tulip_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "white_tulip",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/white_tulip_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "white_tulip",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/white_tulip_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "pink_tulip",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/pink_tulip_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "pink_tulip",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/pink_tulip_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "pink_tulip",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/pink_tulip_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "pink_tulip",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/pink_tulip_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "oxeye_daisy",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/oxeye_daisy_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "oxeye_daisy",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/oxeye_daisy_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "oxeye_daisy",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/oxeye_daisy_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "oxeye_daisy",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/oxeye_daisy_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "cornflower",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/cornflower_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "cornflower",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/cornflower_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "cornflower",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/cornflower_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "cornflower",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/cornflower_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "lily_of_the_valley",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/lily_of_the_valley_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "lily_of_the_valley",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/lily_of_the_valley_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "lily_of_the_valley",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/lily_of_the_valley_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "lily_of_the_valley",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/lily_of_the_valley_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "sunflower",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/sunflower_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "sunflower",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/sunflower_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "sunflower",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/sunflower_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "sunflower",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/sunflower_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "lilac",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/lilac_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "lilac",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/lilac_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "lilac",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/lilac_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "lilac",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/lilac_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "peony",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/peony_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "peony",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/peony_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "peony",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/peony_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "peony",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/peony_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "rose_bush",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/rose_bush_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "rose_bush",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/rose_bush_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "rose_bush",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/rose_bush_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "rose_bush",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/rose_bush_stage_3"
+      }
     }
   ]
 }
