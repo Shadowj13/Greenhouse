@@ -36,18 +36,26 @@ final class CropAndRecipeTests {
     CropAndRecipeTests(ServerLevel level,BiConsumer<String,Runnable> test) {
         this.level=level; this.test=test;
     }
+    private static final List<Crop> ADDITIONS=List.of(
+        Crop.GLOW_BERRIES,Crop.DANDELION,Crop.POPPY,Crop.BLUE_ORCHID,Crop.ALLIUM,
+        Crop.AZURE_BLUET,Crop.RED_TULIP,Crop.ORANGE_TULIP,Crop.WHITE_TULIP,
+        Crop.PINK_TULIP,Crop.OXEYE_DAISY,Crop.CORNFLOWER,Crop.LILY_OF_THE_VALLEY,
+        Crop.SUNFLOWER,Crop.LILAC,Crop.PEONY,Crop.ROSE_BUSH);
     private record Spec(Crop crop, int duration, int min, int max, Set<String> bonus) {}
     private Spec spec(Crop crop) {
         // Independent acceptance limits: do not infer expected yields/timings
         // from the production fields whose behavior is being verified.
-        int duration = switch(crop) { case WHEAT,CARROTS,POTATOES,BEETROOT,CACTUS,SUGAR_CANE,KELP -> 600; default -> 900; };
+        int duration = switch(crop) { case WHEAT,CARROTS,POTATOES,BEETROOT,CACTUS,SUGAR_CANE,KELP,
+                DANDELION,POPPY,BLUE_ORCHID,ALLIUM,AZURE_BLUET,RED_TULIP,ORANGE_TULIP,
+                WHITE_TULIP,PINK_TULIP,OXEYE_DAISY,CORNFLOWER,LILY_OF_THE_VALLEY,
+                SUNFLOWER,LILAC,PEONY,ROSE_BUSH -> 600; default -> 900; };
         int min = switch(crop) {
             case WHEAT,BEETROOT,NETHER_WART,MELON -> 2;
             default -> crop.isTree()?2:1;
         };
         int max = switch(crop) {
             case MELON -> 4;
-            case CARROTS,POTATOES,COCOA,BAMBOO,SWEET_BERRIES,RED_MUSHROOM,BROWN_MUSHROOM -> min+1;
+            case CARROTS,POTATOES,COCOA,BAMBOO,SWEET_BERRIES,GLOW_BERRIES,RED_MUSHROOM,BROWN_MUSHROOM -> min+1;
             default -> min;
         };
         Set<String> bonus = new HashSet<>();
@@ -179,6 +187,27 @@ final class CropAndRecipeTests {
                 for(int count=s.min;count<=s.max;count++) require(mains.contains(count),"unreachable main yield "+count);
             });
         }
+        for(Crop crop:ADDITIONS) test.accept("priority123_"+crop.getSerializedName()+"_reload_and_menu",()->{
+            var be=fresh(false); inputs(be,crop,1);
+            var p=player(be.getBlockPos()); var menu=new GreenhouseMenu(1,p.getInventory(),be);
+            require(menu.slots.get(0).mayPlace(new ItemStack(Items.DIRT)) &&
+                menu.slots.get(1).mayPlace(new ItemStack(item(crop.plantId))),"menu rejects new crop");
+            require(!crop.isTree(),"new flower/berry classified as a tree");
+            tick(be,137); var saved=state(be); load(be,saved); tick(be,1);
+            require(be.dataAccess().get(0)==138 && be.dataAccess().get(1)==spec(crop).duration/2 &&
+                be.dataAccess().get(3)==3,"reload loses progress or boost");
+            require(be.getBlockState().getValue(GreenhouseBlock.CROP)==crop,"reload changes plant identity");
+            tick(be,spec(crop).duration/2-138); be.collectBy(p); harvest(spec(crop),contents(p.getInventory()));
+            require(be.getItem(0).is(Items.DIRT) && be.getItem(1).is(item(crop.plantId)) &&
+                be.getItem(1).getCount()==1,"harvest consumes original plant or soil");
+        });
+        test.accept("priority123_scope_and_excluded_plants",()->{
+            require(Crop.values().length==49 && ADDITIONS.size()==17,"unexpected crop scope");
+            for(String path:List.of("golden_dandelion","wither_rose","torchflower","torchflower_seeds",
+                    "pitcher_plant","pitcher_pod","red_shrub","shelf_mushroom","open_eyeblossom",
+                    "closed_eyeblossom","dead_bush","pink_petals","wildflowers","vine"))
+                require(Crop.of(new ItemStack(item(path)))==Crop.EMPTY,"unapproved crop accepted: "+path);
+        });
         test.accept("kelp_aquatic_inputs_reload_and_menu",()->{
             var be=fresh(false); inputs(be,Crop.KELP,0);
             for(Item invalid:List.of(Items.BUCKET,Items.LAVA_BUCKET,Items.DIRT,Items.SAND))
@@ -214,6 +243,33 @@ final class CropAndRecipeTests {
             require(!Crop.OAK.accepts(new ItemStack(FOREIGN_SOIL.get())),"foreign dirt accepted as vanilla");
             var be=fresh(false);
             require(!be.canPlaceItem(0,new ItemStack(FOREIGN_SOIL.get())) && !be.canPlaceItem(1,new ItemStack(FOREIGN_PLANT.get())),"foreign inputs enter menu/hopper slots");
+        });
+    }
+    private BlockPos persisted(Crop crop) {
+        return new BlockPos(53248+ADDITIONS.indexOf(crop)*3,100,51400);
+    }
+    void checkpointAdditions() {
+        for(Crop crop:ADDITIONS) test.accept("persist_priority123_"+crop.getSerializedName(),()->{
+            BlockPos at=persisted(crop);
+            level.setBlock(at,Blocks.AIR.defaultBlockState(),3);
+            level.setBlock(at.below(),Blocks.STONE.defaultBlockState(),3);
+            level.setBlock(at,BonsaiGreenhouse.NORMAL.get().defaultBlockState(),3);
+            var be=(GreenhouseBlockEntity)level.getBlockEntity(at);
+            inputs(be,crop,1); tick(be,137);
+        });
+    }
+    void reloadAdditions() {
+        for(Crop crop:ADDITIONS) test.accept("disk_reload_priority123_"+crop.getSerializedName(),()->{
+            var be=(GreenhouseBlockEntity)level.getBlockEntity(persisted(crop));
+            require(be!=null && be.dataAccess().get(0)==137 &&
+                be.dataAccess().get(1)==spec(crop).duration/2 && be.dataAccess().get(3)==3,
+                "new crop progress/boost changed across process restart");
+            require(be.getBlockState().getValue(GreenhouseBlock.CROP)==crop,"disk reload loses plant identity");
+            tick(be,spec(crop).duration/2-137);
+            require(be.dataAccess().get(2)==1,"disk-restored crop misses original maturity deadline");
+            var p=player(be.getBlockPos()); be.collectBy(p); harvest(spec(crop),contents(p.getInventory()));
+            require(be.getItem(0).is(Items.DIRT) && be.getItem(1).is(item(crop.plantId)),
+                "disk-restored harvest loses inputs");
         });
     }
     private List<ItemStack> grid(boolean automatic,Item slab,int count) {

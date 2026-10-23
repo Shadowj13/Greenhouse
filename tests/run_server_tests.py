@@ -18,12 +18,14 @@ ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument('--java', default=str(Path(os.environ['JAVA_HOME']) / 'bin/java') if 'JAVA_HOME' in os.environ else 'java')
 parser.add_argument('--jar', type=Path)
+parser.add_argument('--qa-jar', type=Path, help='Optional historical QA JAR for migration checkpoints')
 parser.add_argument('--report-name', default='consolidation')
 scenarios = parser.add_mutually_exclusive_group()
 scenarios.add_argument('--core-only', action='store_true')
 scenarios.add_argument('--crops-only', action='store_true')
 scenarios.add_argument('--checkpoint-only', action='store_true')
 scenarios.add_argument('--reload-only', action='store_true')
+scenarios.add_argument('--legacy-reload-only', action='store_true')
 args = parser.parse_args()
 props = dict(line.split('=', 1) for line in (ROOT / 'gradle.properties').read_text(encoding='utf-8').splitlines() if '=' in line)
 jar = (args.jar or ROOT / f'build/libs/greenhouse-{props["mod_version"]}.jar').resolve()
@@ -35,14 +37,14 @@ run.mkdir(parents=True, exist_ok=True)
 # deliberately reuses the checkpoint written by the previous server process.
 world = (run / 'qa-world').resolve()
 assert world.parent == run.resolve() and world.name == 'qa-world'
-if not args.reload_only and world.exists():
+if not (args.reload_only or args.legacy_reload_only) and world.exists():
     shutil.rmtree(world)
 mods = run / 'mods'
 mods.mkdir(exist_ok=True)
 for p in mods.glob('greenhouse*.jar'):
     p.unlink()
 shutil.copy2(jar, mods / 'greenhouse.jar')
-shutil.copy2(ROOT / 'build/qa/greenhouse-qa.jar', mods / 'greenhouse-qa.jar')
+shutil.copy2(args.qa_jar or ROOT / 'build/qa/greenhouse-qa.jar', mods / 'greenhouse-qa.jar')
 (run / 'eula.txt').write_text('eula=true\n', encoding='utf-8')
 (run / 'server.properties').write_text('\n'.join((
     'server-ip=127.0.0.1', 'server-port=0', 'level-name=qa-world',
@@ -124,9 +126,11 @@ elif args.checkpoint_only:
     launch(['checkpoint'], 1)
 elif args.reload_only:
     launch(['reload'], 1)
+elif args.legacy_reload_only:
+    launch(['legacyreload'], 1)
 else:
     launch(['core', 'benchmark'] if args.core_only else ['core', 'crops', 'recipes', 'checkpoint', 'benchmark', 'unload'], 1)
-if not (args.core_only or args.crops_only or args.checkpoint_only or args.reload_only):
+if not (args.core_only or args.crops_only or args.checkpoint_only or args.reload_only or args.legacy_reload_only):
     launch(['reload'], 2)
 from zipfile import ZipFile
 with ZipFile(jar) as archive:

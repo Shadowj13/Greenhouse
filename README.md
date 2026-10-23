@@ -2,7 +2,7 @@
 
 Minecraft Java **26.3**, NeoForge **26.3.0.76 or later**, Java **25**.
 
-## Download
+## Latest published download
 
 [Download Greenhouse 0.3.0-beta.2](https://github.com/Shadowj13/Greenhouse/releases/tag/v0.3.0-beta.2)
 (public beta; no GitHub account required).
@@ -23,6 +23,20 @@ See [kelp verification](docs/kelp-0.3.0-beta.2.md) for this update and the
 [previous beta verification report](docs/beta-0.3.0.md) for the beta.1 two-client,
 natural-tick load and migration scope, with explicit untested configurations.
 
+## Development: 0.3.0-beta.3
+
+The source adds priorities 1-3: glow berries, twelve common small flowers and
+sunflower, lilac, peony and rose bush. Flowers yield one matching item every
+30 seconds; glow berries yield one or two every 45 seconds. Both use reusable
+dirt and plant inputs, including the existing dirt variants and fertilizer rules.
+There are now 48 crop/color entries and 68 additional growth models, reusing
+vanilla textures inside the approved detailed one-block enclosure and GUI.
+
+The download links above remain the published beta.2 until a beta.3 release is
+published. Build beta.3 from this source or use the separately supplied validated
+JAR. See [the crop guide](docs/USO.md) for all supported inputs and the
+[beta.3 verification report](docs/flowers-0.3.0-beta.3.md) for evidence and limits.
+
 ## Build and verify
 
 The canonical, editable project is now at the repository root. The original ZIP
@@ -37,7 +51,7 @@ and `patch/` are historical inputs, no longer applied by CI.
 
 Python 3 is required for the asset regression checks in `check` (no packages are
 required). Override its location with `-PpythonExecutable=C:/path/to/python.exe`.
-The installable file is `build/libs/greenhouse-0.3.0-beta.2.jar`.
+The installable file is `build/libs/greenhouse-0.3.0-beta.3.jar`.
 Use one Greenhouse JAR at a time in the instance's `mods` folder.
 
 `releaseBundle` builds and runs all server checks, then creates a reproducible
@@ -48,7 +62,7 @@ any failed test. CI uploads both the standalone JAR and the bundle.
 `integrationTest` launches the packaged JAR and a separate QA mod on an isolated,
 headless NeoForge server. It checks growth, fertilizer, full inventories, sided
 insertion, double chests, drops, server-side menu listeners, chunk unloading,
-disk reload, all 31 crop/color entries and both crafting recipes (156 checks).
+disk reload, all 48 crop/color entries and both crafting recipes (276 checks).
 Its world stays under `build/integration`; results and server logs
 are written to `build/qa-results`. The QA mod is never part of the installable JAR.
 The harness accepts the Minecraft EULA for this local test server.

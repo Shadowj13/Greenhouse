@@ -73,6 +73,55 @@ class ModelTests(unittest.TestCase):
                 self.assertGreaterEqual(e['from'][1], 4.96)
         self.assertEqual(heights, sorted(set(heights)))
 
+    def test_priority123_models_and_both_blockstates(self):
+        crops = ('glow_berries', 'dandelion', 'poppy', 'blue_orchid', 'allium',
+                 'azure_bluet', 'red_tulip', 'orange_tulip', 'white_tulip',
+                 'pink_tulip', 'oxeye_daisy', 'cornflower', 'lily_of_the_valley',
+                 'sunflower', 'lilac', 'peony', 'rose_bush')
+        for crop in crops:
+            versions = []
+            for stage in range(4):
+                model = read(MODELS / f'block/plants/{crop}_stage_{stage}.json')
+                versions.append(model)
+                self.assertFalse(model['ambientocclusion'])
+                for e in model['elements']:
+                    self.assertTrue(all(4.5 <= e['from'][a] <= e['to'][a] <= 11.5 for a in (0, 2)))
+                    self.assertGreaterEqual(e['from'][1], 5.0)
+                    self.assertLessEqual(e['to'][1], 14.25)
+                    if any(a == b for a, b in zip(e['from'], e['to'])):
+                        self.assertEqual(len(e['faces']), 2)
+                        self.assertFalse(e['shade'])
+                        self.assertFalse(e['neoforge_data']['ambient_occlusion'])
+                for kind in ('greenhouse', 'automatic_greenhouse'):
+                    parts = read(ASSETS / f'blockstates/{kind}.json')['multipart']
+                    matched = [p for p in parts if p.get('when', {}) == {'crop': crop, 'stage': str(stage)}]
+                    self.assertEqual(len(matched), 1)
+                    self.assertEqual(matched[0]['apply']['model'], f'greenhouse:block/plants/{crop}_stage_{stage}')
+            self.assertEqual(len({json.dumps(v, sort_keys=True) for v in versions}), 4)
+            if crop != 'glow_berries':
+                heights = [max(e['to'][1] for e in v['elements']) for v in versions]
+                self.assertEqual(heights, sorted(set(heights)))
+
+    def test_glow_berries_hang_from_a_support_and_ripen_only_in_final_stage(self):
+        bottoms = []
+        for stage in range(4):
+            model = read(MODELS / f'block/plants/glow_berries_stage_{stage}.json')
+            vines = [e for e in model['elements'] if len(e['faces']) == 2]
+            bottoms.append(min(e['from'][1] for e in vines))
+            self.assertEqual(max(e['to'][1] for e in vines), 13.0)
+            self.assertEqual(len(model['elements']) - len(vines), 3)
+            self.assertEqual(model['textures']['tip'].endswith('_lit'), stage == 3)
+        self.assertEqual(bottoms, sorted(set(bottoms), reverse=True))
+
+    def test_sunflower_has_separate_front_and_back_flower_sprites(self):
+        for stage in range(4):
+            model = read(MODELS / f'block/plants/sunflower_stage_{stage}.json')
+            self.assertEqual(model['textures']['front'], 'minecraft:block/sunflower_front')
+            self.assertEqual(model['textures']['back'], 'minecraft:block/sunflower_back')
+            head = model['elements'][-1]
+            self.assertEqual(head['faces']['north']['texture'], '#front')
+            self.assertEqual(head['faces']['south']['texture'], '#back')
+
     def test_all_resource_references_resolve(self):
         for path in ASSETS.rglob('*.json'):
             model = read(path)
