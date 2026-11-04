@@ -2,7 +2,17 @@
   "multipart": [
     {
       "when": {
-        "crop": "!kelp"
+        "AND": [
+          {
+            "crop": "!kelp"
+          },
+          {
+            "crop": "!sea_pickle"
+          },
+          {
+            "crop": "!chorus"
+          }
+        ]
       },
       "apply": {
         "model": "greenhouse:block/automatic_greenhouse"
@@ -10,10 +20,25 @@
     },
     {
       "when": {
-        "crop": "kelp"
+        "OR": [
+          {
+            "crop": "kelp"
+          },
+          {
+            "crop": "sea_pickle"
+          }
+        ]
       },
       "apply": {
         "model": "greenhouse:block/automatic_greenhouse_aquatic"
+      }
+    },
+    {
+      "when": {
+        "crop": "chorus"
+      },
+      "apply": {
+        "model": "greenhouse:block/automatic_greenhouse_end"
       }
     },
     {
@@ -1742,6 +1767,114 @@
       },
       "apply": {
         "model": "greenhouse:block/plants/rose_bush_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "sea_pickle",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/sea_pickle_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "sea_pickle",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/sea_pickle_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "sea_pickle",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/sea_pickle_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "sea_pickle",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/sea_pickle_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "moss",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/moss_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "moss",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/moss_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "moss",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/moss_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "moss",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/moss_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "chorus",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/chorus_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "chorus",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/chorus_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "chorus",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/chorus_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "chorus",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/chorus_stage_3"
       }
     }
   ]

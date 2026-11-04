@@ -60,7 +60,9 @@ class ModelTests(unittest.TestCase):
             self.assertEqual(aquatic['textures']['dirt'], 'minecraft:block/water_still')
             parts = read(ASSETS / f'blockstates/{kind}.json')['multipart']
             bases = [p for p in parts if 'stage' not in p.get('when', {})]
-            self.assertEqual([p['when']['crop'] for p in bases], ['!kelp', 'kelp'])
+            self.assertEqual(len(bases), 3)
+            aquatic_base = next(p for p in bases if p['apply']['model'].endswith('_aquatic'))
+            self.assertEqual(aquatic_base['when'], {'OR': [{'crop': 'kelp'}, {'crop': 'sea_pickle'}]})
             stages = [p['when']['stage'] for p in parts
                       if p.get('when', {}).get('crop') == 'kelp' and 'stage' in p['when']]
             self.assertEqual(stages, ['0', '1', '2', '3'])
@@ -121,6 +123,62 @@ class ModelTests(unittest.TestCase):
             head = model['elements'][-1]
             self.assertEqual(head['faces']['north']['texture'], '#front')
             self.assertEqual(head['faces']['south']['texture'], '#back')
+
+    def test_every_crop_stage_has_one_shell_and_one_matching_plant(self):
+        java = (ROOT / 'src/main/java/it/bonsaigreenhouse/Crop.java').read_text(encoding='utf-8')
+        crops = [name.lower() for name in re.findall(r'^    ([A-Z_]+)[(]"', java, re.M)]
+        self.assertEqual(len(crops), 52)
+        def applies(when, crop, stage):
+            if 'AND' in when:
+                return all(applies(c, crop, stage) for c in when['AND'])
+            if 'OR' in when:
+                return any(applies(c, crop, stage) for c in when['OR'])
+            for key, value in when.items():
+                actual = crop if key == 'crop' else str(stage)
+                negate = value.startswith('!')
+                options = value[1:] if negate else value
+                if (actual in options.split('|')) == negate:
+                    return False
+            return True
+        for kind in ('greenhouse', 'automatic_greenhouse'):
+            parts = read(ASSETS / f'blockstates/{kind}.json')['multipart']
+            shell_ids = {f'greenhouse:block/{kind}{suffix}' for suffix in ('', '_aquatic', '_end')}
+            for crop in crops:
+                for stage in range(4):
+                    selected = [p['apply']['model'] for p in parts if applies(p.get('when', {}), crop, stage)]
+                    shells = [m for m in selected if m in shell_ids]
+                    plants = [m for m in selected if m not in shell_ids]
+                    suffix = '_aquatic' if crop in ('kelp', 'sea_pickle') else '_end' if crop == 'chorus' else ''
+                    self.assertEqual(shells, [f'greenhouse:block/{kind}{suffix}'], (kind, crop, stage))
+                    self.assertEqual(plants, [] if crop == 'empty' else [f'greenhouse:block/plants/{crop}_stage_{stage}'])
+
+    def test_end_pots_change_only_the_soil_texture(self):
+        for kind in ('greenhouse', 'automatic_greenhouse'):
+            base = read(MODELS / f'block/{kind}.json')
+            end = read(MODELS / f'block/{kind}_end.json')
+            self.assertEqual(end['textures']['dirt'], 'minecraft:block/end_stone')
+            end['textures']['dirt'] = base['textures']['dirt']
+            self.assertEqual(base, end)
+
+    def test_beta4_crops_have_four_distinct_contained_3d_stages(self):
+        for crop in ('sea_pickle', 'moss', 'chorus'):
+            versions = [read(MODELS / f'block/plants/{crop}_stage_{stage}.json') for stage in range(4)]
+            self.assertEqual(len({json.dumps(v, sort_keys=True) for v in versions}), 4)
+            for model in versions:
+                self.assertFalse(model['ambientocclusion'])
+                for e in model['elements']:
+                    self.assertTrue(all(5.0 <= e['from'][a] < e['to'][a] <= 11.0 for a in (0, 2)))
+                    self.assertGreaterEqual(e['from'][1], 4.96)
+                    self.assertLessEqual(e['to'][1], 14.25)
+                    self.assertTrue(all(a < b for a, b in zip(e['from'], e['to'])))
+                    self.assertFalse(e['shade'])
+                    self.assertFalse(e['neoforge_data']['ambient_occlusion'])
+                    self.assertTrue(all('cullface' not in face for face in e['faces'].values()))
+            if crop == 'sea_pickle':
+                self.assertEqual([len(v['elements']) for v in versions], [2, 4, 6, 8])
+            else:
+                heights = [max(e['to'][1] for e in v['elements']) for v in versions]
+                self.assertEqual(heights, sorted(set(heights)))
 
     def test_all_resource_references_resolve(self):
         for path in ASSETS.rglob('*.json'):

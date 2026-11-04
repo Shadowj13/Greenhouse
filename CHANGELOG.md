@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0-beta.4
+
+- Add sea pickles with reusable water, moss on stone or the existing dirt
+  substrates, and chorus flowers on end stone. Both greenhouse variants now
+  support 51 crop/color entries.
+- Sea pickles and moss yield one matching item every 600 ticks; chorus yields
+  one or two raw fruits every 900 ticks. Preserve the original plant/substrate
+  and four accelerated bone-meal cycles; chorus cannot generate free flowers.
+- Add twelve detailed growth models and two End pot variants. Reuse the kelp
+  aquatic shell for sea pickles, with exactly one selected base per state.
+- Extend packaged-JAR verification to 300 checks and add beta.3 disk migration
+  and a reproducible three-crop visual fixture. Make model generation emit LF
+  deterministically across checkouts.
+
 ## 0.3.0-beta.3
 
 - Add priorities 1-3: glow berries, twelve common small flowers and four tall

@@ -57,6 +57,9 @@ rimangono disponibili dopo il raccolto. Raccogli prima di cambiare coltura.
 | Bacche luminose | Terra* | 1–2 bacche luminose | 45 s |
 | Fiori comuni bassi (elenco sotto) | Terra* | 1 fiore del tipo inserito | 30 s |
 | Girasole, lillà, peonia, rosaio | Terra* | 1 fiore/pianta del tipo inserito | 30 s |
+| Cetriolo di mare | Secchio d'acqua | 1 cetriolo di mare | 30 s |
+| Blocco di muschio | Pietra oppure Terra* | 1 blocco di muschio | 30 s |
+| Fiore di coro | Pietra dell'End | 1–2 frutti di coro | 45 s |
 
 *Terra comprende anche blocco d'erba, podzol, terra radicata e terra brulla.
 I tempi indicati corrispondono a 20 tick al secondo; un server rallentato può
@@ -66,8 +69,8 @@ prodotto principale e non promette tutti i bonus a ogni raccolto.
 
 Il pioppo usa un solo alberello: quando viene stabilito sceglie rosso, arancione
 o giallo con pari probabilità e conserva il colore tra raccolte e salvataggi.
-Con le tre varianti del pioppo, le kelp e le 17 aggiunte della beta.3, il totale
-è di 48 voci di coltura/colore.
+Con le tre varianti del pioppo, le kelp, le 17 aggiunte della beta.3 e le tre
+della beta.4, il totale è di 51 voci di coltura/colore.
 
 I dodici fiori bassi supportati sono: dente di leone, papavero, orchidea blu,
 fiore d'aglio, houstonia, tulipano rosso, arancione, bianco e rosa, margherita,
@@ -87,6 +90,23 @@ acqua o richiedere tubazioni. Il vaso mostra acqua e quattro stadi di crescita.
 Si raccolgono alghe normali: le alghe essiccate non si possono piantare.
 La serra automatica trasferisce le alghe nei contenitori sottostanti come le
 altre colture. La farina d'ossa applica lo stesso bonus di quattro cicli.
+
+Per i cetrioli di mare usa il secchio d'acqua nello slot Terreno e un cetriolo
+nello slot Pianta. Il vaso mostra una colonia acquatica in quattro stadi e
+produce un cetriolo per raccolto. La serra simula l'ambiente di coltivazione:
+non richiede un ulteriore blocco di corallo. Questa è una regola della mod;
+le condizioni vanilla di riproduzione con farina d'ossa fuori dalla serra
+restano quelle di Minecraft.
+
+Per il muschio usa un blocco di pietra o una delle terre sopra elencate e un
+blocco di muschio. Si raccolgono blocchi di muschio, non pietra, terra,
+tappeti, azalee o muschio pallido. Gli input restano disponibili.
+
+Per il coro inserisci pietra dell'End nello slot Terreno e un fiore di coro
+nello slot Pianta. Il fiore iniziale va ottenuto nel gioco: frutti, frutti
+scoppiati e rami di coro non sono input validi. Il raccolto contiene solo
+frutti normali; non produce nuovi fiori o blocchi di purpur. Il vaso ha un
+fondo di pietra dell'End e quattro stadi ramificati.
 
 Una farina d'ossa dimezza il tempo di **quattro cicli**, incluso quello che la
 consuma. Il bonus visualizzato indica i cicli accelerati ancora disponibili
@@ -115,4 +135,4 @@ L'accesso automatico alla serra avviene così:
 
 Le serre funzionano quando il loro chunk è caricato e attivo. Greenhouse non
 carica autonomamente i chunk e non richiede energia, rifornimenti d'acqua o un
-orario solare. Solo le kelp richiedono un secchio d'acqua come substrato iniziale.
+orario solare. Kelp e cetrioli di mare richiedono un secchio d'acqua come substrato iniziale.

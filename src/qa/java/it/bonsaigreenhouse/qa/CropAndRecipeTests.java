@@ -40,7 +40,8 @@ final class CropAndRecipeTests {
         Crop.GLOW_BERRIES,Crop.DANDELION,Crop.POPPY,Crop.BLUE_ORCHID,Crop.ALLIUM,
         Crop.AZURE_BLUET,Crop.RED_TULIP,Crop.ORANGE_TULIP,Crop.WHITE_TULIP,
         Crop.PINK_TULIP,Crop.OXEYE_DAISY,Crop.CORNFLOWER,Crop.LILY_OF_THE_VALLEY,
-        Crop.SUNFLOWER,Crop.LILAC,Crop.PEONY,Crop.ROSE_BUSH);
+        Crop.SUNFLOWER,Crop.LILAC,Crop.PEONY,Crop.ROSE_BUSH,
+        Crop.SEA_PICKLE,Crop.MOSS,Crop.CHORUS);
     private record Spec(Crop crop, int duration, int min, int max, Set<String> bonus) {}
     private Spec spec(Crop crop) {
         // Independent acceptance limits: do not infer expected yields/timings
@@ -48,14 +49,14 @@ final class CropAndRecipeTests {
         int duration = switch(crop) { case WHEAT,CARROTS,POTATOES,BEETROOT,CACTUS,SUGAR_CANE,KELP,
                 DANDELION,POPPY,BLUE_ORCHID,ALLIUM,AZURE_BLUET,RED_TULIP,ORANGE_TULIP,
                 WHITE_TULIP,PINK_TULIP,OXEYE_DAISY,CORNFLOWER,LILY_OF_THE_VALLEY,
-                SUNFLOWER,LILAC,PEONY,ROSE_BUSH -> 600; default -> 900; };
+                SUNFLOWER,LILAC,PEONY,ROSE_BUSH,SEA_PICKLE,MOSS -> 600; default -> 900; };
         int min = switch(crop) {
             case WHEAT,BEETROOT,NETHER_WART,MELON -> 2;
             default -> crop.isTree()?2:1;
         };
         int max = switch(crop) {
             case MELON -> 4;
-            case CARROTS,POTATOES,COCOA,BAMBOO,SWEET_BERRIES,GLOW_BERRIES,RED_MUSHROOM,BROWN_MUSHROOM -> min+1;
+            case CARROTS,POTATOES,COCOA,BAMBOO,SWEET_BERRIES,GLOW_BERRIES,RED_MUSHROOM,BROWN_MUSHROOM,CHORUS -> min+1;
             default -> min;
         };
         Set<String> bonus = new HashSet<>();
@@ -141,8 +142,10 @@ final class CropAndRecipeTests {
                 if(crop.soilId.equals("dirt")) soils.addAll(List.of("grass_block","podzol","rooted_dirt","coarse_dirt"));
                 if(crop.soilId.equals("sand")) soils.add("red_sand");
                 if(crop.soilId.equals("mycelium")) soils.add("podzol");
+                if(crop==Crop.MOSS) soils.addAll(List.of("dirt","grass_block","podzol","rooted_dirt","coarse_dirt"));
                 for(String soil:soils) require(crop.accepts(new ItemStack(item(soil))),"rejected substrate "+soil);
-                require(!crop.accepts(new ItemStack(Items.STONE)) && !crop.accepts(ItemStack.EMPTY),"invalid substrate accepted");
+                require(!crop.accepts(new ItemStack(Items.COBBLESTONE)) && !crop.accepts(ItemStack.EMPTY),"invalid substrate accepted");
+                require(crop.accepts(new ItemStack(Items.STONE))==(crop==Crop.MOSS),"stone accepted by wrong crop");
                 var be=fresh(false); inputs(be,crop,1);
                 be.setItem(0,new ItemStack(crop.soilId.equals("sand")?Items.DIRT:Items.SAND)); tick(be,1000);
                 require(be.dataAccess().get(0)==0 && be.getItem(2).getCount()==1,"invalid combination grew or spent fertilizer");
@@ -190,23 +193,60 @@ final class CropAndRecipeTests {
         for(Crop crop:ADDITIONS) test.accept("priority123_"+crop.getSerializedName()+"_reload_and_menu",()->{
             var be=fresh(false); inputs(be,crop,1);
             var p=player(be.getBlockPos()); var menu=new GreenhouseMenu(1,p.getInventory(),be);
-            require(menu.slots.get(0).mayPlace(new ItemStack(Items.DIRT)) &&
+            require(menu.slots.get(0).mayPlace(new ItemStack(item(crop.soilId))) &&
                 menu.slots.get(1).mayPlace(new ItemStack(item(crop.plantId))),"menu rejects new crop");
-            require(!crop.isTree(),"new flower/berry classified as a tree");
+            require(!crop.isTree(),"non-tree crop classified as a tree");
             tick(be,137); var saved=state(be); load(be,saved); tick(be,1);
             require(be.dataAccess().get(0)==138 && be.dataAccess().get(1)==spec(crop).duration/2 &&
                 be.dataAccess().get(3)==3,"reload loses progress or boost");
             require(be.getBlockState().getValue(GreenhouseBlock.CROP)==crop,"reload changes plant identity");
             tick(be,spec(crop).duration/2-138); be.collectBy(p); harvest(spec(crop),contents(p.getInventory()));
-            require(be.getItem(0).is(Items.DIRT) && be.getItem(1).is(item(crop.plantId)) &&
+            require(be.getItem(0).is(item(crop.soilId)) && be.getItem(1).is(item(crop.plantId)) &&
                 be.getItem(1).getCount()==1,"harvest consumes original plant or soil");
         });
         test.accept("priority123_scope_and_excluded_plants",()->{
-            require(Crop.values().length==49 && ADDITIONS.size()==17,"unexpected crop scope");
+            require(Crop.values().length==52 && ADDITIONS.size()==20,"unexpected crop scope");
             for(String path:List.of("golden_dandelion","wither_rose","torchflower","torchflower_seeds",
                     "pitcher_plant","pitcher_pod","red_shrub","shelf_mushroom","open_eyeblossom",
                     "closed_eyeblossom","dead_bush","pink_petals","wildflowers","vine"))
                 require(Crop.of(new ItemStack(item(path)))==Crop.EMPTY,"unapproved crop accepted: "+path);
+        });
+        test.accept("sea_pickle_water_and_original_input_contract",()->{
+            require(Crop.SEA_PICKLE.accepts(new ItemStack(Items.WATER_BUCKET)),"water rejected");
+            for(Item invalid:List.of(Items.BUCKET,Items.LAVA_BUCKET,Items.DIRT,Items.STONE,Items.TUBE_CORAL_BLOCK))
+                require(!Crop.SEA_PICKLE.accepts(new ItemStack(invalid)),"invalid aquatic substrate accepted");
+            require(Crop.of(new ItemStack(Items.SEA_PICKLE))==Crop.SEA_PICKLE,"wrong pickle input");
+            var be=fresh(false); inputs(be,Crop.SEA_PICKLE,0); tick(be,600);
+            var p=player(be.getBlockPos()); be.collectBy(p);
+            require(contents(p.getInventory()).equals(Map.of("sea_pickle",1)),"wrong pickle harvest");
+            require(be.getItem(0).is(Items.WATER_BUCKET) && be.getItem(1).is(Items.SEA_PICKLE),
+                "pickle harvest consumes water or original colony");
+        });
+        test.accept("moss_all_supported_substrates_grow_and_survive_harvest",()->{
+            for(Item soil:List.of(Items.STONE,Items.DIRT,Items.GRASS_BLOCK,Items.PODZOL,Items.ROOTED_DIRT,Items.COARSE_DIRT)) {
+                var be=fresh(false); be.setItem(0,new ItemStack(soil)); be.setItem(1,new ItemStack(Items.MOSS_BLOCK));
+                tick(be,600); var p=player(be.getBlockPos()); be.collectBy(p);
+                require(contents(p.getInventory()).equals(Map.of("moss_block",1)),"moss did not grow on "+soil);
+                require(be.getItem(0).is(soil) && be.getItem(1).is(Items.MOSS_BLOCK),"moss consumed input");
+            }
+            require(Crop.of(new ItemStack(Items.MOSS_CARPET))==Crop.EMPTY &&
+                Crop.of(new ItemStack(Items.PALE_MOSS_BLOCK))==Crop.EMPTY,"unapproved moss variant accepted");
+            require(!Crop.MOSS.accepts(new ItemStack(FOREIGN_SOIL.get())),"foreign dirt accepted for moss");
+        });
+        test.accept("chorus_requires_flower_and_end_stone_and_drops_fruit_only",()->{
+            require(Crop.of(new ItemStack(Items.CHORUS_FLOWER))==Crop.CHORUS,"flower rejected");
+            for(Item invalid:List.of(Items.CHORUS_FRUIT,Items.POPPED_CHORUS_FRUIT,Items.CHORUS_PLANT))
+                require(Crop.of(new ItemStack(invalid))==Crop.EMPTY,"fruit/branch bypasses flower acquisition");
+            require(Crop.CHORUS.accepts(new ItemStack(Items.END_STONE)),"end stone rejected");
+            for(Item invalid:List.of(Items.DIRT,Items.STONE,Items.END_STONE_BRICKS,Items.WATER_BUCKET))
+                require(!Crop.CHORUS.accepts(new ItemStack(invalid)),"invalid chorus substrate accepted");
+            var be=fresh(false); inputs(be,Crop.CHORUS,0); tick(be,900);
+            var p=player(be.getBlockPos()); be.collectBy(p);
+            var got=contents(p.getInventory());
+            require(got.size()==1 && got.getOrDefault("chorus_fruit",0)>=1 &&
+                got.getOrDefault("chorus_fruit",0)<=2,"chorus generated a flower or processed product");
+            require(be.getItem(0).is(Items.END_STONE) && be.getItem(1).is(Items.CHORUS_FLOWER),
+                "chorus harvest consumes original flower or substrate");
         });
         test.accept("kelp_aquatic_inputs_reload_and_menu",()->{
             var be=fresh(false); inputs(be,Crop.KELP,0);
@@ -258,8 +298,10 @@ final class CropAndRecipeTests {
             inputs(be,crop,1); tick(be,137);
         });
     }
-    void reloadAdditions() {
-        for(Crop crop:ADDITIONS) test.accept("disk_reload_priority123_"+crop.getSerializedName(),()->{
+    void reloadAdditions() { reloadAdditions(ADDITIONS); }
+    void reloadBeta3Additions() { reloadAdditions(ADDITIONS.subList(0,17)); }
+    private void reloadAdditions(List<Crop> restored) {
+        for(Crop crop:restored) test.accept("disk_reload_priority123_"+crop.getSerializedName(),()->{
             var be=(GreenhouseBlockEntity)level.getBlockEntity(persisted(crop));
             require(be!=null && be.dataAccess().get(0)==137 &&
                 be.dataAccess().get(1)==spec(crop).duration/2 && be.dataAccess().get(3)==3,
@@ -268,7 +310,7 @@ final class CropAndRecipeTests {
             tick(be,spec(crop).duration/2-137);
             require(be.dataAccess().get(2)==1,"disk-restored crop misses original maturity deadline");
             var p=player(be.getBlockPos()); be.collectBy(p); harvest(spec(crop),contents(p.getInventory()));
-            require(be.getItem(0).is(Items.DIRT) && be.getItem(1).is(item(crop.plantId)),
+            require(be.getItem(0).is(item(crop.soilId)) && be.getItem(1).is(item(crop.plantId)),
                 "disk-restored harvest loses inputs");
         });
     }

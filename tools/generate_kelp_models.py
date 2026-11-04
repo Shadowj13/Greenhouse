@@ -1,12 +1,13 @@
 """Generate only the aquatic base variants and four kelp stages; reuse vanilla textures."""
 import json
 from pathlib import Path
+from model_bases import configure_bases
 
 ASSETS = Path(__file__).resolve().parents[1] / 'src/main/resources/assets/greenhouse'
 
 
 def write(path, value):
-    path.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8')
+    path.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8', newline='\n')
 
 
 def plane(cx, z, bottom, top, width, texture, axis):
@@ -32,16 +33,21 @@ for kind in ('greenhouse', 'automatic_greenhouse'):
     write(ASSETS / f'models/block/{kind}_aquatic.json', model)
     path = ASSETS / f'blockstates/{kind}.json'
     states = json.loads(path.read_text())
+    configure_bases(kind, states)
     parts = states['multipart']
-    # Regeneration does not duplicate the conditional bases or plant entries.
-    parts = [p for p in parts if p.get('when', {}).get('crop') != 'kelp'
-             and p.get('apply', {}).get('model') != f'greenhouse:block/{kind}_aquatic']
-    parts[0] = {'when': {'crop': '!kelp'}, 'apply': {'model': f'greenhouse:block/{kind}'}}
-    parts.insert(1, {'when': {'crop': 'kelp'},
-                     'apply': {'model': f'greenhouse:block/{kind}_aquatic'}})
+    # Update existing stage entries in place so regenerating kelp does not
+    # reorder unrelated crops or duplicate the newer substrate selectors.
     for stage in range(4):
-        parts.append({'when': {'crop': 'kelp', 'stage': str(stage)},
-                      'apply': {'model': f'greenhouse:block/plants/kelp_stage_{stage}'}})
+        expected = {'when': {'crop': 'kelp', 'stage': str(stage)},
+                    'apply': {'model': f'greenhouse:block/plants/kelp_stage_{stage}'}}
+        matching = [i for i, part in enumerate(parts)
+                    if part.get('when', {}) == expected['when']]
+        if matching:
+            parts[matching[0]] = expected
+            for index in reversed(matching[1:]):
+                del parts[index]
+        else:
+            parts.append(expected)
     states['multipart'] = parts
     write(path, states)
 

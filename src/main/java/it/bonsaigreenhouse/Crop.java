@@ -61,7 +61,10 @@ public enum Crop implements StringRepresentable {
     SUNFLOWER("sunflower", "sunflower", "dirt", 600, 1, 0),
     LILAC("lilac", "lilac", "dirt", 600, 1, 0),
     PEONY("peony", "peony", "dirt", 600, 1, 0),
-    ROSE_BUSH("rose_bush", "rose_bush", "dirt", 600, 1, 0);
+    ROSE_BUSH("rose_bush", "rose_bush", "dirt", 600, 1, 0),
+    SEA_PICKLE("sea_pickle", "sea_pickle", "water_bucket", 600, 1, 0),
+    MOSS("moss_block", "moss_block", "stone", 600, 1, 0),
+    CHORUS("chorus_flower", "chorus_fruit", "end_stone", 900, 1, 50);
 
     public final String plantId, dropId, soilId;
     public final int duration, guaranteed, extraChance;
@@ -84,7 +87,7 @@ public enum Crop implements StringRepresentable {
         if (this==EMPTY || substrate.isEmpty()) return false;
         String s=id(substrate);
         if (soilId.equals(s)) return true;
-        if (soilId.equals("dirt")) return s.equals("grass_block") || s.equals("podzol") || s.equals("rooted_dirt") || s.equals("coarse_dirt");
+        if (soilId.equals("dirt") || this==MOSS) return s.equals("dirt") || s.equals("grass_block") || s.equals("podzol") || s.equals("rooted_dirt") || s.equals("coarse_dirt");
         if (soilId.equals("sand")) return s.equals("red_sand");
         if (soilId.equals("mycelium")) return s.equals("podzol");
         return false;
