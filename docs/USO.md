@@ -60,6 +60,11 @@ rimangono disponibili dopo il raccolto. Raccogli prima di cambiare coltura.
 | Cetriolo di mare | Secchio d'acqua | 1 cetriolo di mare | 30 s |
 | Blocco di muschio | Pietra oppure Terra* | 1 blocco di muschio | 30 s |
 | Fiore di coro | Pietra dell'End | 1–2 frutti di coro | 45 s |
+| Rampicante normale | Terra* | 1 rampicante normale | 30 s |
+| Lichene luminescente | Pietra | 1 lichene luminescente | 30 s |
+| Rampicanti attorcigliati | Nylium distorto | 1 rampicante attorcigliato | 30 s |
+| Rampicanti piangenti | Blocco di verruche del Nether | 1 rampicante piangente | 30 s |
+| Piantaforma grande | Terra* | 1 piantaforma grande | 30 s |
 
 *Terra comprende anche blocco d'erba, podzol, terra radicata e terra brulla.
 I tempi indicati corrispondono a 20 tick al secondo; un server rallentato può
@@ -70,7 +75,7 @@ prodotto principale e non promette tutti i bonus a ogni raccolto.
 Il pioppo usa un solo alberello: quando viene stabilito sceglie rosso, arancione
 o giallo con pari probabilità e conserva il colore tra raccolte e salvataggi.
 Con le tre varianti del pioppo, le kelp, le 17 aggiunte della beta.3 e le tre
-della beta.4, il totale è di 51 voci di coltura/colore.
+della beta.4, più le cinque aggiunte della beta.5, il totale è di 56 voci di coltura/colore.
 
 I dodici fiori bassi supportati sono: dente di leone, papavero, orchidea blu,
 fiore d'aglio, houstonia, tulipano rosso, arancione, bianco e rosa, margherita,
@@ -107,6 +112,22 @@ nello slot Pianta. Il fiore iniziale va ottenuto nel gioco: frutti, frutti
 scoppiati e rami di coro non sono input validi. Il raccolto contiene solo
 frutti normali; non produce nuovi fiori o blocchi di purpur. Il vaso ha un
 fondo di pietra dell'End e quattro stadi ramificati.
+
+Per i rampicanti normali e la piantaforma grande inserisci un esemplare già
+ottenuto nel mondo e una delle terre compatibili. I primi crescono su un
+sostegno interno; la piantaforma sviluppa una foglia larga. La piantaforma
+piccola non è un input valido e non viene prodotta come sottoprodotto.
+
+Il lichene luminescente richiede pietra e un lichene iniziale: il modello
+mostra la colonizzazione di una roccia interna. Le parti del lichene hanno
+luminosità visiva propria; la serra non diventa una lampada per il mondo.
+
+I rampicanti attorcigliati richiedono nylium distorto; quelli piangenti un
+blocco di verruche del Nether. I primi crescono verso l'alto, i secondi
+pendono dal sostegno interno. Questi substrati sono le regole di coltivazione
+della mod: le condizioni vanilla fuori dalla serra rimangono invariate.
+Ogni nuovo raccolto consegna un esemplare della stessa pianta e conserva gli
+input. Erba acquatica e rosa di Wither restano escluse.
 
 Una farina d'ossa dimezza il tempo di **quattro cicli**, incluso quello che la
 consuma. Il bonus visualizzato indica i cicli accelerati ancora disponibili

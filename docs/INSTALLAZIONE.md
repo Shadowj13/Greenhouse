@@ -1,4 +1,4 @@
-# Installazione Greenhouse 0.3.0-beta.4
+# Installazione Greenhouse 0.3.0-beta.5
 
 Per Minecraft Java **26.3**, NeoForge **26.3.0.76 o successivo della linea 26.3**,
 Java **25**. Questa è una beta: le verifiche effettuate e i limiti sono descritti
@@ -8,10 +8,10 @@ nel rapporto di collaudo. Non usare il JAR con Fabric, Forge o Bedrock.
 
 1. Chiudi Minecraft. Apri la cartella dell'istanza che vuoi usare; in Prism
    Launcher puoi selezionare l'istanza e aprire la sua cartella Minecraft.
-2. Copia **solo** `greenhouse-0.3.0-beta.4.jar` nella sottocartella `mods`.
+2. Copia **solo** `greenhouse-0.3.0-beta.5.jar` nella sottocartella `mods`.
    Non copiare lo ZIP completo nella cartella `mods`.
 3. Avvia quell'istanza e verifica che nella lista delle mod compaia Greenhouse
-   con versione `0.3.0-beta.4`.
+   con versione `0.3.0-beta.5`.
 
 Greenhouse non richiede Jade o JEI. Le verifiche delle compatibilità opzionali
 sono documentate per ciascuna versione nel rapporto di collaudo.
@@ -26,9 +26,10 @@ nel launcher. Questo pacchetto non include un installer né Minecraft o Java.
 3. Riavvia l'istanza. Blocchi, inventari, progresso e farina d'ossa usano lo
    stesso formato di salvataggio; non devi rompere e riposizionare le serre.
 
-La beta.4 aggiunge cetrioli di mare, muschio e coro alle aggiunte della beta.3.
-Le 48 colture/colori precedenti mantengono le loro regole. Un mondo usato con
-le nuove colture richiede la beta.4: per tornare a una versione precedente
+La beta.5 aggiunge rampicanti normali, lichene luminescente, rampicanti
+attorcigliati, rampicanti piangenti e piantaforma grande. Le 51 colture/colori
+precedenti mantengono le loro regole. Un mondo usato con
+le nuove colture richiede la beta.5: per tornare a una versione precedente
 ripristina la copia del mondo effettuata prima dell'aggiornamento.
 Non dichiariamo compatibilità con versioni Minecraft diverse dalla 26.3.
 

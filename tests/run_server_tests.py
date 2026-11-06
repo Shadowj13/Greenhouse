@@ -27,6 +27,7 @@ scenarios.add_argument('--checkpoint-only', action='store_true')
 scenarios.add_argument('--reload-only', action='store_true')
 scenarios.add_argument('--legacy-reload-only', action='store_true')
 scenarios.add_argument('--beta3-reload-only', action='store_true')
+scenarios.add_argument('--beta4-reload-only', action='store_true')
 args = parser.parse_args()
 props = dict(line.split('=', 1) for line in (ROOT / 'gradle.properties').read_text(encoding='utf-8').splitlines() if '=' in line)
 jar = (args.jar or ROOT / f'build/libs/greenhouse-{props["mod_version"]}.jar').resolve()
@@ -38,7 +39,7 @@ run.mkdir(parents=True, exist_ok=True)
 # deliberately reuses the checkpoint written by the previous server process.
 world = (run / 'qa-world').resolve()
 assert world.parent == run.resolve() and world.name == 'qa-world'
-if not (args.reload_only or args.legacy_reload_only or args.beta3_reload_only) and world.exists():
+if not (args.reload_only or args.legacy_reload_only or args.beta3_reload_only or args.beta4_reload_only) and world.exists():
     shutil.rmtree(world)
 mods = run / 'mods'
 mods.mkdir(exist_ok=True)
@@ -131,9 +132,11 @@ elif args.legacy_reload_only:
     launch(['legacyreload'], 1)
 elif args.beta3_reload_only:
     launch(['beta3reload'], 1)
+elif args.beta4_reload_only:
+    launch(['beta4reload'], 1)
 else:
     launch(['core', 'benchmark'] if args.core_only else ['core', 'crops', 'recipes', 'checkpoint', 'benchmark', 'unload'], 1)
-if not (args.core_only or args.crops_only or args.checkpoint_only or args.reload_only or args.legacy_reload_only or args.beta3_reload_only):
+if not (args.core_only or args.crops_only or args.checkpoint_only or args.reload_only or args.legacy_reload_only or args.beta3_reload_only or args.beta4_reload_only):
     launch(['reload'], 2)
 from zipfile import ZipFile
 with ZipFile(jar) as archive:

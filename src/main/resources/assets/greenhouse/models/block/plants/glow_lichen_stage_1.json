@@ -1,0 +1,157 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "plant": "minecraft:block/glow_lichen",
+    "rock": "minecraft:block/stone",
+    "particle": "minecraft:block/glow_lichen"
+  },
+  "elements": [
+    {
+      "from": [
+        6.0,
+        5,
+        6.3
+      ],
+      "to": [
+        10.0,
+        10.0,
+        9.7
+      ],
+      "shade": false,
+      "light_emission": 0,
+      "neoforge_data": {
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "down": {
+          "texture": "#rock",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rock",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#rock",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#rock",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#rock",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#rock",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6.95,
+        6.45,
+        6.28
+      ],
+      "to": [
+        9.05,
+        8.55,
+        6.28
+      ],
+      "shade": false,
+      "light_emission": 7,
+      "neoforge_data": {
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "north": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5.98,
+        6.45,
+        7.3
+      ],
+      "to": [
+        5.98,
+        8.55,
+        8.7
+      ],
+      "shade": false,
+      "light_emission": 7,
+      "neoforge_data": {
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "west": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -11,6 +11,15 @@
           },
           {
             "crop": "!chorus"
+          },
+          {
+            "crop": "!glow_lichen"
+          },
+          {
+            "crop": "!twisting_vines"
+          },
+          {
+            "crop": "!weeping_vines"
           }
         ]
       },
@@ -39,6 +48,30 @@
       },
       "apply": {
         "model": "greenhouse:block/greenhouse_end"
+      }
+    },
+    {
+      "when": {
+        "crop": "glow_lichen"
+      },
+      "apply": {
+        "model": "greenhouse:block/greenhouse_stone"
+      }
+    },
+    {
+      "when": {
+        "crop": "twisting_vines"
+      },
+      "apply": {
+        "model": "greenhouse:block/greenhouse_warped"
+      }
+    },
+    {
+      "when": {
+        "crop": "weeping_vines"
+      },
+      "apply": {
+        "model": "greenhouse:block/greenhouse_wart"
       }
     },
     {
@@ -1875,6 +1908,186 @@
       },
       "apply": {
         "model": "greenhouse:block/plants/chorus_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "vine",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/vine_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "vine",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/vine_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "vine",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/vine_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "vine",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/vine_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "glow_lichen",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/glow_lichen_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "glow_lichen",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/glow_lichen_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "glow_lichen",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/glow_lichen_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "glow_lichen",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/glow_lichen_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "twisting_vines",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/twisting_vines_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "twisting_vines",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/twisting_vines_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "twisting_vines",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/twisting_vines_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "twisting_vines",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/twisting_vines_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "weeping_vines",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/weeping_vines_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "weeping_vines",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/weeping_vines_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "weeping_vines",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/weeping_vines_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "weeping_vines",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/weeping_vines_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "big_dripleaf",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/big_dripleaf_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "big_dripleaf",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/big_dripleaf_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "big_dripleaf",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/big_dripleaf_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "big_dripleaf",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/big_dripleaf_stage_3"
       }
     }
   ]

@@ -64,7 +64,12 @@ public enum Crop implements StringRepresentable {
     ROSE_BUSH("rose_bush", "rose_bush", "dirt", 600, 1, 0),
     SEA_PICKLE("sea_pickle", "sea_pickle", "water_bucket", 600, 1, 0),
     MOSS("moss_block", "moss_block", "stone", 600, 1, 0),
-    CHORUS("chorus_flower", "chorus_fruit", "end_stone", 900, 1, 50);
+    CHORUS("chorus_flower", "chorus_fruit", "end_stone", 900, 1, 50),
+    VINE("vine", "vine", "dirt", 600, 1, 0),
+    GLOW_LICHEN("glow_lichen", "glow_lichen", "stone", 600, 1, 0),
+    TWISTING_VINES("twisting_vines", "twisting_vines", "warped_nylium", 600, 1, 0),
+    WEEPING_VINES("weeping_vines", "weeping_vines", "nether_wart_block", 600, 1, 0),
+    BIG_DRIPLEAF("big_dripleaf", "big_dripleaf", "dirt", 600, 1, 0);
 
     public final String plantId, dropId, soilId;
     public final int duration, guaranteed, extraChance;

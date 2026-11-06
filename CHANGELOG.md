@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0-beta.5
+
+- Add normal vines, glow lichen, twisting vines, weeping vines and big dripleaf
+  to both machines, reaching 56 crop/color entries. Seagrass and wither roses
+  remain excluded. Each new crop yields one item every 600 ticks and retains
+  the original plant/substrate and four-cycle bone-meal boost.
+- Use reusable dirt for vines/dripleaf, stone for lichen, warped nylium for
+  twisting vines and nether wart blocks for weeping vines.
+- Add 20 growth models, six substrate shell variants, internal vine supports,
+  a green tint for native vine textures and visual light emission for lichen.
+  Preserve the existing enclosure, GUI, transfer logic and earlier crop rules.
+- Extend packaged-JAR verification to 340 checks and add beta.4 disk migration
+  plus a reproducible five-crop visual fixture.
+
 ## 0.3.0-beta.4
 
 - Add sea pickles with reusable water, moss on stone or the existing dirt

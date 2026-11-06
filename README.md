@@ -23,20 +23,25 @@ See [kelp verification](docs/kelp-0.3.0-beta.2.md) for this update and the
 [previous beta verification report](docs/beta-0.3.0.md) for the beta.1 two-client,
 natural-tick load and migration scope, with explicit untested configurations.
 
-## Development: 0.3.0-beta.4
+## Development: 0.3.0-beta.5
 
-The source includes the beta.3 flowers and glow berries, plus sea pickles, moss
-and chorus: 51 crop/color entries in both greenhouses. Pickles use a reusable
+The source includes the beta.3 flowers/glow berries and beta.4 sea pickles,
+moss/chorus, plus normal vines, glow lichen, twisting/weeping vines and big
+dripleaf in beta.5: 56 crop/color entries in both greenhouses. Pickles use a reusable
 water bucket; moss accepts stone or the supported dirt variants; chorus requires
 an original chorus flower and end stone, and produces only raw fruits.
 Pickles/moss yield one item every 30 seconds; chorus yields 1-2 fruits every
 45 seconds. The approved detailed one-block shell, GUI and earlier crop rules
-are preserved. Four stages per added crop use vanilla textures.
+are preserved. Each beta.5 crop yields one matching item every 30 seconds;
+vines/dripleaf use dirt, lichen uses stone, twisting vines use warped nylium,
+and weeping vines use nether wart blocks. Four stages per crop use native
+textures, internal supports and visual lichen emission. Seagrass and wither
+roses remain excluded.
 
 The links above remain the published beta.2 until a newer release is published.
-Build beta.4 from this source or use the separately supplied validated JAR.
+Build beta.5 from this source or use the separately supplied validated JAR.
 See [the crop guide](docs/USO.md) and
-[the beta.4 verification report](docs/crops-0.3.0-beta.4.md) for details.
+[the beta.5 verification report](docs/crops-0.3.0-beta.5.md) for details.
 
 ## Build and verify
 
@@ -52,7 +57,7 @@ and `patch/` are historical inputs, no longer applied by CI.
 
 Python 3 is required for the asset regression checks in `check` (no packages are
 required). Override its location with `-PpythonExecutable=C:/path/to/python.exe`.
-The installable file is `build/libs/greenhouse-0.3.0-beta.4.jar`.
+The installable file is `build/libs/greenhouse-0.3.0-beta.5.jar`.
 Use one Greenhouse JAR at a time in the instance's `mods` folder.
 
 `releaseBundle` builds and runs all server checks, then creates a reproducible
@@ -63,7 +68,7 @@ any failed test. CI uploads both the standalone JAR and the bundle.
 `integrationTest` launches the packaged JAR and a separate QA mod on an isolated,
 headless NeoForge server. It checks growth, fertilizer, full inventories, sided
 insertion, double chests, drops, server-side menu listeners, chunk unloading,
-disk reload, all 51 crop/color entries and both crafting recipes (300 checks).
+disk reload, all 56 crop/color entries and both crafting recipes (340 checks).
 Its world stays under `build/integration`; results and server logs
 are written to `build/qa-results`. The QA mod is never part of the installable JAR.
 The harness accepts the Minecraft EULA for this local test server.
