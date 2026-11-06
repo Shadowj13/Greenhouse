@@ -44,7 +44,32 @@ public enum Crop implements StringRepresentable {
     RED_MUSHROOM("red_mushroom", "red_mushroom", "mycelium", 900, 1, 25),
     BROWN_MUSHROOM("brown_mushroom", "brown_mushroom", "mycelium", 900, 1, 25),
     // Append new crops so the existing ordinal-based tree boundary stays stable.
-    KELP("kelp", "kelp", "water_bucket", 600, 1, 0);
+    KELP("kelp", "kelp", "water_bucket", 600, 1, 0),
+    GLOW_BERRIES("glow_berries", "glow_berries", "dirt", 900, 1, 50),
+    DANDELION("dandelion", "dandelion", "dirt", 600, 1, 0),
+    POPPY("poppy", "poppy", "dirt", 600, 1, 0),
+    BLUE_ORCHID("blue_orchid", "blue_orchid", "dirt", 600, 1, 0),
+    ALLIUM("allium", "allium", "dirt", 600, 1, 0),
+    AZURE_BLUET("azure_bluet", "azure_bluet", "dirt", 600, 1, 0),
+    RED_TULIP("red_tulip", "red_tulip", "dirt", 600, 1, 0),
+    ORANGE_TULIP("orange_tulip", "orange_tulip", "dirt", 600, 1, 0),
+    WHITE_TULIP("white_tulip", "white_tulip", "dirt", 600, 1, 0),
+    PINK_TULIP("pink_tulip", "pink_tulip", "dirt", 600, 1, 0),
+    OXEYE_DAISY("oxeye_daisy", "oxeye_daisy", "dirt", 600, 1, 0),
+    CORNFLOWER("cornflower", "cornflower", "dirt", 600, 1, 0),
+    LILY_OF_THE_VALLEY("lily_of_the_valley", "lily_of_the_valley", "dirt", 600, 1, 0),
+    SUNFLOWER("sunflower", "sunflower", "dirt", 600, 1, 0),
+    LILAC("lilac", "lilac", "dirt", 600, 1, 0),
+    PEONY("peony", "peony", "dirt", 600, 1, 0),
+    ROSE_BUSH("rose_bush", "rose_bush", "dirt", 600, 1, 0),
+    SEA_PICKLE("sea_pickle", "sea_pickle", "water_bucket", 600, 1, 0),
+    MOSS("moss_block", "moss_block", "stone", 600, 1, 0),
+    CHORUS("chorus_flower", "chorus_fruit", "end_stone", 900, 1, 50),
+    VINE("vine", "vine", "dirt", 600, 1, 0),
+    GLOW_LICHEN("glow_lichen", "glow_lichen", "stone", 600, 1, 0),
+    TWISTING_VINES("twisting_vines", "twisting_vines", "warped_nylium", 600, 1, 0),
+    WEEPING_VINES("weeping_vines", "weeping_vines", "nether_wart_block", 600, 1, 0),
+    BIG_DRIPLEAF("big_dripleaf", "big_dripleaf", "dirt", 600, 1, 0);
 
     public final String plantId, dropId, soilId;
     public final int duration, guaranteed, extraChance;
@@ -67,7 +92,7 @@ public enum Crop implements StringRepresentable {
         if (this==EMPTY || substrate.isEmpty()) return false;
         String s=id(substrate);
         if (soilId.equals(s)) return true;
-        if (soilId.equals("dirt")) return s.equals("grass_block") || s.equals("podzol") || s.equals("rooted_dirt") || s.equals("coarse_dirt");
+        if (soilId.equals("dirt") || this==MOSS) return s.equals("dirt") || s.equals("grass_block") || s.equals("podzol") || s.equals("rooted_dirt") || s.equals("coarse_dirt");
         if (soilId.equals("sand")) return s.equals("red_sand");
         if (soilId.equals("mycelium")) return s.equals("podzol");
         return false;

@@ -60,7 +60,9 @@ class ModelTests(unittest.TestCase):
             self.assertEqual(aquatic['textures']['dirt'], 'minecraft:block/water_still')
             parts = read(ASSETS / f'blockstates/{kind}.json')['multipart']
             bases = [p for p in parts if 'stage' not in p.get('when', {})]
-            self.assertEqual([p['when']['crop'] for p in bases], ['!kelp', 'kelp'])
+            self.assertEqual(len(bases), 6)
+            aquatic_base = next(p for p in bases if p['apply']['model'].endswith('_aquatic'))
+            self.assertEqual(aquatic_base['when'], {'OR': [{'crop': 'kelp'}, {'crop': 'sea_pickle'}]})
             stages = [p['when']['stage'] for p in parts
                       if p.get('when', {}).get('crop') == 'kelp' and 'stage' in p['when']]
             self.assertEqual(stages, ['0', '1', '2', '3'])
@@ -72,6 +74,160 @@ class ModelTests(unittest.TestCase):
                 self.assertEqual(len(e['faces']), 2)
                 self.assertGreaterEqual(e['from'][1], 4.96)
         self.assertEqual(heights, sorted(set(heights)))
+
+    def test_priority123_models_and_both_blockstates(self):
+        crops = ('glow_berries', 'dandelion', 'poppy', 'blue_orchid', 'allium',
+                 'azure_bluet', 'red_tulip', 'orange_tulip', 'white_tulip',
+                 'pink_tulip', 'oxeye_daisy', 'cornflower', 'lily_of_the_valley',
+                 'sunflower', 'lilac', 'peony', 'rose_bush')
+        for crop in crops:
+            versions = []
+            for stage in range(4):
+                model = read(MODELS / f'block/plants/{crop}_stage_{stage}.json')
+                versions.append(model)
+                self.assertFalse(model['ambientocclusion'])
+                for e in model['elements']:
+                    self.assertTrue(all(4.5 <= e['from'][a] <= e['to'][a] <= 11.5 for a in (0, 2)))
+                    self.assertGreaterEqual(e['from'][1], 5.0)
+                    self.assertLessEqual(e['to'][1], 14.25)
+                    if any(a == b for a, b in zip(e['from'], e['to'])):
+                        self.assertEqual(len(e['faces']), 2)
+                        self.assertFalse(e['shade'])
+                        self.assertFalse(e['neoforge_data']['ambient_occlusion'])
+                for kind in ('greenhouse', 'automatic_greenhouse'):
+                    parts = read(ASSETS / f'blockstates/{kind}.json')['multipart']
+                    matched = [p for p in parts if p.get('when', {}) == {'crop': crop, 'stage': str(stage)}]
+                    self.assertEqual(len(matched), 1)
+                    self.assertEqual(matched[0]['apply']['model'], f'greenhouse:block/plants/{crop}_stage_{stage}')
+            self.assertEqual(len({json.dumps(v, sort_keys=True) for v in versions}), 4)
+            if crop != 'glow_berries':
+                heights = [max(e['to'][1] for e in v['elements']) for v in versions]
+                self.assertEqual(heights, sorted(set(heights)))
+
+    def test_glow_berries_hang_from_a_support_and_ripen_only_in_final_stage(self):
+        bottoms = []
+        for stage in range(4):
+            model = read(MODELS / f'block/plants/glow_berries_stage_{stage}.json')
+            vines = [e for e in model['elements'] if len(e['faces']) == 2]
+            bottoms.append(min(e['from'][1] for e in vines))
+            self.assertEqual(max(e['to'][1] for e in vines), 13.0)
+            self.assertEqual(len(model['elements']) - len(vines), 3)
+            self.assertEqual(model['textures']['tip'].endswith('_lit'), stage == 3)
+        self.assertEqual(bottoms, sorted(set(bottoms), reverse=True))
+
+    def test_sunflower_has_separate_front_and_back_flower_sprites(self):
+        for stage in range(4):
+            model = read(MODELS / f'block/plants/sunflower_stage_{stage}.json')
+            self.assertEqual(model['textures']['front'], 'minecraft:block/sunflower_front')
+            self.assertEqual(model['textures']['back'], 'minecraft:block/sunflower_back')
+            head = model['elements'][-1]
+            self.assertEqual(head['faces']['north']['texture'], '#front')
+            self.assertEqual(head['faces']['south']['texture'], '#back')
+
+    def test_every_crop_stage_has_one_shell_and_one_matching_plant(self):
+        java = (ROOT / 'src/main/java/it/bonsaigreenhouse/Crop.java').read_text(encoding='utf-8')
+        crops = [name.lower() for name in re.findall(r'^    ([A-Z_]+)[(]"', java, re.M)]
+        self.assertEqual(len(crops), 57)
+        def applies(when, crop, stage):
+            if 'AND' in when:
+                return all(applies(c, crop, stage) for c in when['AND'])
+            if 'OR' in when:
+                return any(applies(c, crop, stage) for c in when['OR'])
+            for key, value in when.items():
+                actual = crop if key == 'crop' else str(stage)
+                negate = value.startswith('!')
+                options = value[1:] if negate else value
+                if (actual in options.split('|')) == negate:
+                    return False
+            return True
+        for kind in ('greenhouse', 'automatic_greenhouse'):
+            parts = read(ASSETS / f'blockstates/{kind}.json')['multipart']
+            shell_ids = {f'greenhouse:block/{kind}{suffix}' for suffix in ('', '_aquatic', '_end', '_stone', '_warped', '_wart')}
+            for crop in crops:
+                for stage in range(4):
+                    selected = [p['apply']['model'] for p in parts if applies(p.get('when', {}), crop, stage)]
+                    shells = [m for m in selected if m in shell_ids]
+                    plants = [m for m in selected if m not in shell_ids]
+                    suffix = {'kelp': '_aquatic', 'sea_pickle': '_aquatic', 'chorus': '_end',
+                              'glow_lichen': '_stone', 'twisting_vines': '_warped', 'weeping_vines': '_wart'}.get(crop, '')
+                    self.assertEqual(shells, [f'greenhouse:block/{kind}{suffix}'], (kind, crop, stage))
+                    self.assertEqual(plants, [] if crop == 'empty' else [f'greenhouse:block/plants/{crop}_stage_{stage}'])
+
+    def test_end_pots_change_only_the_soil_texture(self):
+        for kind in ('greenhouse', 'automatic_greenhouse'):
+            base = read(MODELS / f'block/{kind}.json')
+            end = read(MODELS / f'block/{kind}_end.json')
+            self.assertEqual(end['textures']['dirt'], 'minecraft:block/end_stone')
+            end['textures']['dirt'] = base['textures']['dirt']
+            self.assertEqual(base, end)
+
+    def test_beta4_crops_have_four_distinct_contained_3d_stages(self):
+        for crop in ('sea_pickle', 'moss', 'chorus'):
+            versions = [read(MODELS / f'block/plants/{crop}_stage_{stage}.json') for stage in range(4)]
+            self.assertEqual(len({json.dumps(v, sort_keys=True) for v in versions}), 4)
+            for model in versions:
+                self.assertFalse(model['ambientocclusion'])
+                for e in model['elements']:
+                    self.assertTrue(all(5.0 <= e['from'][a] < e['to'][a] <= 11.0 for a in (0, 2)))
+                    self.assertGreaterEqual(e['from'][1], 4.96)
+                    self.assertLessEqual(e['to'][1], 14.25)
+                    self.assertTrue(all(a < b for a, b in zip(e['from'], e['to'])))
+                    self.assertFalse(e['shade'])
+                    self.assertFalse(e['neoforge_data']['ambient_occlusion'])
+                    self.assertTrue(all('cullface' not in face for face in e['faces'].values()))
+            if crop == 'sea_pickle':
+                self.assertEqual([len(v['elements']) for v in versions], [2, 4, 6, 8])
+            else:
+                heights = [max(e['to'][1] for e in v['elements']) for v in versions]
+                self.assertEqual(heights, sorted(set(heights)))
+
+    def test_beta5_substrate_shells_only_change_soil_texture(self):
+        for kind in ('greenhouse', 'automatic_greenhouse'):
+            for suffix, texture in (('stone', 'stone'), ('warped', 'warped_nylium'), ('wart', 'nether_wart_block')):
+                base = read(MODELS / f'block/{kind}.json')
+                variant = read(MODELS / f'block/{kind}_{suffix}.json')
+                self.assertEqual(variant['textures']['dirt'], 'minecraft:block/'+texture)
+                variant['textures']['dirt'] = base['textures']['dirt']
+                self.assertEqual(base, variant)
+
+    def test_beta5_distinct_growth_and_containment(self):
+        for crop in ('vine', 'glow_lichen', 'twisting_vines', 'weeping_vines', 'big_dripleaf'):
+            versions = [read(MODELS / f'block/plants/{crop}_stage_{i}.json') for i in range(4)]
+            self.assertEqual(len({json.dumps(v, sort_keys=True) for v in versions}), 4)
+            for model in versions:
+                self.assertFalse(model['ambientocclusion'])
+                for e in model['elements']:
+                    self.assertTrue(all(5.0 <= e['from'][a] <= e['to'][a] <= 11.0 for a in (0, 2)))
+                    self.assertTrue(5.0 <= e['from'][1] <= e['to'][1] <= 14.25)
+                    self.assertFalse(e['shade'])
+                    self.assertFalse(e['neoforge_data']['ambient_occlusion'])
+                    self.assertFalse(any('cullface' in f for f in e['faces'].values()))
+            if crop in ('vine', 'weeping_vines'):
+                bottoms = [min(e['from'][1] for e in m['elements'] if len(e['faces']) == 2) for m in versions]
+                self.assertEqual(bottoms, sorted(set(bottoms), reverse=True))
+            elif crop != 'glow_lichen':
+                heights = [max(e['to'][1] for e in m['elements']) for m in versions]
+                self.assertEqual(heights, sorted(set(heights)))
+
+    def test_lichen_emission_vine_tint_and_dripleaf_structure(self):
+        for stage in range(4):
+            lichen = read(MODELS / f'block/plants/glow_lichen_stage_{stage}.json')
+            patch = [e for e in lichen['elements'] if len(e['faces']) == 2]
+            self.assertEqual(len(patch), stage+1)
+            self.assertTrue(all(e['light_emission'] == 7 for e in patch))
+            self.assertEqual(lichen['elements'][0]['light_emission'], 0)
+            # Planes sit outside the rock and never share a coplanar face.
+            for e in patch:
+                axis = next(i for i in range(3) if e['from'][i] == e['to'][i])
+                rock = lichen['elements'][0]
+                self.assertTrue(e['from'][axis] < rock['from'][axis] or e['from'][axis] > rock['to'][axis])
+            vine = read(MODELS / f'block/plants/vine_stage_{stage}.json')
+            self.assertEqual(vine['elements'][-1]['neoforge_data']['color'], 0xFF64A432)
+            dripleaf = read(MODELS / f'block/plants/big_dripleaf_stage_{stage}.json')
+            leaf = [e for e in dripleaf['elements'] if all(f['texture'] == '#top' for f in e['faces'].values())]
+            self.assertEqual(len(leaf), 1)
+            self.assertEqual(set(leaf[0]['faces']), {'up', 'down'})
+            self.assertGreater(leaf[0]['to'][0]-leaf[0]['from'][0], 2)
 
     def test_all_resource_references_resolve(self):
         for path in ASSETS.rglob('*.json'):

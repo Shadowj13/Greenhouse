@@ -54,6 +54,17 @@ rimangono disponibili dopo il raccolto. Raccogli prima di cambiare coltura.
 | Semi di anguria | Terra* | 2–4 fette | 45 s |
 | Bacche dolci | Terra* | 1–2 bacche | 45 s |
 | Fungo rosso o marrone | Micelio o podzol | 1–2 funghi dello stesso tipo | 45 s |
+| Bacche luminose | Terra* | 1–2 bacche luminose | 45 s |
+| Fiori comuni bassi (elenco sotto) | Terra* | 1 fiore del tipo inserito | 30 s |
+| Girasole, lillà, peonia, rosaio | Terra* | 1 fiore/pianta del tipo inserito | 30 s |
+| Cetriolo di mare | Secchio d'acqua | 1 cetriolo di mare | 30 s |
+| Blocco di muschio | Pietra oppure Terra* | 1 blocco di muschio | 30 s |
+| Fiore di coro | Pietra dell'End | 1–2 frutti di coro | 45 s |
+| Rampicante normale | Terra* | 1 rampicante normale | 30 s |
+| Lichene luminescente | Pietra | 1 lichene luminescente | 30 s |
+| Rampicanti attorcigliati | Nylium distorto | 1 rampicante attorcigliato | 30 s |
+| Rampicanti piangenti | Blocco di verruche del Nether | 1 rampicante piangente | 30 s |
+| Piantaforma grande | Terra* | 1 piantaforma grande | 30 s |
 
 *Terra comprende anche blocco d'erba, podzol, terra radicata e terra brulla.
 I tempi indicati corrispondono a 20 tick al secondo; un server rallentato può
@@ -63,7 +74,20 @@ prodotto principale e non promette tutti i bonus a ogni raccolto.
 
 Il pioppo usa un solo alberello: quando viene stabilito sceglie rosso, arancione
 o giallo con pari probabilità e conserva il colore tra raccolte e salvataggi.
-Con le tre varianti del pioppo e le kelp, il totale è di 31 voci di coltura/colore.
+Con le tre varianti del pioppo, le kelp, le 17 aggiunte della beta.3 e le tre
+della beta.4, più le cinque aggiunte della beta.5, il totale è di 56 voci di coltura/colore.
+
+I dodici fiori bassi supportati sono: dente di leone, papavero, orchidea blu,
+fiore d'aglio, houstonia, tulipano rosso, arancione, bianco e rosa, margherita,
+fiordaliso e mughetto. Inserisci il fiore stesso nello slot Pianta: rimane dopo
+ogni raccolto, come le altre piante. Non vengono prodotti semi aggiuntivi.
+Dente di leone d'oro, rosa di Wither, fiortorcia, pianta carnivora e occhidee
+restano esclusi da questo aggiornamento.
+
+Le bacche luminose si inseriscono nello slot Pianta con terra nello slot
+Terreno. Nel vaso crescono verso il basso su un piccolo sostegno interno;
+le bacche compaiono nell'ultimo dei quattro stadi. Il raccolto produce bacche,
+non blocchi di rampicante, e conserva l'esemplare originale.
 
 Per le kelp inserisci un **secchio d'acqua nello slot Terreno** e un'alga kelp
 nello slot Pianta. Secchio e pianta rimangono dopo ogni raccolto, senza consumare
@@ -71,6 +95,39 @@ acqua o richiedere tubazioni. Il vaso mostra acqua e quattro stadi di crescita.
 Si raccolgono alghe normali: le alghe essiccate non si possono piantare.
 La serra automatica trasferisce le alghe nei contenitori sottostanti come le
 altre colture. La farina d'ossa applica lo stesso bonus di quattro cicli.
+
+Per i cetrioli di mare usa il secchio d'acqua nello slot Terreno e un cetriolo
+nello slot Pianta. Il vaso mostra una colonia acquatica in quattro stadi e
+produce un cetriolo per raccolto. La serra simula l'ambiente di coltivazione:
+non richiede un ulteriore blocco di corallo. Questa è una regola della mod;
+le condizioni vanilla di riproduzione con farina d'ossa fuori dalla serra
+restano quelle di Minecraft.
+
+Per il muschio usa un blocco di pietra o una delle terre sopra elencate e un
+blocco di muschio. Si raccolgono blocchi di muschio, non pietra, terra,
+tappeti, azalee o muschio pallido. Gli input restano disponibili.
+
+Per il coro inserisci pietra dell'End nello slot Terreno e un fiore di coro
+nello slot Pianta. Il fiore iniziale va ottenuto nel gioco: frutti, frutti
+scoppiati e rami di coro non sono input validi. Il raccolto contiene solo
+frutti normali; non produce nuovi fiori o blocchi di purpur. Il vaso ha un
+fondo di pietra dell'End e quattro stadi ramificati.
+
+Per i rampicanti normali e la piantaforma grande inserisci un esemplare già
+ottenuto nel mondo e una delle terre compatibili. I primi crescono su un
+sostegno interno; la piantaforma sviluppa una foglia larga. La piantaforma
+piccola non è un input valido e non viene prodotta come sottoprodotto.
+
+Il lichene luminescente richiede pietra e un lichene iniziale: il modello
+mostra la colonizzazione di una roccia interna. Le parti del lichene hanno
+luminosità visiva propria; la serra non diventa una lampada per il mondo.
+
+I rampicanti attorcigliati richiedono nylium distorto; quelli piangenti un
+blocco di verruche del Nether. I primi crescono verso l'alto, i secondi
+pendono dal sostegno interno. Questi substrati sono le regole di coltivazione
+della mod: le condizioni vanilla fuori dalla serra rimangono invariate.
+Ogni nuovo raccolto consegna un esemplare della stessa pianta e conserva gli
+input. Erba acquatica e rosa di Wither restano escluse.
 
 Una farina d'ossa dimezza il tempo di **quattro cicli**, incluso quello che la
 consuma. Il bonus visualizzato indica i cicli accelerati ancora disponibili
@@ -99,4 +156,4 @@ L'accesso automatico alla serra avviene così:
 
 Le serre funzionano quando il loro chunk è caricato e attivo. Greenhouse non
 carica autonomamente i chunk e non richiede energia, rifornimenti d'acqua o un
-orario solare. Solo le kelp richiedono un secchio d'acqua come substrato iniziale.
+orario solare. Kelp e cetrioli di mare richiedono un secchio d'acqua come substrato iniziale.

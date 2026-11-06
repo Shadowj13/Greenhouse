@@ -1,0 +1,144 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "plant": "minecraft:block/sea_pickle",
+    "particle": "minecraft:block/sea_pickle"
+  },
+  "elements": [
+    {
+      "from": [
+        7.2,
+        4.96,
+        7.2
+      ],
+      "to": [
+        8.8,
+        7.76,
+        8.8
+      ],
+      "shade": false,
+      "neoforge_data": {
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "down": {
+          "texture": "#plant",
+          "uv": [
+            8,
+            1,
+            12,
+            5
+          ]
+        },
+        "up": {
+          "texture": "#plant",
+          "uv": [
+            4,
+            1,
+            8,
+            5
+          ]
+        },
+        "north": {
+          "texture": "#plant",
+          "uv": [
+            4,
+            5,
+            8,
+            11
+          ]
+        },
+        "south": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            5,
+            4,
+            11
+          ]
+        },
+        "west": {
+          "texture": "#plant",
+          "uv": [
+            8,
+            5,
+            12,
+            11
+          ]
+        },
+        "east": {
+          "texture": "#plant",
+          "uv": [
+            12,
+            5,
+            16,
+            11
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7.72,
+        7.76,
+        7.72
+      ],
+      "to": [
+        8.28,
+        8.06,
+        8.28
+      ],
+      "shade": false,
+      "neoforge_data": {
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "up": {
+          "texture": "#plant",
+          "uv": [
+            8,
+            1,
+            12,
+            5
+          ]
+        },
+        "north": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

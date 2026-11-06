@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.3.0-beta.5
+
+- Add normal vines, glow lichen, twisting vines, weeping vines and big dripleaf
+  to both machines, reaching 56 crop/color entries. Seagrass and wither roses
+  remain excluded. Each new crop yields one item every 600 ticks and retains
+  the original plant/substrate and four-cycle bone-meal boost.
+- Use reusable dirt for vines/dripleaf, stone for lichen, warped nylium for
+  twisting vines and nether wart blocks for weeping vines.
+- Add 20 growth models, six substrate shell variants, internal vine supports,
+  a green tint for native vine textures and visual light emission for lichen.
+  Preserve the existing enclosure, GUI, transfer logic and earlier crop rules.
+- Extend packaged-JAR verification to 340 checks and add beta.4 disk migration
+  plus a reproducible five-crop visual fixture.
+
+## 0.3.0-beta.4
+
+- Add sea pickles with reusable water, moss on stone or the existing dirt
+  substrates, and chorus flowers on end stone. Both greenhouse variants now
+  support 51 crop/color entries.
+- Sea pickles and moss yield one matching item every 600 ticks; chorus yields
+  one or two raw fruits every 900 ticks. Preserve the original plant/substrate
+  and four accelerated bone-meal cycles; chorus cannot generate free flowers.
+- Add twelve detailed growth models and two End pot variants. Reuse the kelp
+  aquatic shell for sea pickles, with exactly one selected base per state.
+- Extend packaged-JAR verification to 300 checks and add beta.3 disk migration
+  and a reproducible three-crop visual fixture. Make model generation emit LF
+  deterministically across checkouts.
+
+## 0.3.0-beta.3
+
+- Add priorities 1-3: glow berries, twelve common small flowers and four tall
+  flowers, in both manual and automatic greenhouses (48 crop/color entries).
+- Flowers yield one matching flower every 600 ticks (30 seconds); glow berries
+  yield one or two berries every 900 ticks (45 seconds). Both retain dirt and
+  plant, accept existing dirt variants, and use the four-cycle bone-meal bonus.
+- Add 68 growth models using vanilla textures, a miniature internal berry
+  support, and separate sunflower front/back sprites. Keep the approved shell,
+  glass, roof, pot, selection/collision shape, GUI and all earlier crop rules.
+- Extend packaged-JAR checks to 276, including all new crops, exact timing,
+  manual/automatic harvest, menus, NBT and disk restart. Add a reproducible
+  isolated visual fixture and a historical-QA migration option.
+
 ## 0.3.0-beta.2
 
 - Add kelp to both greenhouses: one raw kelp every 30 seconds, with a reusable
