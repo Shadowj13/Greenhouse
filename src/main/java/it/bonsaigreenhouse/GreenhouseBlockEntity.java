@@ -71,9 +71,13 @@ public class GreenhouseBlockEntity extends BlockEntity implements WorldlyContain
         }
         return crop;
     }
+    private boolean hasLegacyHarvest() {
+        return mature && (active==Crop.MOSS ||
+            (active==Crop.WEEPING_VINES && stacks.get(0).is(Items.NETHER_WART_BLOCK)));
+    }
     public static void serverTick(Level level, BlockPos pos, BlockState state, GreenhouseBlockEntity be) {
         Crop selected=be.selected();
-        if (selected!=be.active) {
+        if (selected!=be.active && !be.hasLegacyHarvest()) {
             be.active=selected;
             be.elapsed=0; be.duration=0; be.mature=false;
             be.isReadyForNewCycle=true; be.pending.replaceAll(x -> ItemStack.EMPTY);
@@ -83,8 +87,7 @@ public class GreenhouseBlockEntity extends BlockEntity implements WorldlyContain
             be.transferCooldown=0;
             be.pushDown(level,pos);
         }
-        if (selected==Crop.EMPTY) return;
-        if (!be.mature) {
+        if (selected!=Crop.EMPTY && !be.mature) {
             if (be.isReadyForNewCycle) be.startCycle();
             if (++be.elapsed >= be.duration) {
                 be.elapsed=be.duration;

@@ -63,13 +63,15 @@ public enum Crop implements StringRepresentable {
     PEONY("peony", "peony", "dirt", 600, 1, 0),
     ROSE_BUSH("rose_bush", "rose_bush", "dirt", 600, 1, 0),
     SEA_PICKLE("sea_pickle", "sea_pickle", "water_bucket", 600, 1, 0),
+    // Keep the serialized state and ordinal for older worlds.
     MOSS("moss_block", "moss_block", "stone", 600, 1, 0),
     CHORUS("chorus_flower", "chorus_fruit", "end_stone", 900, 1, 50),
     VINE("vine", "vine", "dirt", 600, 1, 0),
     GLOW_LICHEN("glow_lichen", "glow_lichen", "stone", 600, 1, 0),
     TWISTING_VINES("twisting_vines", "twisting_vines", "warped_nylium", 600, 1, 0),
-    WEEPING_VINES("weeping_vines", "weeping_vines", "nether_wart_block", 600, 1, 0),
-    BIG_DRIPLEAF("big_dripleaf", "big_dripleaf", "dirt", 600, 1, 0);
+    WEEPING_VINES("weeping_vines", "weeping_vines", "crimson_nylium", 600, 1, 0),
+    BIG_DRIPLEAF("big_dripleaf", "big_dripleaf", "dirt", 600, 1, 0),
+    SHELF_MUSHROOM("shelf_mushroom", "shelf_mushroom", "mycelium", 900, 1, 25);
 
     public final String plantId, dropId, soilId;
     public final int duration, guaranteed, extraChance;
@@ -85,14 +87,15 @@ public enum Crop implements StringRepresentable {
     public static Crop of(ItemStack stack) {
         if (stack.isEmpty()) return EMPTY;
         String name = id(stack);
-        for (Crop c : values()) if (c!=EMPTY && c.plantId.equals(name)) return c;
+        for (Crop c : values()) if (c.isCultivable() && c.plantId.equals(name)) return c;
         return EMPTY;
     }
+    public boolean isCultivable() { return this!=EMPTY && this!=MOSS; }
     public boolean accepts(ItemStack substrate) {
-        if (this==EMPTY || substrate.isEmpty()) return false;
+        if (!isCultivable() || substrate.isEmpty()) return false;
         String s=id(substrate);
         if (soilId.equals(s)) return true;
-        if (soilId.equals("dirt") || this==MOSS) return s.equals("dirt") || s.equals("grass_block") || s.equals("podzol") || s.equals("rooted_dirt") || s.equals("coarse_dirt");
+        if (soilId.equals("dirt")) return s.equals("dirt") || s.equals("grass_block") || s.equals("podzol") || s.equals("rooted_dirt") || s.equals("coarse_dirt");
         if (soilId.equals("sand")) return s.equals("red_sand");
         if (soilId.equals("mycelium")) return s.equals("podzol");
         return false;
@@ -104,7 +107,7 @@ public enum Crop implements StringRepresentable {
     }
     public List<ItemStack> roll(net.minecraft.util.RandomSource rng) {
         List<ItemStack> products = new ArrayList<>();
-        if (this==EMPTY) return products;
+        if (!isCultivable()) return products;
         int main = guaranteed;
         if (this==MELON) main += rng.nextInt(3); // 2..4 slices
         else if (extraChance>0 && rng.nextInt(100)<extraChance) main++;

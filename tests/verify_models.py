@@ -127,7 +127,7 @@ class ModelTests(unittest.TestCase):
     def test_every_crop_stage_has_one_shell_and_one_matching_plant(self):
         java = (ROOT / 'src/main/java/it/bonsaigreenhouse/Crop.java').read_text(encoding='utf-8')
         crops = [name.lower() for name in re.findall(r'^    ([A-Z_]+)[(]"', java, re.M)]
-        self.assertEqual(len(crops), 57)
+        self.assertEqual(len(crops), 58)
         def applies(when, crop, stage):
             if 'AND' in when:
                 return all(applies(c, crop, stage) for c in when['AND'])
@@ -142,14 +142,14 @@ class ModelTests(unittest.TestCase):
             return True
         for kind in ('greenhouse', 'automatic_greenhouse'):
             parts = read(ASSETS / f'blockstates/{kind}.json')['multipart']
-            shell_ids = {f'greenhouse:block/{kind}{suffix}' for suffix in ('', '_aquatic', '_end', '_stone', '_warped', '_wart')}
+            shell_ids = {f'greenhouse:block/{kind}{suffix}' for suffix in ('', '_aquatic', '_end', '_stone', '_warped', '_crimson')}
             for crop in crops:
                 for stage in range(4):
                     selected = [p['apply']['model'] for p in parts if applies(p.get('when', {}), crop, stage)]
                     shells = [m for m in selected if m in shell_ids]
                     plants = [m for m in selected if m not in shell_ids]
                     suffix = {'kelp': '_aquatic', 'sea_pickle': '_aquatic', 'chorus': '_end',
-                              'glow_lichen': '_stone', 'twisting_vines': '_warped', 'weeping_vines': '_wart'}.get(crop, '')
+                              'glow_lichen': '_stone', 'twisting_vines': '_warped', 'weeping_vines': '_crimson'}.get(crop, '')
                     self.assertEqual(shells, [f'greenhouse:block/{kind}{suffix}'], (kind, crop, stage))
                     self.assertEqual(plants, [] if crop == 'empty' else [f'greenhouse:block/plants/{crop}_stage_{stage}'])
 
@@ -183,7 +183,7 @@ class ModelTests(unittest.TestCase):
 
     def test_beta5_substrate_shells_only_change_soil_texture(self):
         for kind in ('greenhouse', 'automatic_greenhouse'):
-            for suffix, texture in (('stone', 'stone'), ('warped', 'warped_nylium'), ('wart', 'nether_wart_block')):
+            for suffix, texture in (('stone', 'stone'), ('warped', 'warped_nylium'), ('crimson', 'crimson_nylium')):
                 base = read(MODELS / f'block/{kind}.json')
                 variant = read(MODELS / f'block/{kind}_{suffix}.json')
                 self.assertEqual(variant['textures']['dirt'], 'minecraft:block/'+texture)
@@ -228,6 +228,22 @@ class ModelTests(unittest.TestCase):
             self.assertEqual(len(leaf), 1)
             self.assertEqual(set(leaf[0]['faces']), {'up', 'down'})
             self.assertGreater(leaf[0]['to'][0]-leaf[0]['from'][0], 2)
+
+    def test_shelf_mushroom_grows_on_a_contained_poplar_support(self):
+        widths = []
+        for stage in range(4):
+            model = read(MODELS / f'block/plants/shelf_mushroom_stage_{stage}.json')
+            log, cap, underside = model['elements']
+            self.assertEqual(model['textures']['log'], 'minecraft:block/poplar_log')
+            self.assertEqual(log['to'][2], cap['from'][2])
+            self.assertEqual(cap['from'][1], underside['to'][1])
+            self.assertNotIn('up', underside['faces'])
+            for element in model['elements']:
+                for axis in (0, 2):
+                    self.assertTrue(4.5 <= element['from'][axis] < element['to'][axis] <= 11.5)
+                self.assertTrue(5 <= element['from'][1] < element['to'][1] <= 14.25)
+            widths.append(cap['to'][0]-cap['from'][0])
+        self.assertEqual(widths, sorted(set(widths)))
 
     def test_all_resource_references_resolve(self):
         for path in ASSETS.rglob('*.json'):

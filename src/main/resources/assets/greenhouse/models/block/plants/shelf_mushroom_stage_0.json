@@ -1,0 +1,173 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "minecraft:block/shelf_mushroom_particle",
+    "fungus": "minecraft:block/shelf_mushroom_stage0",
+    "log": "minecraft:block/poplar_log",
+    "log_top": "minecraft:block/poplar_log_top"
+  },
+  "elements": [
+    {
+      "from": [
+        6.7,
+        5,
+        6.0
+      ],
+      "to": [
+        9.3,
+        12.0,
+        8.1
+      ],
+      "shade_direction_override": "up",
+      "neoforge_data": {
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "north": {
+          "texture": "#log"
+        },
+        "south": {
+          "texture": "#log"
+        },
+        "east": {
+          "texture": "#log"
+        },
+        "west": {
+          "texture": "#log"
+        },
+        "up": {
+          "texture": "#log_top"
+        },
+        "down": {
+          "texture": "#log_top"
+        }
+      }
+    },
+    {
+      "from": [
+        6.7,
+        9.3,
+        8.1
+      ],
+      "to": [
+        9.3,
+        9.85,
+        9.55
+      ],
+      "shade_direction_override": "up",
+      "neoforge_data": {
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "north": {
+          "texture": "#fungus",
+          "uv": [
+            5,
+            2,
+            10,
+            3
+          ]
+        },
+        "south": {
+          "texture": "#fungus",
+          "uv": [
+            5,
+            3,
+            10,
+            4
+          ]
+        },
+        "east": {
+          "texture": "#fungus",
+          "uv": [
+            5,
+            0,
+            8.5,
+            1
+          ]
+        },
+        "west": {
+          "texture": "#fungus",
+          "uv": [
+            5,
+            1,
+            8.5,
+            2
+          ]
+        },
+        "up": {
+          "texture": "#fungus",
+          "uv": [
+            5,
+            3.5,
+            0,
+            0
+          ]
+        },
+        "down": {
+          "texture": "#fungus",
+          "uv": [
+            5,
+            3.5,
+            0,
+            7
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7.194,
+        8.992,
+        8.1
+      ],
+      "to": [
+        8.806,
+        9.3,
+        8.97
+      ],
+      "shade_direction_override": "up",
+      "neoforge_data": {
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "south": {
+          "texture": "#fungus",
+          "uv": [
+            5,
+            5.5,
+            8,
+            6
+          ]
+        },
+        "east": {
+          "texture": "#fungus",
+          "uv": [
+            5,
+            4,
+            7,
+            4.5
+          ]
+        },
+        "west": {
+          "texture": "#fungus",
+          "uv": [
+            5,
+            4.5,
+            7,
+            5
+          ]
+        },
+        "down": {
+          "texture": "#fungus",
+          "uv": [
+            3,
+            9,
+            0,
+            11
+          ]
+        }
+      }
+    }
+  ]
+}

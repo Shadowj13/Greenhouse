@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0-beta.6
+
+- Grow weeping vines on crimson nylium and show it in the pot.
+- Replace moss cultivation with shelf mushrooms on mycelium or podzol.
+  An original shelf mushroom yields one or two mushrooms every 900 ticks.
+- Preserve stored inputs and ready harvests when updating older greenhouses.
+  Recover retired moss and replace the old weeping-vine substrate to restart growth.
+- Cover the crop changes, saves and legacy harvests with 345 server checks.
+
 ## 0.3.0-beta.5
 
 - Add normal vines, glow lichen, twisting vines, weeping vines and big dripleaf

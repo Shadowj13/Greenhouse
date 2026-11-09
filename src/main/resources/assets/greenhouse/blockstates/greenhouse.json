@@ -71,7 +71,7 @@
         "crop": "weeping_vines"
       },
       "apply": {
-        "model": "greenhouse:block/greenhouse_wart"
+        "model": "greenhouse:block/greenhouse_crimson"
       }
     },
     {
@@ -2088,6 +2088,42 @@
       },
       "apply": {
         "model": "greenhouse:block/plants/big_dripleaf_stage_3"
+      }
+    },
+    {
+      "when": {
+        "crop": "shelf_mushroom",
+        "stage": "0"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/shelf_mushroom_stage_0"
+      }
+    },
+    {
+      "when": {
+        "crop": "shelf_mushroom",
+        "stage": "1"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/shelf_mushroom_stage_1"
+      }
+    },
+    {
+      "when": {
+        "crop": "shelf_mushroom",
+        "stage": "2"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/shelf_mushroom_stage_2"
+      }
+    },
+    {
+      "when": {
+        "crop": "shelf_mushroom",
+        "stage": "3"
+      },
+      "apply": {
+        "model": "greenhouse:block/plants/shelf_mushroom_stage_3"
       }
     }
   ]

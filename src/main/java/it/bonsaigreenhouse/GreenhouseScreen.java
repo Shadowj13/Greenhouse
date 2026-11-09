@@ -87,9 +87,9 @@ public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMe
         if (fill>0) g.fill(x+15,y+76,x+15+fill,y+81,menu.mature()?0xFFD5B45B:0xFF75B36D);
 
         String state;
-        if(menu.crop()==Crop.EMPTY) state=Component.translatable("gui.greenhouse.missing_plant").getString();
+        if(menu.mature()) state=Component.translatable("gui.greenhouse.ready").getString();
+        else if(menu.crop()==Crop.EMPTY) state=Component.translatable("gui.greenhouse.missing_plant").getString();
         else if(!menu.validCrop()) state=Component.translatable("gui.greenhouse.invalid_soil").getString();
-        else if(menu.mature()) state=Component.translatable("gui.greenhouse.ready").getString();
         else state=Component.translatable("gui.greenhouse.growing").getString();
         g.text(font,Component.literal(state),x+13,y+86,0xFF332B22,false);
         g.text(font,Component.translatable("gui.greenhouse.bonus"),x+108,y+86,0xFF332B22,false);

@@ -53,17 +53,16 @@ rimangono disponibili dopo il raccolto. Raccogli prima di cambiare coltura.
 | Semi di zucca | Terra* | 1 zucca | 45 s |
 | Semi di anguria | Terra* | 2–4 fette | 45 s |
 | Bacche dolci | Terra* | 1–2 bacche | 45 s |
-| Fungo rosso o marrone | Micelio o podzol | 1–2 funghi dello stesso tipo | 45 s |
+| Fungo rosso, marrone o a mensola | Micelio o podzol | 1–2 funghi dello stesso tipo | 45 s |
 | Bacche luminose | Terra* | 1–2 bacche luminose | 45 s |
 | Fiori comuni bassi (elenco sotto) | Terra* | 1 fiore del tipo inserito | 30 s |
 | Girasole, lillà, peonia, rosaio | Terra* | 1 fiore/pianta del tipo inserito | 30 s |
 | Cetriolo di mare | Secchio d'acqua | 1 cetriolo di mare | 30 s |
-| Blocco di muschio | Pietra oppure Terra* | 1 blocco di muschio | 30 s |
 | Fiore di coro | Pietra dell'End | 1–2 frutti di coro | 45 s |
 | Rampicante normale | Terra* | 1 rampicante normale | 30 s |
 | Lichene luminescente | Pietra | 1 lichene luminescente | 30 s |
 | Rampicanti attorcigliati | Nylium distorto | 1 rampicante attorcigliato | 30 s |
-| Rampicanti piangenti | Blocco di verruche del Nether | 1 rampicante piangente | 30 s |
+| Rampicanti piangenti | Nylium cremisi | 1 rampicante piangente | 30 s |
 | Piantaforma grande | Terra* | 1 piantaforma grande | 30 s |
 
 *Terra comprende anche blocco d'erba, podzol, terra radicata e terra brulla.
@@ -74,8 +73,7 @@ prodotto principale e non promette tutti i bonus a ogni raccolto.
 
 Il pioppo usa un solo alberello: quando viene stabilito sceglie rosso, arancione
 o giallo con pari probabilità e conserva il colore tra raccolte e salvataggi.
-Con le tre varianti del pioppo, le kelp, le 17 aggiunte della beta.3 e le tre
-della beta.4, più le cinque aggiunte della beta.5, il totale è di 56 voci di coltura/colore.
+Il totale nella beta.6 è di 56 voci di coltura/colore contando i tre colori del pioppo.
 
 I dodici fiori bassi supportati sono: dente di leone, papavero, orchidea blu,
 fiore d'aglio, houstonia, tulipano rosso, arancione, bianco e rosa, margherita,
@@ -103,9 +101,14 @@ non richiede un ulteriore blocco di corallo. Questa è una regola della mod;
 le condizioni vanilla di riproduzione con farina d'ossa fuori dalla serra
 restano quelle di Minecraft.
 
-Per il muschio usa un blocco di pietra o una delle terre sopra elencate e un
-blocco di muschio. Si raccolgono blocchi di muschio, non pietra, terra,
-tappeti, azalee o muschio pallido. Gli input restano disponibili.
+Per il fungo a mensola inserisci un esemplare nello slot Pianta e micelio
+oppure podzol nello slot Terreno. Il supporto interno di pioppo fa parte del
+modello. Il raccolto produce un fungo con il 25% di probabilità di ottenerne
+un secondo. La crescita richiede 900 tick e conserva pianta e terreno.
+
+Se una vecchia serra contiene muschio, puoi recuperare terreno, pianta ed
+eventuale raccolto già pronto. Il muschio ritirato dalla coltivazione non
+avvia nuovi cicli.
 
 Per il coro inserisci pietra dell'End nello slot Terreno e un fiore di coro
 nello slot Pianta. Il fiore iniziale va ottenuto nel gioco: frutti, frutti
@@ -123,11 +126,13 @@ mostra la colonizzazione di una roccia interna. Le parti del lichene hanno
 luminosità visiva propria; la serra non diventa una lampada per il mondo.
 
 I rampicanti attorcigliati richiedono nylium distorto; quelli piangenti un
-blocco di verruche del Nether. I primi crescono verso l'alto, i secondi
+nylium cremisi. I primi crescono verso l'alto, i secondi
 pendono dal sostegno interno. Questi substrati sono le regole di coltivazione
 della mod: le condizioni vanilla fuori dalla serra rimangono invariate.
 Ogni nuovo raccolto consegna un esemplare della stessa pianta e conserva gli
-input. Erba acquatica e rosa di Wither restano escluse.
+input. Nelle vecchie serre dei rampicanti piangenti ritira il raccolto già
+pronto e sostituisci il blocco di verruche del Nether con nylium cremisi
+per riavviare la crescita.
 
 Una farina d'ossa dimezza il tempo di **quattro cicli**, incluso quello che la
 consuma. Il bonus visualizzato indica i cicli accelerati ancora disponibili

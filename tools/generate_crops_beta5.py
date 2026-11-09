@@ -96,7 +96,7 @@ for crop in CROPS:
               {'ambientocclusion': False, 'textures': textures, 'elements': elements})
 
 for kind in ('greenhouse', 'automatic_greenhouse'):
-    for suffix, texture in (('stone', 'stone'), ('warped', 'warped_nylium'), ('wart', 'nether_wart_block')):
+    for suffix, texture in (('stone', 'stone'), ('warped', 'warped_nylium'), ('crimson', 'crimson_nylium')):
         model = json.loads((ASSETS / f'models/block/{kind}.json').read_text(encoding='utf-8'))
         model['textures']['dirt'] = 'minecraft:block/'+texture
         write(ASSETS / f'models/block/{kind}_{suffix}.json', model)

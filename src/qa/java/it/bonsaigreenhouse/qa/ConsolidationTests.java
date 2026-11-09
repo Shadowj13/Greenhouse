@@ -48,7 +48,7 @@ public final class ConsolidationTests {
     }
     private void commands(RegisterCommandsEvent event) {
         var root = Commands.literal("greenhouseqa");
-        for (String phase : List.of("core", "crops", "recipes", "checkpoint", "unload", "reload", "legacyreload", "beta3reload", "beta4reload", "benchmark",
+        for (String phase : List.of("core", "crops", "recipes", "checkpoint", "unload", "reload", "legacyreload", "beta3reload", "beta4reload", "beta5reload", "benchmark",
                 "networksetup", "networkassert", "soaksetup", "soakstats", "soakassert",
                 "poplarsoaksetup", "poplarsoakassert"))
             root.then(Commands.literal(phase).executes(c -> run(c.getSource(), phase)));
@@ -70,6 +70,10 @@ public final class ConsolidationTests {
             }
             case "beta4reload" -> {
                 new CropAndRecipeTests(level,this::test).reloadBeta4Additions();
+                reload(false);
+            }
+            case "beta5reload" -> {
+                new CropAndRecipeTests(level,this::test).reloadBeta5Additions();
                 reload(false);
             }
             case "benchmark" -> benchmark();
