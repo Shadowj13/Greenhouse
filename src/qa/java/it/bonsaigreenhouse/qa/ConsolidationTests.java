@@ -111,7 +111,7 @@ public final class ConsolidationTests {
                 require(p.openMenu(be).isPresent(),"server did not open menu for "+p.getPlainTextName());
                 p.containerMenu.broadcastChanges();
             }
-            require(be.dataAccess().get(2)==1 && be.getItem(2).getCount()==63,"network fixture not mature");
+            require(ready(be) && be.getItem(2).getCount()==63,"network fixture not mature");
         });
     }
     private void networkAssert(CommandSourceStack source) {
@@ -202,6 +202,8 @@ public final class ConsolidationTests {
         be.setItem(0, new ItemStack(soil)); be.setItem(1, new ItemStack(seed));
         if (bone > 0) be.setItem(2, new ItemStack(Items.BONE_MEAL, bone));
     }
+    /** A harvest is available: moved into the outputs, or waiting because they are full. */
+    private static boolean ready(GreenhouseBlockEntity be) { return be.dataAccess().get(2)==1 || !be.getItem(9).isEmpty(); }
     private void tick(GreenhouseBlockEntity be, int ticks) {
         for (int i=0;i<ticks;i++) GreenhouseBlockEntity.serverTick(level, be.getBlockPos(), be.getBlockState(), be);
     }
@@ -251,7 +253,7 @@ public final class ConsolidationTests {
     private void core() {
         test("growth_and_manual_harvest_once",()->{
             var be=greenhouse(false); inputs(be,Items.DIRT,Items.OAK_SAPLING,0); tick(be,900);
-            require(be.dataAccess().get(2)==1,"manual crop not mature");
+            require(ready(be),"manual crop not mature");
             var p=player("GHManual",be.getBlockPos()); be.collectBy(p); be.collectBy(p);
             require(p.getInventory().countItem(Items.OAK_LOG)==2,"manual harvest lost or duplicated logs");
             require(be.getItem(0).getCount()==1 && be.getItem(1).getCount()==1,"inputs consumed");
@@ -259,7 +261,7 @@ public final class ConsolidationTests {
         test("fertilizer_four_cycles",()->{
             var be=greenhouse(false); inputs(be,Items.DIRT,Items.OAK_SAPLING,2);
             var p=player("GHBoost",be.getBlockPos());
-            for(int i=0;i<4;i++) { tick(be,450); require(be.dataAccess().get(2)==1,"boosted duration changed"); be.collectBy(p); }
+            for(int i=0;i<4;i++) { tick(be,449); require(!ready(be),"boosted cycle finished early"); tick(be,1); require(ready(be),"boosted duration changed"); be.collectBy(p); }
             require(be.getItem(2).getCount()==1,"bone meal did not last four cycles");
             tick(be,1); require(be.getItem(2).isEmpty(),"fifth cycle did not consume next bone meal");
         });
@@ -317,15 +319,25 @@ public final class ConsolidationTests {
             tick(be,8); require(be.getItem(9).isEmpty() && c2.countItem(Items.OAK_LOG)==10,"double chest transfer: source="+be.getItem(9)+", other-half logs="+c2.countItem(Items.OAK_LOG));
         });
         test("removal_preserves_pending_harvest",()->{
-            var be=blockedReady(pos()); var p=be.getBlockPos(); level.removeBlock(p,false);
+            var be=blockedReady(pos()); var p=be.getBlockPos();
+            require(Block.getDrops(be.getBlockState(),level,p,be).size()==1,"loot preview did not return the greenhouse");
+            level.removeBlock(p,false);
             require(dropped(p,Items.OAK_LOG)==2,"non-player removal lost pending mature harvest");
             require(dropped(p,Items.COBBLESTONE)==576,"stored items lost/duplicated on removal");
         });
         test("survival_break_drops_once",()->{
             var be=blockedReady(pos()); var p=be.getBlockPos(); var player=player("GHBreak",p);
             require(player.gameMode.destroyBlock(p),"survival break failed");
-            require(dropped(p,Items.OAK_LOG)==2 && dropped(p,Items.COBBLESTONE)==576,"break duplicated or lost contents");
+            // Contents travel inside the dropped greenhouse, like a shulker box.
+            require(dropped(p,Items.OAK_LOG)==0 && dropped(p,Items.COBBLESTONE)==0,"contents dropped loose as well as packed");
             require(dropped(p,BonsaiGreenhouse.HOPPING_ITEM.get())==1,"survival block item count incorrect");
+            var item=level.getEntitiesOfClass(ItemEntity.class,new AABB(p).inflate(1)).stream()
+                .filter(e->e.getItem().is(BonsaiGreenhouse.HOPPING_ITEM.get())).findFirst().orElseThrow().getItem();
+            var packed=item.get(net.minecraft.core.component.DataComponents.CONTAINER);
+            require(packed!=null,"dropped greenhouse carries no contents");
+            int logs=packed.nonEmptyItemCopyStream().filter(s->s.is(Items.OAK_LOG)).mapToInt(ItemStack::getCount).sum();
+            int stone=packed.nonEmptyItemCopyStream().filter(s->s.is(Items.COBBLESTONE)).mapToInt(ItemStack::getCount).sum();
+            require(logs==2 && stone==576,"packed contents lost or duplicated: logs="+logs+", cobblestone="+stone);
         });
         test("manual_harvest_with_full_player_inventory",()->{
             var be=greenhouse(false); inputs(be,Items.DIRT,Items.OAK_SAPLING,0); tick(be,900);
@@ -338,8 +350,10 @@ public final class ConsolidationTests {
             var p1=player("GHSync1",be.getBlockPos()); var p2=player("GHSync2",be.getBlockPos());
             var m1=new GreenhouseMenu(1,p1.getInventory(),be); var m2=new GreenhouseMenu(2,p2.getInventory(),be);
             var l1=new Listener(); var l2=new Listener(); m1.addSlotListener(l1); m2.addSlotListener(l2);
-            tick(be,450); m1.broadcastChanges(); m2.broadcastChanges();
-            require(Arrays.equals(l1.data,l2.data) && l1.data[0]==450 && l1.data[2]==1,"menu viewers diverged");
+            tick(be,449); m1.broadcastChanges(); m2.broadcastChanges();
+            require(Arrays.equals(l1.data,l2.data) && l1.data[0]==449 && l1.data[1]==450,"menu viewers diverged");
+            tick(be,1); m1.broadcastChanges(); m2.broadcastChanges();
+            require(ready(be) && Arrays.equals(l1.data,l2.data),"harvest not ready for both viewers");
             require(m1.clickMenuButton(p1,0) && m2.clickMenuButton(p2,0),"menu harvest button rejected valid viewers");
             m1.broadcastChanges(); m2.broadcastChanges();
             require(p1.getInventory().countItem(Items.OAK_LOG)+p2.getInventory().countItem(Items.OAK_LOG)==2,"two viewers duplicated harvest");
@@ -369,7 +383,7 @@ public final class ConsolidationTests {
             var be=(GreenhouseBlockEntity)level.getBlockEntity(new BlockPos(X+100,Y,Z+100));
             require(be!=null && be.dataAccess().get(0)==137 && be.dataAccess().get(1)==450 && be.dataAccess().get(3)==3,"progress/boost changed across restart");
             require(be.getItem(2).getCount()==63,"reload spent fertilizer again"); tick(be,313);
-            require(be.dataAccess().get(2)==1,"reloaded crop did not finish at original deadline");
+            require(ready(be),"reloaded crop did not finish at original deadline");
         });
         test("disk_reload_pending_and_full_outputs",()->{
             var be=(GreenhouseBlockEntity)level.getBlockEntity(new BlockPos(X+103,Y,Z+100));
@@ -397,7 +411,7 @@ public final class ConsolidationTests {
         results.put("scope","256 active machines only; excludes full world tick, networking and rendering");
     }
     private static final class Listener implements ContainerListener {
-        final int[] data=new int[4];
+        final int[] data=new int[6];
         public void slotChanged(AbstractContainerMenu menu,int slot,ItemStack stack) {}
         public void dataChanged(AbstractContainerMenu menu,int id,int value) { data[id]=value; }
     }

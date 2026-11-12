@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-/** Greenhouse v0.2.2: compact, contrast-first GUI with a stable localized title. */
+/** Compact, contrast-first greenhouse GUI with a stable localized title. */
 public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMenu> {
     private Button harvest;
 
@@ -21,19 +21,28 @@ public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMe
     @Override protected void init() {
         super.init();
         if (!menu.isAutomatic()) {
-            harvest = Button.builder(Component.translatable("gui.greenhouse.harvest"), button -> {
+            harvest = Button.builder(harvestLabel(), button -> {
                 if (minecraft != null && minecraft.gameMode != null) {
                     minecraft.gameMode.handleInventoryButtonClick(menu.containerId, 0);
                 }
             }).bounds(leftPos + 42, topPos + 101, 92, 20).build();
-            harvest.active = menu.mature();
+            harvest.active = menu.hasHarvest();
             addRenderableWidget(harvest);
         }
     }
 
     @Override protected void containerTick() {
         super.containerTick();
-        if (harvest != null) harvest.active = menu.mature();
+        if (harvest != null) {
+            harvest.active = menu.hasHarvest();
+            harvest.setMessage(harvestLabel());
+        }
+    }
+
+    /** "Harvest n/4": the normal greenhouse keeps up to four ready harvests. */
+    private Component harvestLabel() {
+        return Component.translatable("gui.greenhouse.harvest_count",
+            menu.readyHarvests(), GreenhouseBlockEntity.NORMAL_HARVESTS);
     }
 
     private void slot(GuiGraphicsExtractor g, int x, int y) {
@@ -55,9 +64,11 @@ public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMe
         g.fill(x-2,y-2,x+178,y+218,0xFF866747);
         g.fill(x,y,x+176,y+216,0xFFE1D6B9);
 
-        // Title is deliberately short and independent of stale alpha-world translation keys.
+        // Title comes from the current block keys, never from the block entity's
+        // saved name, so stale alpha-world translation keys cannot appear.
         g.fill(x+5,y+5,x+171,y+21,0xFF4C6449);
-        g.centeredText(font,Component.literal(menu.isAutomatic()?"Automatic Greenhouse":"Greenhouse"),
+        g.centeredText(font,Component.translatable(menu.isAutomatic()?
+                       "block.greenhouse.automatic_greenhouse":"block.greenhouse.greenhouse"),
                        x+88,y+9,0xFFFFFFFF);
 
         // The former green title bar overlapped the Soil caption.
@@ -80,16 +91,26 @@ public final class GreenhouseScreen extends AbstractContainerScreen<GreenhouseMe
         int percent = menu.mature()?100:
             (menu.duration()==0?0:Math.min(100,100*menu.elapsed()/Math.max(1,menu.duration())));
         String percentText = percent+"%";
-        g.text(font,Component.literal(percentText),x+141,y+63,0xFF342C22,false);
+        // Remaining time while actually growing (not ready, not paused).
+        if(!menu.mature() && !menu.powered() && menu.duration()>0)
+            percentText += " · " + Component.translatable("gui.greenhouse.seconds",
+                GreenhouseBlockEntity.remainingSeconds(menu.elapsed(),menu.duration())).getString();
+        g.text(font,Component.literal(percentText),x+163-font.width(percentText),y+63,0xFF342C22,false);
         g.fill(x+13,y+74,x+163,y+83,0xFF554D39);
         g.fill(x+15,y+76,x+161,y+81,0xFF243729);
         int fill = (146*percent)/100;
         if (fill>0) g.fill(x+15,y+76,x+15+fill,y+81,menu.mature()?0xFFD5B45B:0xFF75B36D);
 
         String state;
-        if(menu.mature()) state=Component.translatable("gui.greenhouse.ready").getString();
+        // An automatic greenhouse stores a ready harvest on the same tick unless
+        // its nine output slots cannot hold it, so "mature" means it is waiting.
+        // A harvest still "mature" is waiting: automatic outputs full, or the
+        // normal greenhouse holds all four harvests.
+        if(menu.mature()) state=Component.translatable(menu.isAutomatic()?"gui.greenhouse.output_full":"gui.greenhouse.full").getString();
+        else if(!menu.hasSoil()) state=Component.translatable("gui.greenhouse.missing_soil").getString();
         else if(menu.crop()==Crop.EMPTY) state=Component.translatable("gui.greenhouse.missing_plant").getString();
         else if(!menu.validCrop()) state=Component.translatable("gui.greenhouse.invalid_soil").getString();
+        else if(menu.powered()) state=Component.translatable("gui.greenhouse.paused").getString();
         else state=Component.translatable("gui.greenhouse.growing").getString();
         g.text(font,Component.literal(state),x+13,y+86,0xFF332B22,false);
         g.text(font,Component.translatable("gui.greenhouse.bonus"),x+108,y+86,0xFF332B22,false);

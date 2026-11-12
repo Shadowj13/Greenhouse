@@ -23,7 +23,13 @@ See [kelp verification](docs/kelp-0.3.0-beta.2.md) for this update and the
 [previous beta verification report](docs/beta-0.3.0.md) for the beta.1 two-client,
 natural-tick load and migration scope, with explicit untested configurations.
 
-## Development: 0.3.0-beta.6
+## Development: 0.3.0-beta.7
+
+Beta.7 keeps a ready harvest when inputs change, lets the normal greenhouse
+hold four harvests, adds redstone pause, comparator output, optional JEI and
+Jade integration, pipe support for other mods, axe mining, recipe-book
+unlocks, and keeps the contents when a greenhouse is broken or upgraded. See
+the [changelog](CHANGELOG.md) for the full list.
 
 Both greenhouses support 56 crop and color entries. Beta.6 replaces moss
 cultivation with shelf mushrooms and moves weeping vines to crimson nylium.
@@ -48,7 +54,7 @@ and `patch/` are historical inputs, no longer applied by CI.
 
 Python 3 is required for the asset regression checks in `check` (no packages are
 required). Override its location with `-PpythonExecutable=C:/path/to/python.exe`.
-The installable file is `build/libs/greenhouse-0.3.0-beta.6.jar`.
+The installable file is `build/libs/greenhouse-0.3.0-beta.7.jar`.
 Use one Greenhouse JAR at a time in the instance's `mods` folder.
 
 `releaseBundle` builds and runs all server checks, then creates a reproducible
@@ -59,7 +65,15 @@ any failed test. CI uploads both the standalone JAR and the bundle.
 `integrationTest` launches the packaged JAR and a separate QA mod on an isolated,
 headless NeoForge server. It checks growth, fertilizer, full inventories, sided
 insertion, double chests, drops, server-side menu listeners, chunk unloading,
-disk reload, all 56 crop/color entries and both crafting recipes (345 checks).
+disk reload, all 56 crop/color entries, the JEI catalog data, comparator output,
+redstone pause, item handler faces, axe tag, recipe advancements and both
+crafting recipes, contents kept in dropped items and through the upgrade
+recipe, the remaining-time calculation and the normal greenhouse's
+four-harvest buffer (362 checks).
+JEI is optional at runtime; only its API is needed to compile
+(`mezz.jei:jei-26.3-common-api`, version in `gradle.properties`).
+Jade is optional too; it is compiled against `maven.modrinth:jade`
+(version `jade_version` in `gradle.properties`).
 Its world stays under `build/integration`; results and server logs
 are written to `build/qa-results`. The QA mod is never part of the installable JAR.
 The harness accepts the Minecraft EULA for this local test server.

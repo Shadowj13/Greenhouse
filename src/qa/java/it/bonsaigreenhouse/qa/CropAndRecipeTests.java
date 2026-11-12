@@ -20,10 +20,14 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.ServerExplosion;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -86,6 +90,8 @@ final class CropAndRecipeTests {
         return new Spec(crop,duration,min,max,bonus);
     }
     private static void require(boolean ok,String message) { if(!ok) throw new AssertionError(message); }
+    /** A harvest is available: moved into the outputs, or waiting because they are full. */
+    private static boolean ready(GreenhouseBlockEntity be) { return be.dataAccess().get(2)==1 || !be.getItem(9).isEmpty(); }
     private static Item item(String path) {
         var id=Identifier.withDefaultNamespace(path);
         require(BuiltInRegistries.ITEM.containsKey(id),"unregistered vanilla item: "+id);
@@ -157,14 +163,14 @@ final class CropAndRecipeTests {
             test.accept(prefix+"_manual_timing_and_four_boosted_cycles",()->{
                 var be=fresh(false); inputs(be,crop,0); tick(be,s.duration-1);
                 require(be.getBlockState().getValue(GreenhouseBlock.CROP)==crop,"selected color/crop changed");
-                require(be.dataAccess().get(2)==0 && be.dataAccess().get(0)==s.duration-1,"early/late maturity");
-                tick(be,1); require(be.dataAccess().get(2)==1,"maturity missing at expected tick");
+                require(!ready(be) && be.dataAccess().get(0)==s.duration-1,"early/late maturity");
+                tick(be,1); require(ready(be),"maturity missing at expected tick");
                 var p=player(be.getBlockPos()); be.collectBy(p); var collected=contents(p.getInventory()); harvest(s,collected);
                 be.collectBy(p); require(contents(p.getInventory()).equals(collected),"duplicate harvest");
                 be.setItem(2,new ItemStack(Items.BONE_MEAL));
                 for(int cycle=0;cycle<4;cycle++) {
-                    tick(be,s.duration/2-1); require(be.dataAccess().get(2)==0,"boosted cycle matured early");
-                    tick(be,1); require(be.dataAccess().get(2)==1,"boosted cycle did not mature");
+                    tick(be,s.duration/2-1); require(!ready(be),"boosted cycle matured early");
+                    tick(be,1); require(ready(be),"boosted cycle did not mature");
                     p.getInventory().clearContent(); be.collectBy(p); harvest(s,contents(p.getInventory()));
                 }
                 tick(be,1); require(be.dataAccess().get(1)==s.duration && be.dataAccess().get(3)==0,"boost lasted beyond four cycles");
@@ -227,13 +233,13 @@ final class CropAndRecipeTests {
                 for(Item soil:accepted) {
                     var be=fresh(false); be.setItem(0,new ItemStack(soil));
                     be.setItem(1,new ItemStack(item(crop.plantId))); tick(be,599);
-                    require(be.dataAccess().get(2)==0,"new plant matured early");
+                    require(!ready(be),"new plant matured early");
                     tick(be,1); var player=player(be.getBlockPos()); be.collectBy(player);
                     require(contents(player.getInventory()).equals(Map.of(crop.plantId,1)),"wrong new-plant harvest");
                     be.collectBy(player);
                     require(contents(player.getInventory()).equals(Map.of(crop.plantId,1)),"duplicate new-plant harvest");
                     require(be.getItem(0).is(soil) && be.getItem(1).is(item(crop.plantId)),"new plant consumes original inputs");
-                    tick(be,600); require(be.dataAccess().get(2)==1,"new plant fails to regrow");
+                    tick(be,600); require(ready(be),"new plant fails to regrow");
                 }
                 for(Item soil:List.of(Items.DIRT,Items.STONE,Items.SAND,Items.WATER_BUCKET,Items.CRIMSON_NYLIUM,
                         Items.WARPED_NYLIUM,Items.NETHER_WART_BLOCK,Items.NETHERRACK,Items.CLAY))
@@ -342,6 +348,310 @@ final class CropAndRecipeTests {
             var be=fresh(false);
             require(!be.canPlaceItem(0,new ItemStack(FOREIGN_SOIL.get())) && !be.canPlaceItem(1,new ItemStack(FOREIGN_PLANT.get())),"foreign inputs enter menu/hopper slots");
         });
+        test.accept("ready_harvest_survives_input_change_manual",()->{
+            // Full internal slots make the ready harvest wait inside the greenhouse.
+            var be=fresh(false); loadOutputs(be,9); inputs(be,Crop.OAK,0); tick(be,900);
+            require(be.dataAccess().get(2)==1,"oak fixture not waiting");
+            be.setItem(1,ItemStack.EMPTY); tick(be,20);
+            require(be.dataAccess().get(2)==1 && be.getBlockState().getValue(GreenhouseBlock.CROP)==Crop.OAK,"removing the plant discarded the ready harvest");
+            be.setItem(1,new ItemStack(Items.BIRCH_SAPLING)); tick(be,20);
+            be.setItem(0,ItemStack.EMPTY); tick(be,20);
+            require(be.dataAccess().get(2)==1 && be.getBlockState().getValue(GreenhouseBlock.CROP)==Crop.OAK,"changing plant or soil discarded the ready harvest");
+            var p=player(be.getBlockPos()); be.collectBy(p);
+            var got=contents(p.getInventory());
+            require(got.getOrDefault("oak_log",0)==2 && got.getOrDefault("cobblestone",0)==576,"ready harvest or outputs not returned: "+got);
+            be.setItem(0,new ItemStack(Items.DIRT)); tick(be,1);
+            require(be.getBlockState().getValue(GreenhouseBlock.CROP)==Crop.BIRCH && be.dataAccess().get(2)==0 &&
+                be.dataAccess().get(0)==1,"new crop did not start after collecting the old harvest");
+        });
+        test.accept("ready_harvest_survives_input_change_automatic",()->{
+            var be=fresh(true);
+            loadOutputs(be,9); inputs(be,Crop.OAK,0); tick(be,900);
+            require(be.dataAccess().get(2)==1 && be.getBlockState().getValue(GreenhouseBlock.CROP)==Crop.OAK,
+                "oak fixture did not mature with blocked outputs");
+            be.setItem(1,new ItemStack(Items.BIRCH_SAPLING)); tick(be,40);
+            require(be.dataAccess().get(2)==1 && be.getBlockState().getValue(GreenhouseBlock.CROP)==Crop.OAK,"blocked harvest discarded by plant change");
+            // Oak can roll logs plus up to three different bonus items.
+            for (int slot=9;slot<13;slot++) be.removeItem(slot,64);
+            tick(be,1);
+            require(be.getItem(9).is(Items.OAK_LOG) && be.getItem(9).getCount()==2,"blocked harvest not exported after plant change");
+            tick(be,1);
+            require(be.getBlockState().getValue(GreenhouseBlock.CROP)==Crop.BIRCH && be.dataAccess().get(2)==0,"new crop did not start after export");
+        });
+        test.accept("interrupted_boosted_cycle_refunds_bone_meal_charge",()->{
+            var be=fresh(false); inputs(be,Crop.OAK,1); tick(be,100);
+            require(be.dataAccess().get(1)==450 && be.dataAccess().get(3)==3 && be.getItem(2).isEmpty(),"boosted fixture not started");
+            be.setItem(1,ItemStack.EMPTY); tick(be,1);
+            require(be.dataAccess().get(3)==4 && be.dataAccess().get(0)==0,"interrupted boosted cycle not refunded");
+            be.setItem(1,new ItemStack(Items.OAK_SAPLING));
+            var p=player(be.getBlockPos());
+            for(int cycle=0;cycle<4;cycle++) {
+                tick(be,449); require(!ready(be),"refunded boosted cycle matured early");
+                tick(be,1); require(ready(be),"refunded charge did not give four boosted cycles");
+                be.collectBy(p);
+            }
+            tick(be,1); require(be.dataAccess().get(1)==900 && be.dataAccess().get(3)==0,"refund granted more than four boosted cycles");
+        });
+        test.accept("automation_keeps_single_soil_and_plant",()->{
+            var up=net.minecraft.core.Direction.UP;
+            var be=fresh(true);
+            require(be.canPlaceItemThroughFace(0,new ItemStack(Items.DIRT),up) &&
+                be.canPlaceItemThroughFace(1,new ItemStack(Items.OAK_SAPLING),up),"automation cannot fill empty input slots");
+            be.setItem(0,new ItemStack(Items.DIRT)); be.setItem(1,new ItemStack(Items.OAK_SAPLING));
+            require(!be.canPlaceItemThroughFace(0,new ItemStack(Items.DIRT),up) &&
+                !be.canPlaceItemThroughFace(1,new ItemStack(Items.OAK_SAPLING),up),"automation stacks extra soil or plants");
+            require(be.canPlaceItemThroughFace(2,new ItemStack(Items.BONE_MEAL),up) &&
+                be.canPlaceItemThroughFace(2,new ItemStack(Items.BONE_MEAL),net.minecraft.core.Direction.NORTH),"automation rejects bone meal");
+            be.setItem(1,new ItemStack(Items.BIRCH_SAPLING));
+            require(be.getItem(1).is(Items.BIRCH_SAPLING) && be.getItem(1).getCount()==1,"player/menu replacement of an occupied slot broken");
+        });
+        test.accept("crop_catalog_matches_rules",()->{
+            // The JEI catalog reads soilIds/minYield/maxYield/bonuses: check them
+            // against the independent acceptance limits used by every crop test.
+            for(Crop crop:Crop.values()) if(crop.isCultivable()) {
+                Spec s=spec(crop);
+                Set<String> soils=new HashSet<>(List.of(crop.soilId));
+                if(crop.soilId.equals("dirt")) soils.addAll(List.of("grass_block","podzol","rooted_dirt","coarse_dirt"));
+                if(crop.soilId.equals("sand")) soils.add("red_sand");
+                if(crop.soilId.equals("mycelium")) soils.add("podzol");
+                require(new HashSet<>(crop.soilIds()).equals(soils),"catalog soils differ for "+crop+": "+crop.soilIds());
+                for(String soil:crop.soilIds()) require(crop.accepts(new ItemStack(item(soil))),"catalog soil rejected: "+soil);
+                require(crop.minYield()==s.min && crop.maxYield()==s.max,"catalog yield differs for "+crop);
+                Set<String> bonus=new HashSet<>();
+                for(var b:crop.bonuses()) {
+                    item(b.itemId()); bonus.add(b.itemId());
+                    require(b.chancePercent()>0 && b.chancePercent()<100,"invalid bonus chance for "+crop);
+                }
+                require(bonus.equals(s.bonus),"catalog bonuses differ for "+crop+": "+bonus);
+            }
+        });
+        test.accept("comparator_normal_progress_and_ready",()->{
+            var be=fresh(false); var at=be.getBlockPos();
+            require(be.getBlockState().hasAnalogOutputSignal(),"greenhouse has no comparator output");
+            require(signal(be)==0,"empty greenhouse emits a signal");
+            inputs(be,Crop.OAK,0); tick(be,1);
+            require(signal(be)==1,"growing crop does not start at signal 1");
+            tick(be,449); require(signal(be)==8,"half-grown crop signal: "+signal(be));
+            tick(be,450); require(ready(be) && be.dataAccess().get(2)==0 && signal(be)==0,"harvest not moved into the outputs");
+            // Three more harvests: the fourth waits and the comparator reads 15.
+            tick(be,2700);
+            require(be.dataAccess().get(2)==1 && be.dataAccess().get(5)==4 && signal(be)==15,"four ready harvests do not emit 15");
+            be.collectBy(player(at)); require(signal(be)==0 && !ready(be),"signal or outputs not reset after harvest");
+        });
+        test.accept("comparator_automatic_output_fill",()->{
+            var be=fresh(true);
+            require(signal(be)==0,"empty outputs emit a signal");
+            loadOutputs(be,1); require(signal(be)==2,"one full output stack: "+signal(be));
+            loadOutputs(be,9); require(signal(be)==15,"full outputs: "+signal(be));
+        });
+        test.accept("redstone_pauses_growth",()->{
+            var be=fresh(false); var side=be.getBlockPos().east();
+            inputs(be,Crop.OAK,1); tick(be,100);
+            level.setBlock(side,Blocks.REDSTONE_BLOCK.defaultBlockState(),3); tick(be,500);
+            require(be.dataAccess().get(4)==1 && be.dataAccess().get(0)==100,"powered greenhouse kept growing");
+            level.setBlock(side,Blocks.AIR.defaultBlockState(),3); tick(be,350);
+            require(be.dataAccess().get(4)==0 && ready(be),"unpowered greenhouse did not resume");
+            var idle=fresh(false); var idleSide=idle.getBlockPos().east();
+            level.setBlock(idleSide,Blocks.REDSTONE_BLOCK.defaultBlockState(),3);
+            inputs(idle,Crop.OAK,1); tick(idle,200);
+            require(idle.dataAccess().get(1)==0 && idle.getItem(2).getCount()==1,"powered greenhouse started a cycle or spent bone meal");
+            level.setBlock(idleSide,Blocks.AIR.defaultBlockState(),3);
+        });
+        automationAndData();
+    }
+    void automationAndData() {
+        test.accept("item_capability_respects_faces",()->{
+            var be=fresh(true); var at=be.getBlockPos();
+            var cap=net.neoforged.neoforge.capabilities.Capabilities.Item.BLOCK;
+            var up=level.getCapability(cap,at,net.minecraft.core.Direction.UP);
+            var side=level.getCapability(cap,at,net.minecraft.core.Direction.NORTH);
+            var down=level.getCapability(cap,at,net.minecraft.core.Direction.DOWN);
+            require(up!=null && side!=null && down!=null,"greenhouse exposes no item handler to other mods");
+            require(level.getCapability(cap,at,null)==null,"unsided handler bypasses face rules");
+            int soil,plant,bone,wrongSide;
+            try(var tx=net.neoforged.neoforge.transfer.transaction.Transaction.openRoot()) {
+                soil=net.neoforged.neoforge.transfer.ResourceHandlerUtil.insertStacking(up,net.neoforged.neoforge.transfer.item.ItemResource.of(Items.DIRT),64,tx);
+                plant=net.neoforged.neoforge.transfer.ResourceHandlerUtil.insertStacking(up,net.neoforged.neoforge.transfer.item.ItemResource.of(Items.OAK_SAPLING),64,tx);
+                bone=net.neoforged.neoforge.transfer.ResourceHandlerUtil.insertStacking(side,net.neoforged.neoforge.transfer.item.ItemResource.of(Items.BONE_MEAL),64,tx);
+                wrongSide=net.neoforged.neoforge.transfer.ResourceHandlerUtil.insertStacking(side,net.neoforged.neoforge.transfer.item.ItemResource.of(Items.DIRT),64,tx);
+                tx.commit();
+            }
+            require(soil==1 && plant==1 && bone==64 && wrongSide==0,"handler insertion limits: "+soil+"/"+plant+"/"+bone+"/"+wrongSide);
+            require(be.getItem(0).getCount()==1 && be.getItem(1).getCount()==1 && be.getItem(2).getCount()==64,"handler stacked inputs");
+            int stolen;
+            try(var tx=net.neoforged.neoforge.transfer.transaction.Transaction.openRoot()) {
+                stolen=up.extract(net.neoforged.neoforge.transfer.item.ItemResource.of(Items.DIRT),1,tx)
+                    +down.extract(net.neoforged.neoforge.transfer.item.ItemResource.of(Items.OAK_SAPLING),1,tx);
+                tx.commit();
+            }
+            require(stolen==0 && be.getItem(0).is(Items.DIRT) && be.getItem(1).is(Items.OAK_SAPLING),"inputs extractable by other mods");
+            tick(be,450);
+            require(be.getItem(9).is(Items.OAK_LOG) && be.getItem(9).getCount()==2,"boosted harvest not stored");
+            int first,rest;
+            try(var tx=net.neoforged.neoforge.transfer.transaction.Transaction.openRoot()) {
+                first=down.extract(net.neoforged.neoforge.transfer.item.ItemResource.of(Items.OAK_LOG),1,tx);
+                tx.commit();
+            }
+            require(first==1 && be.getItem(9).getCount()==1,"partial extraction duplicated or lost logs");
+            try(var tx=net.neoforged.neoforge.transfer.transaction.Transaction.openRoot()) {
+                rest=down.extract(net.neoforged.neoforge.transfer.item.ItemResource.of(Items.OAK_LOG),64,tx);
+                tx.commit();
+            }
+            require(rest==1 && be.getItem(9).isEmpty(),"remaining products not extractable from below");
+        });
+        test.accept("axe_tag_and_recipe_book_advancements",()->{
+            for(var block:List.of(BonsaiGreenhouse.NORMAL.get(),BonsaiGreenhouse.HOPPING.get())) {
+                var state=block.defaultBlockState();
+                require(state.is(net.minecraft.tags.BlockTags.MINEABLE_WITH_AXE),"greenhouse not mineable with an axe");
+                require(new ItemStack(Items.IRON_AXE).getDestroySpeed(state)>1f,"axe does not speed up breaking");
+            }
+            var advancements=level.getServer().getAdvancements();
+            for(String path:List.of("recipes/misc/greenhouse","recipes/misc/automatic_greenhouse"))
+                require(advancements.get(Identifier.fromNamespaceAndPath(BonsaiGreenhouse.ID,path))!=null,"missing recipe advancement "+path);
+        });
+        packing();
+    }
+    // ---- Contents kept inside the dropped item and through the upgrade recipe ----
+    private List<net.minecraft.world.entity.item.ItemEntity> dropEntities(BlockPos at) {
+        return level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(at).inflate(1.5));
+    }
+    private List<ItemStack> collectDrops(BlockPos at) {
+        List<ItemStack> result=new ArrayList<>();
+        for(var e:dropEntities(at)) { result.add(e.getItem().copy()); e.discard(); }
+        return result;
+    }
+    private Map<String,Integer> packedContents(ItemStack item) {
+        Map<String,Integer> result=new HashMap<>();
+        var contents=item.get(net.minecraft.core.component.DataComponents.CONTAINER);
+        if(contents!=null) contents.nonEmptyItemCopyStream().forEach(s->
+            result.merge(BuiltInRegistries.ITEM.getKey(s.getItem()).getPath(),s.getCount(),Integer::sum));
+        return result;
+    }
+    void packing() {
+        test.accept("normal_greenhouse_keeps_four_harvests",()->{
+            var be=fresh(false); var at=be.getBlockPos();
+            inputs(be,Crop.DANDELION,0);
+            for(int n=1;n<=3;n++) {
+                tick(be,600);
+                require(be.dataAccess().get(5)==n && be.dataAccess().get(2)==0,"harvest "+n+" not kept: "+be.dataAccess().get(5));
+            }
+            tick(be,600);
+            require(be.dataAccess().get(5)==4 && be.dataAccess().get(2)==1 && signal(be)==15,"fourth harvest does not fill the greenhouse");
+            tick(be,600);
+            require(be.dataAccess().get(0)==600 && be.dataAccess().get(5)==4,"full greenhouse kept growing");
+            var down=net.minecraft.core.Direction.DOWN;
+            require(be.getSlotsForFace(down).length==0 && !be.canTakeItemThroughFace(9,be.getItem(9),down),"stored harvests extractable by hoppers");
+            var handler=level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.Item.BLOCK,at,down);
+            int taken=0;
+            if(handler!=null) try(var tx=net.neoforged.neoforge.transfer.transaction.Transaction.openRoot()) {
+                taken=handler.extract(net.neoforged.neoforge.transfer.item.ItemResource.of(Items.DANDELION),64,tx); tx.commit();
+            }
+            require(taken==0,"stored harvests extractable by pipes");
+            require(level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.Item.BLOCK,at,null)==null,
+                "stored harvests extractable by an unsided handler");
+            var menu=new GreenhouseMenu(1,player(at).getInventory(),be);
+            require(menu.slots.size()==3+36 && menu.readyHarvests()==4,"normal greenhouse menu shows outputs or wrong count");
+            var p=player(at); be.collectBy(p);
+            require(contents(p.getInventory()).equals(Map.of("dandelion",4)) && be.dataAccess().get(5)==0 && be.dataAccess().get(2)==0,
+                "harvest did not hand over all four harvests: "+contents(p.getInventory()));
+            tick(be,1); require(be.dataAccess().get(0)==1,"growth did not resume after harvest");
+        });
+        test.accept("remaining_time_shown_by_gui_and_jade",()->{
+            require(GreenhouseBlockEntity.remainingSeconds(0,900)==45 && GreenhouseBlockEntity.remainingSeconds(899,900)==1
+                && GreenhouseBlockEntity.remainingSeconds(900,900)==0 && GreenhouseBlockEntity.remainingSeconds(0,450)==23
+                && GreenhouseBlockEntity.remainingSeconds(10,0)==0,"remaining seconds rounding");
+            var be=fresh(false); inputs(be,Crop.OAK,0); tick(be,300);
+            require(be.activeCrop()==Crop.OAK && GreenhouseBlockEntity.remainingSeconds(be.dataAccess().get(0),be.dataAccess().get(1))==30,
+                "remaining time of a growing crop");
+        });
+        test.accept("survival_break_keeps_contents_and_restores_growth",()->{
+            var be=fresh(false); var at=be.getBlockPos(); collectDrops(at);
+            inputs(be,Crop.OAK,3); tick(be,100);
+            require(be.dataAccess().get(0)==100 && be.dataAccess().get(3)==3,"fixture not growing");
+            require(player(at).gameMode.destroyBlock(at),"survival break failed");
+            var drops=collectDrops(at);
+            require(drops.size()==1 && drops.get(0).is(BonsaiGreenhouse.NORMAL_ITEM.get()) && drops.get(0).getCount()==1,"expected one packed greenhouse, got "+drops);
+            require(packedContents(drops.get(0)).equals(Map.of("dirt",1,"oak_sapling",1,"bone_meal",2)),"packed contents: "+packedContents(drops.get(0)));
+            var copy=fresh(false); copy.applyComponentsFromItemStack(drops.get(0)); tick(copy,1);
+            require(copy.getItem(0).is(Items.DIRT) && copy.getItem(1).is(Items.OAK_SAPLING) && copy.getItem(2).getCount()==2,"inputs not restored");
+            require(copy.dataAccess().get(0)==101 && copy.dataAccess().get(1)==450 && copy.dataAccess().get(3)==3,"growth state not restored");
+            require(copy.getBlockState().getValue(GreenhouseBlock.CROP)==Crop.OAK,"restored crop not shown");
+        });
+        test.accept("creative_break_drops_packed_item_once",()->{
+            var be=fresh(true); var at=be.getBlockPos(); collectDrops(at);
+            loadOutputs(be,2); be.setItem(0,new ItemStack(Items.DIRT)); be.setItem(1,new ItemStack(Items.OAK_SAPLING));
+            var p=player(at); p.setGameMode(GameType.CREATIVE);
+            require(p.gameMode.destroyBlock(at),"creative break failed");
+            var drops=collectDrops(at);
+            require(drops.size()==1 && drops.get(0).is(BonsaiGreenhouse.HOPPING_ITEM.get()),"creative break drops: "+drops);
+            require(packedContents(drops.get(0)).equals(Map.of("cobblestone",128,"dirt",1,"oak_sapling",1)),"creative packed contents: "+packedContents(drops.get(0)));
+        });
+        test.accept("destroy_with_drops_keeps_ready_harvest_once",()->{
+            for (boolean exploded : new boolean[]{false,true}) {
+                var be=fresh(false); var at=be.getBlockPos(); collectDrops(at);
+                inputs(be,Crop.OAK,0); tick(be,900); require(ready(be),"fixture not mature");
+                if (exploded) {
+                    var explosion=new ServerExplosion(level,null,null,null,
+                        Vec3.atCenterOf(at),2.0f,false,Explosion.BlockInteraction.DESTROY);
+                    be.getBlockState().onExplosionHit(level,at,explosion,(stack,pos) -> Block.popResource(level,pos,stack));
+                    require(level.getBlockState(at).isAir(),"explosion did not break the greenhouse");
+                } else require(level.destroyBlock(at,true),"destroyBlock did not break the greenhouse");
+                var drops=collectDrops(at);
+                require(drops.size()==1 && drops.get(0).is(BonsaiGreenhouse.NORMAL_ITEM.get()),"unexpected drops after destruction: "+drops);
+                var packed=packedContents(drops.get(0));
+                require(packed.getOrDefault("oak_log",0)==2 && packed.getOrDefault("dirt",0)==1
+                    && packed.getOrDefault("oak_sapling",0)>=1,"ready harvest or inputs not packed: "+packed);
+                var copy=fresh(false); copy.applyComponentsFromItemStack(drops.get(0)); tick(copy,1);
+                require(ready(copy),"restored harvest not ready");
+                var p=player(copy.getBlockPos()); copy.collectBy(p);
+                require(contents(p.getInventory()).getOrDefault("oak_log",0)==2,"restored harvest lost or duplicated");
+            }
+        });
+        test.accept("empty_break_preserves_charges_or_drops_plain_item",()->{
+            var be=fresh(false); var at=be.getBlockPos(); collectDrops(at);
+            require(player(at).gameMode.destroyBlock(at),"survival break failed");
+            var drops=collectDrops(at);
+            require(drops.size()==1 && ItemStack.isSameItemSameComponents(drops.get(0),new ItemStack(BonsaiGreenhouse.NORMAL_ITEM.get())),
+                "empty greenhouse item carries data and will not stack: "+drops);
+            for (var mode : List.of(GameType.SURVIVAL,GameType.CREATIVE)) {
+                var charged=fresh(false); var chargedPos=charged.getBlockPos(); collectDrops(chargedPos);
+                inputs(charged,Crop.OAK,1); tick(charged,1);
+                charged.removeItem(0,1); charged.removeItem(1,1); tick(charged,1);
+                require(charged.isEmpty() && charged.dataAccess().get(3)==4,"fixture must hold only four charges");
+                var p=player(chargedPos); p.setGameMode(mode);
+                require(p.gameMode.destroyBlock(chargedPos),"charged greenhouse break failed in "+mode);
+                var chargedDrops=collectDrops(chargedPos);
+                require(chargedDrops.size()==1 && chargedDrops.get(0).is(BonsaiGreenhouse.NORMAL_ITEM.get()),
+                    "charged greenhouse drops in "+mode+": "+chargedDrops);
+                var copy=fresh(false); copy.applyComponentsFromItemStack(chargedDrops.get(0)); tick(copy,1);
+                require(copy.isEmpty() && copy.dataAccess().get(3)==4,"replaced greenhouse lost charges in "+mode);
+            }
+        });
+        test.accept("upgrade_recipe_keeps_contents",()->{
+            var all=NonNullList.withSize(36,ItemStack.EMPTY);
+            all.set(0,new ItemStack(Items.DIRT)); all.set(1,new ItemStack(Items.OAK_SAPLING));
+            all.set(2,new ItemStack(Items.BONE_MEAL,5)); all.set(27,new ItemStack(Items.OAK_LOG,2));
+            var packed=new ItemStack(BonsaiGreenhouse.NORMAL_ITEM.get());
+            packed.set(net.minecraft.core.component.DataComponents.CONTAINER,net.minecraft.world.item.component.ItemContainerContents.fromItems(all));
+            var cells=new ArrayList<>(grid(true,Items.OAK_SLAB,1)); cells.set(4,packed);
+            var input=CraftingInput.of(3,3,cells);
+            var holder=recipe(cells).orElseThrow(()->new AssertionError("packed greenhouse not accepted by upgrade recipe"));
+            var result=holder.value().assemble(input);
+            require(result.is(BonsaiGreenhouse.HOPPING_ITEM.get()) && result.getCount()==1,"upgrade result: "+result);
+            require(packedContents(result).equals(packedContents(packed)),"upgrade lost contents: "+packedContents(result));
+            var plain=holder.value().assemble(CraftingInput.of(3,3,grid(true,Items.OAK_SLAB,1)));
+            require(ItemStack.isSameItemSameComponents(plain,new ItemStack(BonsaiGreenhouse.HOPPING_ITEM.get())),"plain upgrade gained data");
+        });
+    }
+    private int signal(GreenhouseBlockEntity be) {
+        return be.getBlockState().getAnalogOutputSignal(level,be.getBlockPos(),net.minecraft.core.Direction.NORTH);
+    }
+    private void loadOutputs(GreenhouseBlockEntity be,int fullSlots) {
+        var slots=NonNullList.withSize(27,ItemStack.EMPTY);
+        for(int i=0;i<fullSlots;i++) slots.set(9+i,new ItemStack(Items.COBBLESTONE,64));
+        var out=TagValueOutput.createWithContext(ProblemReporter.DISCARDING,level.registryAccess());
+        ContainerHelper.saveAllItems(out,slots);
+        load(be,out.buildResult());
     }
     private void loadLegacyHarvest(GreenhouseBlockEntity be,Crop crop,Item soil,Item plant) {
         var slots=NonNullList.withSize(27,ItemStack.EMPTY);
@@ -403,7 +713,7 @@ final class CropAndRecipeTests {
                 "new crop progress/boost changed across process restart");
             require(be.getBlockState().getValue(GreenhouseBlock.CROP)==crop,"disk reload loses plant identity");
             tick(be,spec(crop).duration/2-137);
-            require(be.dataAccess().get(2)==1,"disk-restored crop misses original maturity deadline");
+            require(ready(be),"disk-restored crop misses original maturity deadline");
             var p=player(be.getBlockPos()); be.collectBy(p); harvest(spec(crop),contents(p.getInventory()));
             require(be.getItem(0).is(item(crop.soilId)) && be.getItem(1).is(item(crop.plantId)),
                 "disk-restored harvest loses inputs");

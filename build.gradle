@@ -12,7 +12,15 @@ tasks.withType(AbstractArchiveTask).configureEach {
     reproducibleFileOrder = true
 }
 
-repositories {}
+repositories {
+    // JEI API (compile-time only; JEI stays an optional runtime mod).
+    maven { name = 'BlameJared'; url = 'https://maven.blamejared.com/' }
+    // Jade (compile-time only; Jade stays an optional runtime mod).
+    exclusiveContent {
+        forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
+}
 
 sourceSets {
     qa {
@@ -73,6 +81,9 @@ tasks.register('verifyJar', Exec) {
 tasks.named('check') { dependsOn 'verifyModels', 'verifyJar' }
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    compileOnly "maven.modrinth:jade:${jade_version}"
 }
 
 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }

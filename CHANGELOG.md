@@ -1,5 +1,64 @@
 # Changelog
 
+## 0.3.0-beta.7
+
+- Keep a ready harvest when the plant or substrate is removed or replaced.
+  The harvest stays with the crop that produced it until it is collected or
+  exported; the new crop starts afterwards. Previously the harvest was lost.
+- Give back the bone meal charge of an accelerated cycle interrupted by a crop
+  change, so one bone meal always yields four accelerated harvests.
+- Automation (hoppers) fills an empty soil or plant slot with one item and no
+  longer stacks extra copies, matching the menu limit.
+- GUI: show "Insert soil" when the soil slot is empty and "Output full" when an
+  automatic greenhouse is waiting for space; the title is now translated.
+- Italian names: "Serra" and "Serra automatica".
+- Tree bonuses use an explicit crop list instead of the enum position; remove an
+  unused leaf mapping for fungi.
+- Redstone: a powered greenhouse pauses growth (no new cycle, no bone meal
+  spent); a ready harvest can still be collected or exported. The GUI shows
+  "Paused".
+- Comparator: the normal greenhouse outputs its growth progress (1-14) and 15
+  when ready; the automatic greenhouse outputs the fill level of its nine
+  output slots, like a chest.
+- Optional JEI integration (JEI 31.13+ for 26.3): a "Greenhouse" category lists
+  every crop with accepted soils, yield, bonus chances and cycle time; both
+  greenhouses are catalysts and clicking the growth bar opens the catalog.
+  Soils, yields and bonuses come from one table shared with the harvest code.
+- Pipes and storage from other mods: both greenhouses expose NeoForge's item
+  handler with the same face rules as hoppers (inputs from above, bone meal
+  from the sides, products from below; soil and plant one item each). The
+  automatic greenhouse also exports into non-vanilla storage below it.
+- Axes break greenhouses faster (minecraft:mineable/axe).
+- Both recipes unlock in the recipe book (glass pane or flower pot for the
+  greenhouse; greenhouse or hopper for the automatic one).
+- Breaking a greenhouse keeps its soil, plant, bone meal, products, ready
+  harvest and growth progress inside the dropped item, like a shulker box
+  (survival, creative, explosions and block breakers). Placing it restores
+  everything, including unused bone meal charges. Greenhouses with no items
+  or growth state drop plain, stackable items.
+- Crafting an automatic greenhouse from a filled greenhouse keeps its contents
+  (new recipe type greenhouse:keep_contents_shaped, same JSON as shaped).
+- GUI: the growth line shows the remaining time in seconds next to the
+  percentage while a crop is growing.
+- Optional Jade integration (Jade 26.3.5+): looking at a greenhouse shows the
+  crop, its state (growing with percentage and remaining time, ready, output
+  full, paused) and the bone meal boost left. Without Jade on the server the
+  tooltip still shows the crop.
+- Normal greenhouse: keeps growing until it holds four ready harvests instead
+  of stopping after each one. "Harvest n/4" hands them all over at once; the
+  GUI and Jade show the count and "Greenhouse full" at 4/4. Stored harvests
+  are not shown as slots and cannot be extracted by hoppers or pipes; the
+  automatic greenhouse keeps its nine exportable slots. The comparator reads
+  15 when the normal greenhouse is full.
+- Add seventeen server checks (362 in total): ready harvest after input changes
+  (manual and automatic), bone meal refund, single-item automation inputs,
+  catalog consistency, comparator output (both machines), redstone pause,
+  item handler face rules, the axe tag/recipe advancements, packed drops
+  (survival, creative, destroy with drops, empty item), the upgrade recipe
+  the remaining-time calculation shared by the GUI and Jade, and the normal
+  greenhouse's four-harvest buffer. Tests that expected the normal greenhouse
+  to stop at every harvest now check for an available harvest instead.
+
 ## 0.3.0-beta.6
 
 - Grow weeping vines on crimson nylium and show it in the pot.

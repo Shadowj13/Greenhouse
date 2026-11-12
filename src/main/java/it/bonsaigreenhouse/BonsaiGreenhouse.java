@@ -9,8 +9,14 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.MapColor;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
+import net.neoforged.neoforge.transfer.item.WorldlyContainerWrapper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -24,6 +30,10 @@ public final class BonsaiGreenhouse {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE,ID);
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU,ID);
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ID);
+    public static final DeferredRegister<net.minecraft.world.item.crafting.RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, ID);
+    // Shaped recipe that keeps the contents of the greenhouse ingredient (upgrade to automatic).
+    public static final DeferredHolder<net.minecraft.world.item.crafting.RecipeSerializer<?>,net.minecraft.world.item.crafting.RecipeSerializer<KeepContentsShapedRecipe>> KEEP_CONTENTS_SHAPED =
+        RECIPE_SERIALIZERS.register("keep_contents_shaped", () -> KeepContentsShapedRecipe.SERIALIZER);
 
     public static final DeferredBlock<GreenhouseBlock> NORMAL = BLOCKS.registerBlock("greenhouse",
         p -> new GreenhouseBlock(false,p), p -> p.mapColor(MapColor.WOOD).strength(1.5F).noOcclusion());
@@ -53,5 +63,19 @@ public final class BonsaiGreenhouse {
         BLOCK_ENTITIES.register(modBus);
         MENUS.register(modBus);
         TABS.register(modBus);
+        RECIPE_SERIALIZERS.register(modBus);
+        modBus.addListener(RegisterCapabilitiesEvent.class, BonsaiGreenhouse::registerCapabilities);
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,BlockDropsEvent.class,GreenhouseBlock::onBlockDrops);
+    }
+
+    /**
+     * Expose both greenhouses to pipes and storage from other mods. NeoForge
+     * wraps only vanilla block entities automatically; the wrapper applies the
+     * same face rules as hoppers: soil, plant and bone meal from above, bone
+     * meal from the sides, products extracted from below.
+     */
+    private static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.Item.BLOCK, GREENHOUSE_ENTITY.get(),
+            (greenhouse, side) -> side==null ? null : new WorldlyContainerWrapper(greenhouse, side));
     }
 }

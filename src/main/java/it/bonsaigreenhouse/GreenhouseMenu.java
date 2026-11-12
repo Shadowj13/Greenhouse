@@ -19,7 +19,7 @@ public final class GreenhouseMenu extends AbstractContainerMenu {
     private final int machineSlots;
 
     public GreenhouseMenu(int id, Inventory inventory, boolean automatic) {
-        this(id, inventory, new SimpleContainer(27), new SimpleContainerData(4), automatic, null);
+        this(id, inventory, new SimpleContainer(27), new SimpleContainerData(6), automatic, null);
     }
     public GreenhouseMenu(int id, Inventory inventory, GreenhouseBlockEntity be) {
         this(id, inventory, be, be.dataAccess(), be.isAutomatic(), be);
@@ -33,7 +33,7 @@ public final class GreenhouseMenu extends AbstractContainerMenu {
         this.blockEntity = be;
         this.machineSlots = automatic ? 12 : 3;
         checkContainerSize(storage, 27);
-        checkContainerDataCount(data, 4);
+        checkContainerDataCount(data, 6);
         storage.startOpen(inventory.player);
 
         addSlot(new Slot(storage,0,24,39) {
@@ -50,6 +50,7 @@ public final class GreenhouseMenu extends AbstractContainerMenu {
         addSlot(new Slot(storage,2,136,39) {
             @Override public boolean mayPlace(ItemStack stack) { return stack.is(Items.BONE_MEAL); }
         });
+        // Output slots: only the automatic greenhouse shows its nine outputs.
         if (automatic) for (int i=0;i<9;i++) {
             addSlot(new Slot(storage,9+i,8+i*18,107) {
                 @Override public boolean mayPlace(ItemStack stack) { return false; }
@@ -66,7 +67,12 @@ public final class GreenhouseMenu extends AbstractContainerMenu {
     public int duration() { return data.get(1); }
     public boolean mature() { return data.get(2)!=0; }
     public int bonusCycles() { return data.get(3); }
+    public boolean powered() { return data.get(4)!=0; }
+    /** Ready harvests of the normal greenhouse (0..4). */
+    public int readyHarvests() { return data.get(5); }
+    public boolean hasHarvest() { return readyHarvests()>0; }
     public Crop crop() { return Crop.of(container.getItem(1)); }
+    public boolean hasSoil() { return !container.getItem(0).isEmpty(); }
     public boolean validCrop() {
         Crop crop=crop(); return crop!=Crop.EMPTY && crop.accepts(container.getItem(0));
     }
