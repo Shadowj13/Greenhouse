@@ -17,7 +17,7 @@
   "gui.greenhouse.output_full": "Uscita piena",
   "gui.greenhouse.paused": "In pausa",
   "gui.greenhouse.jei.category": "Serra",
-  "gui.greenhouse.jei.time": "%s s (%s s con farina d'ossa)",
+  "gui.greenhouse.jei.time": "%s s · %s s con ossa",
   "gui.greenhouse.jei.yield": "Quantità: %s",
   "gui.greenhouse.jei.yield_extra": "Quantità: %s–%s (%s con probabilità %s%%)",
   "gui.greenhouse.jei.yield_uniform": "Quantità: %s–%s, ogni valore ugualmente probabile",

@@ -17,7 +17,7 @@
   "gui.greenhouse.output_full": "Output full",
   "gui.greenhouse.paused": "Paused",
   "gui.greenhouse.jei.category": "Greenhouse",
-  "gui.greenhouse.jei.time": "%s s (%s s with bone meal)",
+  "gui.greenhouse.jei.time": "%s s · %s s boosted",
   "gui.greenhouse.jei.yield": "Amount: %s",
   "gui.greenhouse.jei.yield_extra": "Amount: %s–%s (%s with %s%% chance)",
   "gui.greenhouse.jei.yield_uniform": "Amount: %s–%s, each equally likely",
