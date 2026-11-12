@@ -1,0 +1,81 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "plant": "minecraft:block/allium",
+    "particle": "minecraft:block/allium"
+  },
+  "elements": [
+    {
+      "from": [
+        8,
+        5.0,
+        6.25
+      ],
+      "to": [
+        8,
+        8.5,
+        9.75
+      ],
+      "shade": false,
+      "neoforge_data": {
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "west": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6.25,
+        5.0,
+        8
+      ],
+      "to": [
+        9.75,
+        8.5,
+        8
+      ],
+      "shade": false,
+      "neoforge_data": {
+        "ambient_occlusion": false
+      },
+      "faces": {
+        "north": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#plant",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

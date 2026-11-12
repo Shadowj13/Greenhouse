@@ -32,7 +32,7 @@ with ZipFile(jar_path) as jar:
             actual, expected = actual.replace(b'\r\n', b'\n'), expected.replace(b'\r\n', b'\n')
         assert actual == expected, f'Stale or missing asset: {name}'
     classes = [n for n in names if n.endswith('.class')]
-    assert len(classes) == 12, classes
+    assert len(classes) == 20, classes
     for name in classes:
         code = jar.read(name)
         assert code[:4] == b'\xca\xfe\xba\xbe'

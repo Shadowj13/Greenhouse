@@ -6,9 +6,18 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "greenhouse:greenhouse"
+          "name": "greenhouse:greenhouse",
+          "modifier": {
+            "type": "minecraft:copy_components",
+            "include": [
+              "minecraft:container",
+              "minecraft:custom_data"
+            ],
+            "source": "block_entity"
+          }
         }
       ]
     }
-  ]
+  ],
+  "random_sequence": "greenhouse:blocks/greenhouse"
 }

@@ -43,8 +43,36 @@ public enum Crop implements StringRepresentable {
     SWEET_BERRIES("sweet_berries", "sweet_berries", "dirt", 900, 1, 50),
     RED_MUSHROOM("red_mushroom", "red_mushroom", "mycelium", 900, 1, 25),
     BROWN_MUSHROOM("brown_mushroom", "brown_mushroom", "mycelium", 900, 1, 25),
-    // Append new crops so the existing ordinal-based tree boundary stays stable.
-    KELP("kelp", "kelp", "water_bucket", 600, 1, 0);
+    // Append new crops at the end to keep the block state ordering stable.
+    // Tree membership is explicit (see TREES), not derived from the position.
+    KELP("kelp", "kelp", "water_bucket", 600, 1, 0),
+    GLOW_BERRIES("glow_berries", "glow_berries", "dirt", 900, 1, 50),
+    DANDELION("dandelion", "dandelion", "dirt", 600, 1, 0),
+    POPPY("poppy", "poppy", "dirt", 600, 1, 0),
+    BLUE_ORCHID("blue_orchid", "blue_orchid", "dirt", 600, 1, 0),
+    ALLIUM("allium", "allium", "dirt", 600, 1, 0),
+    AZURE_BLUET("azure_bluet", "azure_bluet", "dirt", 600, 1, 0),
+    RED_TULIP("red_tulip", "red_tulip", "dirt", 600, 1, 0),
+    ORANGE_TULIP("orange_tulip", "orange_tulip", "dirt", 600, 1, 0),
+    WHITE_TULIP("white_tulip", "white_tulip", "dirt", 600, 1, 0),
+    PINK_TULIP("pink_tulip", "pink_tulip", "dirt", 600, 1, 0),
+    OXEYE_DAISY("oxeye_daisy", "oxeye_daisy", "dirt", 600, 1, 0),
+    CORNFLOWER("cornflower", "cornflower", "dirt", 600, 1, 0),
+    LILY_OF_THE_VALLEY("lily_of_the_valley", "lily_of_the_valley", "dirt", 600, 1, 0),
+    SUNFLOWER("sunflower", "sunflower", "dirt", 600, 1, 0),
+    LILAC("lilac", "lilac", "dirt", 600, 1, 0),
+    PEONY("peony", "peony", "dirt", 600, 1, 0),
+    ROSE_BUSH("rose_bush", "rose_bush", "dirt", 600, 1, 0),
+    SEA_PICKLE("sea_pickle", "sea_pickle", "water_bucket", 600, 1, 0),
+    // Keep the serialized state and ordinal for older worlds.
+    MOSS("moss_block", "moss_block", "stone", 600, 1, 0),
+    CHORUS("chorus_flower", "chorus_fruit", "end_stone", 900, 1, 50),
+    VINE("vine", "vine", "dirt", 600, 1, 0),
+    GLOW_LICHEN("glow_lichen", "glow_lichen", "stone", 600, 1, 0),
+    TWISTING_VINES("twisting_vines", "twisting_vines", "warped_nylium", 600, 1, 0),
+    WEEPING_VINES("weeping_vines", "weeping_vines", "crimson_nylium", 600, 1, 0),
+    BIG_DRIPLEAF("big_dripleaf", "big_dripleaf", "dirt", 600, 1, 0),
+    SHELF_MUSHROOM("shelf_mushroom", "shelf_mushroom", "mycelium", 900, 1, 25);
 
     public final String plantId, dropId, soilId;
     public final int duration, guaranteed, extraChance;
@@ -60,17 +88,53 @@ public enum Crop implements StringRepresentable {
     public static Crop of(ItemStack stack) {
         if (stack.isEmpty()) return EMPTY;
         String name = id(stack);
-        for (Crop c : values()) if (c!=EMPTY && c.plantId.equals(name)) return c;
+        for (Crop c : values()) if (c.isCultivable() && c.plantId.equals(name)) return c;
         return EMPTY;
     }
+    public boolean isCultivable() { return this!=EMPTY && this!=MOSS; }
+    /**
+     * Every vanilla substrate accepted by this crop. This is the single source
+     * for both the cultivation rule and the JEI catalog.
+     */
+    public List<String> soilIds() {
+        if (!isCultivable()) return List.of();
+        return switch (soilId) {
+            case "dirt" -> List.of("dirt", "grass_block", "podzol", "rooted_dirt", "coarse_dirt");
+            case "sand" -> List.of("sand", "red_sand");
+            case "mycelium" -> List.of("mycelium", "podzol");
+            default -> List.of(soilId);
+        };
+    }
     public boolean accepts(ItemStack substrate) {
-        if (this==EMPTY || substrate.isEmpty()) return false;
-        String s=id(substrate);
-        if (soilId.equals(s)) return true;
-        if (soilId.equals("dirt")) return s.equals("grass_block") || s.equals("podzol") || s.equals("rooted_dirt") || s.equals("coarse_dirt");
-        if (soilId.equals("sand")) return s.equals("red_sand");
-        if (soilId.equals("mycelium")) return s.equals("podzol");
-        return false;
+        if (!isCultivable() || substrate.isEmpty()) return false;
+        return soilIds().contains(id(substrate));
+    }
+    /** Smallest and largest main yield of one harvest. */
+    public int minYield() { return guaranteed; }
+    public int maxYield() { return this==MELON ? guaranteed+2 : extraChance>0 ? guaranteed+1 : guaranteed; }
+    /** An independent extra item: each one is rolled separately at every harvest. */
+    public record Bonus(String itemId, int chancePercent) {}
+    /**
+     * Extra items of one harvest, in roll order. This table drives both the
+     * actual harvest ({@link #roll}) and the JEI catalog, so they cannot diverge.
+     */
+    public List<Bonus> bonuses() {
+        List<Bonus> list = new ArrayList<>();
+        if (this==WHEAT) list.add(new Bonus("wheat_seeds", 50));
+        if (this==BEETROOT) list.add(new Bonus("beetroot_seeds", 50));
+        if (this==POTATOES) list.add(new Bonus("poisonous_potato", 2));
+        if (this==CRIMSON_FUNGUS || this==WARPED_FUNGUS) {
+            list.add(new Bonus(this==CRIMSON_FUNGUS ? "nether_wart_block" : "warped_wart_block", 10));
+            list.add(new Bonus(plantId, 5));
+            list.add(new Bonus("shroomlight", 2));
+        } else if (isTree()) {
+            list.add(new Bonus("stick", 20));
+            list.add(new Bonus(leafId(), 10));
+            list.add(new Bonus(plantId, 5));
+            if (this==OAK || this==DARK_OAK) list.add(new Bonus("apple", 5));
+            if (this==MANGROVE) list.add(new Bonus("mangrove_roots", 10));
+        }
+        return List.copyOf(list);
     }
     private static Item item(String id) { return BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace(id)); }
     private static void add(List<ItemStack> list, String id, int count) {
@@ -79,33 +143,24 @@ public enum Crop implements StringRepresentable {
     }
     public List<ItemStack> roll(net.minecraft.util.RandomSource rng) {
         List<ItemStack> products = new ArrayList<>();
-        if (this==EMPTY) return products;
+        if (!isCultivable()) return products;
         int main = guaranteed;
         if (this==MELON) main += rng.nextInt(3); // 2..4 slices
         else if (extraChance>0 && rng.nextInt(100)<extraChance) main++;
         add(products, dropId, main);
-        if (this==WHEAT && rng.nextBoolean()) add(products,"wheat_seeds",1);
-        if (this==BEETROOT && rng.nextBoolean()) add(products,"beetroot_seeds",1);
-        if (this==POTATOES && rng.nextInt(100)<2) add(products,"poisonous_potato",1);
-        if (this==CRIMSON_FUNGUS || this==WARPED_FUNGUS) {
-            if (rng.nextInt(100)<10) add(products,this==CRIMSON_FUNGUS?"nether_wart_block":"warped_wart_block",1);
-            if (rng.nextInt(100)<5) add(products,plantId,1);
-            if (rng.nextInt(100)<2) add(products,"shroomlight",1);
-        } else if (isTree()) {
-            if (rng.nextInt(100)<20) add(products,"stick",1);
-            if (rng.nextInt(100)<10) add(products,leafId(),1);
-            if (rng.nextInt(100)<5) add(products,plantId,1);
-            if ((this==OAK || this==DARK_OAK) && rng.nextInt(100)<5) add(products,"apple",1);
-            if (this==MANGROVE && rng.nextInt(100)<10) add(products,"mangrove_roots",1);
-        }
+        for (Bonus bonus : bonuses()) if (rng.nextInt(100)<bonus.chancePercent()) add(products, bonus.itemId(), 1);
         return products;
     }
-    public boolean isTree() { return ordinal()>0 && ordinal()<=WARPED_FUNGUS.ordinal(); }
+    /** Crops with tree-style bonuses (logs/stems, sticks, leaves, saplings). */
+    private static final java.util.Set<Crop> TREES = java.util.Collections.unmodifiableSet(java.util.EnumSet.of(
+        OAK, SPRUCE, BIRCH, JUNGLE, ACACIA, DARK_OAK, CHERRY, MANGROVE, PALE_OAK,
+        AZALEA, FLOWERING_AZALEA, POPLAR_RED, POPLAR_ORANGE, POPLAR_YELLOW,
+        CRIMSON_FUNGUS, WARPED_FUNGUS));
+    public boolean isTree() { return TREES.contains(this); }
     public boolean isPoplar() { return this==POPLAR_RED || this==POPLAR_ORANGE || this==POPLAR_YELLOW; }
     private String leafId() {
         if (this==AZALEA) return "azalea_leaves";
         if (this==FLOWERING_AZALEA) return "flowering_azalea_leaves";
-        if (this==CRIMSON_FUNGUS || this==WARPED_FUNGUS) return "shroomlight";
         if (name().startsWith("POPLAR")) return getSerializedName().substring("poplar_".length())+"_poplar_leaves";
         return getSerializedName()+"_leaves";
     }
